@@ -4,8 +4,33 @@
    Author's custom styles
    ========================================================================== */
 
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
 
+body {
+    height: 100%;
+    width: 100%;   
+}
 
+/* override the bootstrap container width */
+.container {
+    max-width: 95%;
+}
+
+/* our three main columns */
+.long-col {
+
+}
+
+/* the map, of course */
+#map {
+    height: 100%;
+    min-height: 600px;
+}
 
 
 
