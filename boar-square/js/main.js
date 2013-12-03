@@ -4,14 +4,14 @@ $(document).ready(function (){
     var markersInMap = [];
     initMap();
 
-    var dummyLocations = [
+    var currentLocations = [
         [
             {point: [37.9, -122.2], selected: true}
         ],
         [
             {point: [37.7, -122.0], selected: true},
             {point: [37.85, -122.25], selected: false},
-            {point: [38.0, -122.5], selected: false}
+            {point: [37.9, -122.5], selected: false}
         ],
         [
             {point: [37.8, -122.4], selected: true},
@@ -23,7 +23,7 @@ $(document).ready(function (){
         ]
     ];
 
-    addLocations(dummyLocations);
+    addLocations(currentLocations);
 
     function initMap() {
         var options ={
@@ -40,9 +40,30 @@ $(document).ready(function (){
         map.addLayer(cloudmade);
     }
 
+    $("#select2a").click(function() {
+        changeSelection('2a');
+    });
+    $("#select2b").click(function() {
+        changeSelection('2b');
+    });
+
+    function changeSelection(indexKey) {
+        var letter = indexKey.substring(indexKey.length-1);
+        var iIndex = parseInt(indexKey.substring(0, indexKey.length-1)) - 1; // coerce to number
+        var jIndex = getJ(letter);
+
+        var locOptions = currentLocations[iIndex];
+        for (var j=0; j<locOptions.length; j++)
+            locOptions[j].selected = false;
+        locOptions[jIndex].selected = true;
+
+        clearMap();
+        addLocations(currentLocations);
+    }
+
     /* 
     takes an array of arrays of points, where each sub-array contains the options for location
-    number one in date. First element of each sub-array is selected by default
+    number one in date.
     */
     function addLocations(locations) {
         for (var i=0; i<locations.length; i++) {
@@ -54,9 +75,10 @@ $(document).ready(function (){
                 if (loc.selected) {                     // the highlighted option
                     marker = L.marker(loc.point);
                     if (i < locations.length - 1) {
-                        var nextOptions = locations[i+1];
-                        drawSelectedPath([loc.point, nextOptions[0].point], iColor);      // highlighted line
-                        drawPossiblePaths(loc.point, nextOptions.slice(1), iColor); // dotted lines
+                        var selectedPoint = getSelectedPoint(locations[i+1]);
+                        var unselectedLocs = getUnselectedLocs(locations[i+1]);
+                        drawSelectedPath([loc.point, selectedPoint], iColor);      // highlighted line
+                        drawPossiblePaths(loc.point, unselectedLocs, iColor); // dotted lines
                     }
                 }
                 else {
@@ -78,9 +100,33 @@ $(document).ready(function (){
         }
     }
 
+    function getSelectedPoint(locArray) {
+        for (var i=0; i<locArray.length; i++) {
+            if (locArray[i].selected)
+                return locArray[i].point;
+        }
+        return null;
+    }
+
+    function getUnselectedLocs(locArray) {
+        return locArray.filter(function(loc) {
+            return loc.selected == false;
+        });
+    }
+
     function getLabel(i, j) {
         var jLabels = ['a', 'b', 'c', 'd'];
         return (i+1) + jLabels[j];
+    }
+
+    function getJ(label) {
+        var labelToJ = {
+            'a': 0,
+            'b': 1,
+            'c': 2,
+            'd': 3
+        };
+        return labelToJ[label];
     }
 
     function drawPossiblePaths(startLoc, destinations, color) {
