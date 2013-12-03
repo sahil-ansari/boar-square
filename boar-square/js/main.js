@@ -2,8 +2,11 @@ $(document).ready(function (){
 
     var map;
     var markersInMap = [];
-    initMap();
+    var iToColor = new Array(10);
+    for (var i=0; i<iToColor.length; i++)
+        iToColor[i] = getRandomColor();
 
+    initMap();
     var currentLocations = [
         [
             {point: [37.9, -122.2], selected: true}
@@ -68,7 +71,7 @@ $(document).ready(function (){
     function addLocations(locations) {
         for (var i=0; i<locations.length; i++) {
             var locOptions = locations[i];
-            var iColor = getRandomColor();
+            var iColor = iToColor[i];
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
                 var marker;
@@ -90,9 +93,12 @@ $(document).ready(function (){
                 marker.on('click', markerClicked);
                 marker.on('mouseover', markerMouseOver);
                 marker.on('mouseout', markerMouseLeft)
-                marker.bindLabel(getLabel(i, j), {noHide: true}).showLabel();
+                marker.bindLabel(getLabel(i, j), {
+                    noHide: true,
+                    className: 'marker-label',
+                }).showLabel();
                 marker.bindPopup('Yum yum yum yum yum a location description', {
-                    closeButton: false
+                    closeButton: false,
                 });
                 marker.addTo(map);
                 markersInMap.push(marker);
@@ -181,6 +187,13 @@ $(document).ready(function (){
         for (var i = 0; i < markersInMap.length; i++)
             map.removeLayer(markersInMap[i]);
         markersInMap = [];
+    }
+
+    $(document).on("click", ".marker-label", changePath);
+    function changePath(ev) {
+        var label = $(ev.target);
+        var key = label.html();
+        changeSelection(key);
     }
 
     function markerClicked(ev) {
