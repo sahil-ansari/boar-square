@@ -94,6 +94,7 @@ $(document).ready(function (){
             weight: 4,
             opacity: 1.0
         }).addTo(map);
+        drawArrows(selectedLine, lineColor, 1.0, 75);
         return selectedLine;
     }
 
@@ -104,7 +105,21 @@ $(document).ready(function (){
             weight: 3,
             opacity: 0.5
         }).addTo(map);
+        drawArrows(possibleLine, lineColor, 0.6, 120);
         return possibleLine;
+    }
+
+    function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
+        var arrow = L.polylineDecorator(line, {
+            patterns: [
+                {
+                    offset: '20%', repeat: repeatVal, 
+                    symbol: L.Symbol.arrowHead({pixelSize: 12, 
+                        pathOptions: {color: arrowColor, weight: 3, stroke: true, opacity: arrowOpacity}
+                    })
+                }
+            ]
+        }).addTo(map);
     }
 
     function markerClicked(ev) {
