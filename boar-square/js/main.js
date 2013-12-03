@@ -5,18 +5,20 @@ $(document).ready(function (){
 
     var dummyLocations = [
         [
-            [37.7, -122.2],
-            [37.9, -122.2]
+            {point: [37.9, -122.2], selected: true}
         ],
         [
-            [37.7, -122.0],
-            [37.85, -122.25],
-            [38.0, -122.5]
+            {point: [37.7, -122.0], selected: true},
+            {point: [37.85, -122.25], selected: false},
+            {point: [38.0, -122.5], selected: false}
         ],
         [
-            [37.8, -122.4],
-            [37.7, -122.25],
-            [37.6, -122.1]
+            {point: [37.8, -122.4], selected: true},
+            {point: [37.7, -122.25], selected: false},
+            {point: [37.6, -122.1], selected: false}
+        ],
+        [
+            {point: [37.65, -122.3], selected: true}
         ]
     ];
 
@@ -42,64 +44,79 @@ $(document).ready(function (){
     number one in date. First element of each sub-array is selected by default
     */
     function addLocations(locations) {
-        var selectedLocs = [];
-        var possiblePaths = [];
         for (var i=0; i<locations.length; i++) {
             var locOptions = locations[i];
             var iColor = getRandomColor();
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
                 var marker;
-                if (j == 0) { // first option is highlighted
-                    marker = L.marker(loc);
-                    selectedLocs.push(loc);
-                    if (i < locations.length - 1) { 
+                if (loc.selected) {                     // the highlighted option
+                    marker = L.marker(loc.point);
+                    if (i < locations.length - 1) {
                         var nextOptions = locations[i+1];
-                        var nextLoc = nextOptions[0];
-
-                        for (var k=1; k<nextOptions.length; k++) {  // connect the dashes
-                            var nextOpLoc = nextOptions[k];
-                            var possibleLine = L.polyline([loc, nextOpLoc], {
-                                dashArray: '5, 10',
-                                color: iColor,
-                                weight: 3,
-                                opacity: 0.75
-                            }).addTo(map);
-                        }
+                        drawSelectedPath([loc.point, nextOptions[0].point], iColor);      // highlighted line
+                        drawPossiblePaths(loc.point, nextOptions.slice(1), iColor); // dotted lines
                     }
                 }
                 else {
-                    marker = L.marker(loc, {opacity: 0.75});
+                    marker = L.marker(loc.point, {opacity: 0.5});
+                    if (i < locations.length - 1) {
+                        drawPossiblePaths(loc.point, locations[i+1], iColor); // all dotted lines
+                    }
                 }
-                marker.on('click', markerClicked).addTo(map);
+                marker.on('click', markerClicked);
+                marker.on('mouseover', markerMouseOver);
+                marker.on('mouseout', markerMouseLeft)
+                marker.bindLabel(getLabel(i, j), {noHide: true}).showLabel();
+                marker.bindPopup('Yum yum yum yum yum a location description', {
+                    closeButton: false
+                });
+                marker.addTo(map);
             }
         }
-        drawSelectedPath(selectedLocs);
-
-        /* marker.bindLabel('Careful, she might be tired after this!'); */
     }
 
-    function drawSelectedPath(points) {
-        var lineColor = 'red'
+    function getLabel(i, j) {
+        var jLabels = ['a', 'b', 'c', 'd'];
+        return (i+1) + jLabels[j];
+    }
+
+    function drawPossiblePaths(startLoc, destinations, color) {
+        for (var i=0; i<destinations.length; i++) {
+            var dest = destinations[i];
+            drawPossiblePath([startLoc, dest.point], color);
+        }
+    }
+
+    function drawSelectedPath(points, lineColor) {
         var selectedLine = L.polyline(points, {
             color: lineColor,
             weight: 4,
             opacity: 1.0
         }).addTo(map);
+        return selectedLine;
     }
 
-    function drawPossiblePath(points) {
-        var lineColor = getRandomColor();
+    function drawPossiblePath(points, lineColor) {
         var possibleLine = L.polyline(points, {
             dashArray: '5, 10',
             color: lineColor,
             weight: 3,
-            opacity: 0.75
+            opacity: 0.5
         }).addTo(map);
+        return possibleLine;
     }
 
     function markerClicked(ev) {
         console.log(ev);
+    }
+
+    function markerMouseOver(ev) {
+        ev.target.openPopup();
+    }
+
+    function markerMouseLeft(ev) {
+        ev.target.closePopup();
     }
 
     function getRandomColor()  {
