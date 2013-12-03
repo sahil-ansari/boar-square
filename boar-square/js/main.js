@@ -1,6 +1,7 @@
 $(document).ready(function (){
 
     var map;
+    var markersInMap = [];
     initMap();
 
     var dummyLocations = [
@@ -72,6 +73,7 @@ $(document).ready(function (){
                     closeButton: false
                 });
                 marker.addTo(map);
+                markersInMap.push(marker);
             }
         }
     }
@@ -120,6 +122,19 @@ $(document).ready(function (){
                 }
             ]
         }).addTo(map);
+        markersInMap.push(arrow);
+    }
+
+    $("#clearMap").click(clearMap);
+    function clearMap() {
+        for(i in map._layers) {
+            if(map._layers[i]._path != undefined) {
+                map.removeLayer(map._layers[i]);
+            }
+        }
+        for (var i = 0; i < markersInMap.length; i++)
+            map.removeLayer(markersInMap[i]);
+        markersInMap = [];
     }
 
     function markerClicked(ev) {
