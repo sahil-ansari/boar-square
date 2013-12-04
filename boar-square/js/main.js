@@ -17,26 +17,42 @@ $(document).ready(function (){
     };
 
     initMap();
-    var currentLocations = [
-        [
-            {point: [37.9, -122.2], selected: true, pathsTo: []}
-        ],
-        [
-            {point: [37.7, -122.0], selected: true, pathsTo: []},
-            {point: [37.85, -122.25], selected: false, pathsTo: []},
-            {point: [37.9, -122.5], selected: false, pathsTo: []}
-        ],
-        [
-            {point: [37.8, -122.4], selected: true, pathsTo: []},
-            {point: [37.7, -122.25], selected: false, pathsTo: []},
-            {point: [37.6, -122.1], selected: false, pathsTo: []}
-        ],
-        [
-            {point: [37.65, -122.3], selected: true, pathsTo: []}
-        ]
-    ];
+    var environment = {
+        "Coffee": {
+            previousCategory: null, 
+            nextCategory: "Museum",
+            places: [ 
+                {name: "Stumptown", point: [37.9, -122.2], selected: true}
+            ] 
+        },
+        "Museum": {
+            previousCategory: "Coffee",
+            nextCategory: "Restaurant",
+            places: [
+                {name: "Met", point: [37.7, -122.0], selected: true},
+                {name: "History Museum", point: [37.85, -122.25], selected: false},
+                {name: "Guggenheim", point: [37.9, -122.5], selected: false}
+            ]
+        },
+        "Restaurant": {
+            previousCategory: "Museum",
+            nextCategory: "Bar",
+            places: [
+                {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true},
+                {name: "Mels", point: [37.7, -122.25], selected: false},
+                {name: "Thai Market", point: [37.6, -122.1], selected: false}
+            ]
+        },
+        "Bar": {
+            previousCategory: "Restaurant",
+            nextCategory: null,
+            places: [
+                {name: "1020", point: [37.65, -122.3], selected: true}
+            ] 
+        }
+    };
 
-    addLocations(currentLocations);
+    addLocations(environment);
 
     function initMap() {
         var options ={
@@ -97,35 +113,46 @@ $(document).ready(function (){
     number one in date.
     */
     function addLocations(locations) {
-        for (var i=0; i<locations.length; i++) {
-            var locOptions = locations[i];
-            var iColor = iToColor[i];
+        idx = 0;
+        for (category in environment) {
+            typeOfPlace = environment[category];
+            var locOptions = typeOfPlace.places
+            var iColor = iToColor[idx];
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
                 var marker;
                 if (loc.selected) {                     // the highlighted option
                     marker = L.marker(loc.point);
-                    if (i < locations.length - 1) {
-                        var selectedLoc = getSelectedLoc(locations[i+1]);
-                        var unselectedLocs = getUnselectedLocs(locations[i+1]);
-                        var selectedLine = drawSelectedPath([loc.point, selectedLoc.point], iColor);      // highlighted line
-                        selectedLoc.pathsTo.push({'line': selectedLine, 'source': loc});
+                    
 
-                        drawPossiblePaths(loc, unselectedLocs, iColor); // dotted lines
-                    }
+
+                    // if (i < locations.length - 1) {
+                    //     var selectedLoc = getSelectedLoc(locations[i+1]);
+                    //     var unselectedLocs = getUnselectedLocs(locations[i+1]);
+                    //     var selectedLine = drawSelectedPath([loc.point, selectedLoc.point], iColor);      // highlighted line
+                    //     selectedLoc.pathsTo.push({'line': selectedLine, 'source': loc});
+
+                    //     drawPossiblePaths(loc, unselectedLocs, iColor); // dotted lines
+                    // }
                 }
                 else {
                     marker = L.marker(loc.point, {opacity: 0.5});
-                    if (i < locations.length - 1) {
-                        drawPossiblePaths(loc, locations[i+1], iColor); // all dotted lines
-                    }
+                    // if (i < locations.length - 1) {
+                        // drawPossiblePaths(loc, locations[i+1], iColor); // all dotted lines
+                    // }
                 }
+
+                if (typeOfPlace.nextCategory) {
+                    nextTypeOfPlace = environment[typeOfPlace.nextCategory];
+                    createPaths(loc, nextTypeOfPlace.places, iColor); 
+                }
+
                 marker.on('click', markerClicked);
                 marker.on('mouseover', markerMouseOver);
                 marker.on('mouseout', markerMouseLeft)
                 marker.bindLabel(getLabel(i, j), {
                     noHide: true,
-                    className: 'marker-label',
+                    classcatgory: 'marker-label',
                 }).showLabel();
                 marker.bindPopup('Yum yum yum yum yum a location description', {
                     closeButton: false,
@@ -134,6 +161,7 @@ $(document).ready(function (){
                 markersInMap.push(marker);
                 loc.marker = marker;
             }
+            idx += 1; 
         }
     }
 
@@ -164,6 +192,20 @@ $(document).ready(function (){
             'd': 3
         };
         return labelToJ[label];
+    }
+
+    function createPaths(startLoc, destinations, lineColor) {
+        for (var i=0; i<destinations.length; i++) {
+            var selectedLine = L.polyline([startLoc.point, destinations[i].point], selectedPathOptions).addTo(map);
+            selectedLine.setStyle({color: lineColor});
+            if (startLoc.selected && destinations[i].selected) {
+                drawArrows(selectedLine, lineColor, 0.8, 75);
+            }
+            else {
+                drawArrows(selectedLine, lineColor, 0.8, 120);
+            }
+
+        }
     }
 
     function drawPossiblePaths(startLoc, destinations, color) {
