@@ -1,10 +1,78 @@
 $(document).ready(function (){
 
+    var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
+    var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
+    
+    var area = "";
+    var placeID = "";   
+    var startTime = "";
+    var duration;
+    var nearbyVenues = [];
+    
+    var $area = $('#place')[0];        //jquery objects for each input field
+    var $startTime = $('#start')[0];
+    var $duration = $('#duration')[0];
+
+    function toVenueObject(v){ console.log("raw venue object from api:"); 
+
+        console.dir(v);
+        if('price' in v.venue)          //some places don't list prices which throws an error
+            pr = Array(v.venue.price.tier+1).join('$');
+        else
+            pr = "not listed";
+
+        return {
+            name: v.venue.name,
+            id: v.venue.id,
+            lat: v.venue.location.lat,
+            lng: v.venue.location.lng,
+            rating: v.venue.rating,
+            url: v.venue.url,               //the business' website
+            checkInsCount: v.venue.stats.checkinsCount,
+            price: pr,                      
+            categories : v.venue.categories,
+            address: v.venue.location.address+ " "+v.venue.location.postalCode,
+            status: v.venue.hours.status    //number to  $$$ amount
+
+            //photo: '',
+        };
+    }
+    //console.dir($area);
+    
+
+    //add 'not found' handler later
+    $($area).change(function(e){   //find location match, get list
+                          // of recommended nearby venues
+        area = this.value; 
+        console.log(area);
+        $.getJSON('https://api.foursquare.com/v2/venues/explore?near='+area+'&client_id='
+            +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
+
+        nearbyVenues = data.response.groups[0].items; //all the nearby places
+        //console.dir(nearbyVenues);    
+        var p = toVenueObject(nearbyVenues[14]);
+        console.log("our object with the stuff we want:");
+        console.dir(p);
+        
+    
+        },'text');
+    });
+
+
+
     var map;
     var markersInMap = [];
-    var iToColor = new Array(10);
-    for (var i=0; i<iToColor.length; i++)
-        iToColor[i] = getRandomColor();
+
+    var iToColor = [
+        "#0099FF",   // blue
+        "#00CC99",   // green
+        "#FFFF00",   // yellow
+        "#CC33FF",   // purple
+        "#FF0066",   // pink
+        "#FF9933"    // orange
+    ];
+    iToColor.sort(function() { return 0.5 - Math.random() }); /* shuffle the color array */
+
     var selectedPathOptions = {
         dashArray: null,
         weight: 4,
@@ -17,6 +85,7 @@ $(document).ready(function (){
     };
 
     initMap();
+    setIteneraryIcons();
     var currentLocations = [
         [
             {point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
@@ -51,6 +120,13 @@ $(document).ready(function (){
             cloudmade = new L.TileLayer(cloudmadeUrl, {subdomains: subDomains, maxZoom: 18});
 
         map.addLayer(cloudmade);
+    }
+
+    function setIteneraryIcons() {
+        for (var i=0; i<iToColor.length; i++) {
+            var name = '#itenerary' + (i+1);
+            $(name).css('background-color', iToColor[i]);
+        }
     }
 
     $("#select2a").click(function() {
