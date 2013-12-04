@@ -62,9 +62,17 @@ $(document).ready(function (){
 
     var map;
     var markersInMap = [];
-    var iToColor = new Array(10);
-    for (var i=0; i<iToColor.length; i++)
-        iToColor[i] = getRandomColor();
+
+    var iToColor = [
+        "#0099FF",   // blue
+        "#00CC99",   // green
+        "#FFFF00",   // yellow
+        "#CC33FF",   // purple
+        "#FF0066",   // pink
+        "#FF9933"    // orange
+    ];
+    iToColor.sort(function() { return 0.5 - Math.random() }); /* shuffle the color array */
+
     var selectedPathOptions = {
         dashArray: null,
         weight: 4,
@@ -117,7 +125,6 @@ $(document).ready(function (){
     function setIteneraryIcons() {
         for (var i=0; i<iToColor.length; i++) {
             var name = '#itenerary' + (i+1);
-            console.log(name);
             $(name).css('background-color', iToColor[i]);
         }
     }
