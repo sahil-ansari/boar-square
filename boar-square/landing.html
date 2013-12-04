@@ -7,14 +7,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
-    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     <title>Boar Square</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrapLanding.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="css/normalize.min.css">
+
 
 
 
@@ -53,46 +52,21 @@
         <br>
         <center>
         <div class="jumbotron">
-      <form id="history">
-      <h2> Select a Date:</h2><br>
-      <button class="btn-info" id="Create New" type="submit">Create New</button>
-      <button class="btn-info" id="Select Existing" type="submit">Select Existing</button>
+      
+      <h2> Select a Date:</h2>
+      
+      <button class="btn-info" id="newDate" type="submit" style="display:inline" >Create New</button>
+      
+     
+      <button class="btn-info" id="oldDate" type="submit" style="display:inline">Select Existing</button>
        <br>
       <br>
+      <div id="bottomLogo">
       <img src="img/poweredBy.jpg">
-      </form> 
+     </div>
+      
       </center>
-      <br>
-      <br>
       
-      
-<form id="target">
-
-<!--       <input type="text" id="Create New" class="form-control" placeholder="Cre" autofocus>
-
-
-      <input type="text" id="Select Existing" class="form-control" placeholder="Location (Optional)" autofocus> -->
-      
-
-
-      <!-- <center>
-      <input type="text" size="20" id="startField" placeholder="Start Date (Optional)">
-      
-      <input type="text" size="20" id="endField" placeholder="End Date (Optional)">
-      </center>
-      <br> -->
-<!-- 
-      <button class="btn btn-lg btn-primary btn-block" id="search" type="submit">Search</button> -->
-      </form> 
-    
-
-</form>
-
-<!-- <span class="input-holder"><input type="text" name="q" id="headerBarSearch" class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"><span class="input-default">I'm looking for...</span></span> -->
-    
-
-
-
     
       <div class="header">
 
@@ -100,20 +74,10 @@
       </div>
 
       
-        <!-- <h1>Twitter (Geo)Search</h1> -->
-        
-        <p class="lead">
-          <!--Javascript adds stuff here-->
-        </p>
-        <!--<p><a class="btn btn-lg btn-success" href="#">Sign up today</a></p>-->
-      </div>
+
  </div>
 
 
-        <!--<label class="checkbox">
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>-->
- 
 
       <div class="footer">
       <p>&copy; Boar Square 2013</p>
@@ -126,10 +90,15 @@
     
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 
+
     
-    <script type="text/javascript" src="js/vendor/jquery-1.10.1.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.js"><\/script>')</script>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+            <script type="text/javascript" src="js/vendor/jquery-1.10.1.js"></script>
+
+        <script src="js/landing.js"></script>
 
   </body>
 </html>
