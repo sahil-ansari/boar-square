@@ -17,6 +17,7 @@ $(document).ready(function (){
     };
 
     initMap();
+    setIteneraryIcons();
     var currentLocations = [
         [
             {point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
@@ -51,6 +52,14 @@ $(document).ready(function (){
             cloudmade = new L.TileLayer(cloudmadeUrl, {subdomains: subDomains, maxZoom: 18});
 
         map.addLayer(cloudmade);
+    }
+
+    function setIteneraryIcons() {
+        for (var i=0; i<iToColor.length; i++) {
+            var name = '#itenerary' + (i+1);
+            console.log(name);
+            $(name).css('background-color', iToColor[i]);
+        }
     }
 
     $("#select2a").click(function() {
