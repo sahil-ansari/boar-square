@@ -19,20 +19,20 @@ $(document).ready(function (){
     initMap();
     var currentLocations = [
         [
-            {point: [37.9, -122.2], selected: true, pathsTo: []}
+            {point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
         ],
         [
-            {point: [37.7, -122.0], selected: true, pathsTo: []},
-            {point: [37.85, -122.25], selected: false, pathsTo: []},
-            {point: [37.9, -122.5], selected: false, pathsTo: []}
+            {point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
+            {point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
         ],
         [
-            {point: [37.8, -122.4], selected: true, pathsTo: []},
-            {point: [37.7, -122.25], selected: false, pathsTo: []},
-            {point: [37.6, -122.1], selected: false, pathsTo: []}
+            {point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
+            {point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
         ],
         [
-            {point: [37.65, -122.3], selected: true, pathsTo: []}
+            {point: [37.65, -122.3], selected: true, pathsTo: [], pathsFrom: []}
         ]
     ];
 
@@ -71,23 +71,35 @@ $(document).ready(function (){
             var loc = locOptions[j];
             loc.selected = false;
             loc.marker.setOpacity(0.5);
-            for (var pIdx=0; pIdx<loc.pathsTo.length; pIdx++) {
-                var line = loc.pathsTo[pIdx].line;
-                line.setStyle(possiblePathOptions);
-            }
+            deselectPaths(loc.pathsTo);
+            deselectPaths(loc.pathsFrom);
         }
 
         /* highlight the new relevant stuff */
         var newLoc = locOptions[jIndex];
         newLoc.selected = true;
         newLoc.marker.setOpacity(1.0);
-        if (iIndex > 0) {
+        if (iIndex > 0) {                 /* gotta highlight path to this guy */
             var prevSelectedLoc = getSelectedLoc(currentLocations[iIndex-1]);
-            for (var pIdx=0; pIdx<newLoc.pathsTo.length; pIdx++) {
-                var path = newLoc.pathsTo[pIdx];
-                if (path.source == prevSelectedLoc) {
-                    path.line.setStyle(selectedPathOptions);
-                }
+            selectPathWithSource(newLoc.pathsTo, prevSelectedLoc);
+        }
+        if (iIndex < currentLocations.length - 1) {   /* gotta highlight path from this guy */
+            var nextSelectedLoc = getSelectedLoc(currentLocations[iIndex+1]);
+            selectPathWithSource(nextSelectedLoc.pathsTo, newLoc);
+        }
+    }
+
+    function deselectPaths(paths) {
+        for (var i=0; i<paths.length; i++) {
+            paths[i].line.setStyle(possiblePathOptions);
+        }
+    }
+
+    function selectPathWithSource(paths, source) {
+        for (var i=0; i<paths.length; i++) {
+            var path = paths[i];
+            if (path.source == source) {
+                path.line.setStyle(selectedPathOptions);
             }
         }
     }
@@ -110,6 +122,7 @@ $(document).ready(function (){
                         var unselectedLocs = getUnselectedLocs(locations[i+1]);
                         var selectedLine = drawSelectedPath([loc.point, selectedLoc.point], iColor);      // highlighted line
                         selectedLoc.pathsTo.push({'line': selectedLine, 'source': loc});
+                        loc.pathsFrom.push({'line': selectedLine, 'dest': selectedLoc});
 
                         drawPossiblePaths(loc, unselectedLocs, iColor); // dotted lines
                     }
@@ -171,6 +184,7 @@ $(document).ready(function (){
             var dest = destinations[i];
             var line = drawPossiblePath([startLoc.point, dest.point], color);
             dest.pathsTo.push({'line': line, 'source': startLoc});
+            startLoc.pathsFrom.push({'line': line, 'dest': dest});
         }
     }
 
@@ -199,7 +213,7 @@ $(document).ready(function (){
                             weight: 3, 
                             stroke: true, 
                             opacity: arrowOpacity,
-                            fillOpacity: 0.75
+                            fillOpacity: 0.6
                         }
                     })
                 }
