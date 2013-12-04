@@ -39,6 +39,16 @@ body {
     cursor: pointer;
 }
 
+/* helper class for hiding */
+.hidden {
+    display: none;
+}
+
+/* buttons for landing page */
+#landing-date-planning {
+
+}
+
 
 
 
