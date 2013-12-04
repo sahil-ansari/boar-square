@@ -23,7 +23,16 @@ body {
 
 /* our three main columns */
 .long-col {
+    border-right: 1px #aaa solid;
+    margin-top: 5px;
+}
 
+#option-column {
+
+}
+
+#itenerary-column {
+    border: none;
 }
 
 /* the map, of course */
@@ -39,17 +48,39 @@ body {
     cursor: pointer;
 }
 
-/* icon for third column */
-.itenerary-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    border: 2px solid black;
+.centered {
     text-align: center;
-    display: inline-block;
-    line-height: 35px;
-    font-size: 1.5em;
 }
+
+.itenerary-column-header {
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.itenerary-item {
+
+}
+
+    /* icon for third column */
+    .itenerary-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        border: 2px solid black;
+        text-align: center;
+        display: inline-block;
+        line-height: 35px;
+        font-size: 1.5em;
+    }
+
+    .itenerary-item-text {
+        padding-left: 5px;
+        font-size: 1.2em;
+    }
+
+    .itenerary-arrow-transition {
+        text-align: center;
+    }
 
 
 

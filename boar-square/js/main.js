@@ -75,12 +75,12 @@ $(document).ready(function (){
 
     var selectedPathOptions = {
         dashArray: null,
-        weight: 4,
+        weight: 8,
         opacity: 1.0
     };
     var possiblePathOptions = {
         dashArray: '5, 10',
-        weight: 3,
+        weight: 6,
         opacity: 0.5
     };
 
@@ -125,7 +125,9 @@ $(document).ready(function (){
     function setIteneraryIcons() {
         for (var i=0; i<iToColor.length; i++) {
             var name = '#itenerary' + (i+1);
+            var arrowName = '#itenerary-arrow' + (i+1);
             $(name).css('background-color', iToColor[i]);
+            $(arrowName).css('color', iToColor[i]);
         }
     }
 
@@ -283,7 +285,7 @@ $(document).ready(function (){
             patterns: [
                 {
                     offset: '20%', repeat: repeatVal, 
-                    symbol: L.Symbol.arrowHead({pixelSize: 12, 
+                    symbol: L.Symbol.arrowHead({pixelSize: 20, 
                         pathOptions: {
                             color: arrowColor, 
                             weight: 3, 
