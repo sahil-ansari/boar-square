@@ -57,6 +57,25 @@ body {
     text-align: center;
 }
 
+/* helper class for hiding */
+.hidden {
+    display: none;
+}
+
+/* buttons for landing page */
+#landing-date-planning {
+
+}
+
+/* icon for third column */
+.itenerary-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 2px solid black;
+    text-align: center;
+}
+
 .itenerary-item {
 
 }
