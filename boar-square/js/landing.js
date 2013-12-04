@@ -1,36 +1,16 @@
 $(function () {
 
-var newDateBox= '';
 
-      newDateBox+='<input type="text" id="location" class="form-control" placeholder="Location" autofocus>';
-      newDateBox+='<center>';
-      newDateBox+='<input type="text" size="20" id="startField" placeholder="Start Time">';
-      newDateBox+='<input type="text" size="20" id="endField" placeholder="End Time">';
-      newDateBox+='</center>';
-      newDateBox+='<br>';
-      newDateBox+='<button class="btn btn-lg btn-primary btn-block" id="goDate" type="submit">Plan My Date!</button>';
-     
+  //If Create new is clicked
+   $('#newDate').click( function() {
 
-  
-
-      //If Create new is clicked
-       $('#newDate').click(
-        function() {
-
-  $( "#bottomLogo" ).empty();
+        $("#bottomLogo").addClass("hidden");
         $(".jumbotron").animate({height:"+=200px"});
-
-
-        $('.jumbotron').append(newDateBox);
+        $("#landing-date-planning").removeClass("hidden");
+        
         document.getElementById('newDate').disabled=true;
 
-
         $('input[type=submit]', this).attr('disabled', 'disabled');
-
-        
-    
-      
-
         return false;
     });
 
