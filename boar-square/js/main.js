@@ -76,10 +76,24 @@ $(document).ready(function (){
         changeSelection('2b');
     });
 
-    function changeSelection(indexKey) {
-        var letter = indexKey.substring(indexKey.length-1);
-        var iIndex = parseInt(indexKey.substring(0, indexKey.length-1)) - 1; // coerce to number
-        var jIndex = getJ(letter);
+    function changeSelection(tag) {
+        var indexKey = tag._L
+        var pieces = indexKey.split('_');
+
+        category = pieces[0]; 
+        id = pieces[1]; 
+
+        victimCategory = environment[category]; 
+        victimPlace = _(victimCategory.place).find(function(place){ 
+            return _leaflet_id.split('_')[1] == id; 
+        });
+
+        
+
+
+        // var letter = indexKey.substring(indexKey.length-1);
+        // var iIndex = parseInt(indexKey.substring(0, indexKey.length-1)) - 1; // coerce to number
+        // var jIndex = getJ(letter);
 
         /* clear the old relevant stuff */
         var locOptions = currentLocations[iIndex];
@@ -123,23 +137,9 @@ $(document).ready(function (){
                 var marker;
                 if (loc.selected) {                     // the highlighted option
                     marker = L.marker(loc.point);
-                    
-
-
-                    // if (i < locations.length - 1) {
-                    //     var selectedLoc = getSelectedLoc(locations[i+1]);
-                    //     var unselectedLocs = getUnselectedLocs(locations[i+1]);
-                    //     var selectedLine = drawSelectedPath([loc.point, selectedLoc.point], iColor);      // highlighted line
-                    //     selectedLoc.pathsTo.push({'line': selectedLine, 'source': loc});
-
-                    //     drawPossiblePaths(loc, unselectedLocs, iColor); // dotted lines
-                    // }
                 }
                 else {
                     marker = L.marker(loc.point, {opacity: 0.5});
-                    // if (i < locations.length - 1) {
-                        // drawPossiblePaths(loc, locations[i+1], iColor); // all dotted lines
-                    // }
                 }
 
                 if (typeOfPlace.nextCategory) {
@@ -165,19 +165,6 @@ $(document).ready(function (){
         }
     }
 
-    function getSelectedLoc(locArray) {
-        for (var i=0; i<locArray.length; i++) {
-            if (locArray[i].selected)
-                return locArray[i];
-        }
-        return null;
-    }
-
-    function getUnselectedLocs(locArray) {
-        return locArray.filter(function(loc) {
-            return loc.selected == false;
-        });
-    }
 
     function getLabel(i, j) {
         var jLabels = ['a', 'b', 'c', 'd'];
@@ -196,38 +183,18 @@ $(document).ready(function (){
 
     function createPaths(startLoc, destinations, lineColor) {
         for (var i=0; i<destinations.length; i++) {
+            if (startLoc.selected && destinations[i].selected) {
             var selectedLine = L.polyline([startLoc.point, destinations[i].point], selectedPathOptions).addTo(map);
             selectedLine.setStyle({color: lineColor});
-            if (startLoc.selected && destinations[i].selected) {
                 drawArrows(selectedLine, lineColor, 0.8, 75);
             }
             else {
+            var selectedLine = L.polyline([startLoc.point, destinations[i].point], possiblePathOptions).addTo(map);
+            selectedLine.setStyle({color: lineColor});
                 drawArrows(selectedLine, lineColor, 0.8, 120);
             }
 
         }
-    }
-
-    function drawPossiblePaths(startLoc, destinations, color) {
-        for (var i=0; i<destinations.length; i++) {
-            var dest = destinations[i];
-            var line = drawPossiblePath([startLoc.point, dest.point], color);
-            dest.pathsTo.push({'line': line, 'source': startLoc});
-        }
-    }
-
-    function drawSelectedPath(points, lineColor) {
-        var selectedLine = L.polyline(points, selectedPathOptions).addTo(map);
-        selectedLine.setStyle({color: lineColor});
-        drawArrows(selectedLine, lineColor, 0.8, 75);
-        return selectedLine;
-    }
-
-    function drawPossiblePath(points, lineColor) {
-        var possibleLine = L.polyline(points, possiblePathOptions).addTo(map);
-        possibleLine.setStyle({color: lineColor});
-        drawArrows(possibleLine, lineColor, 0.8, 120);
-        return possibleLine;
     }
 
     function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
