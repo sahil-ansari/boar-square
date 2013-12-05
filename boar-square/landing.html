@@ -1,114 +1,220 @@
 <!DOCTYPE html>
 <html>
-  <head>
-<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.png">
-    <title>Boar Square</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+  <title>Boar Square</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrapLanding.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrapLanding.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="css/main.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="css/main.css" rel="stylesheet">
 
 
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="../../assets/js/html5shiv.js"></script>
       <script src="../../assets/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
+      <![endif]-->
+    </head>
 
-  <body>
+    <body>
 
 
-  <div class="container">
-<div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="index.html">COMS4170</a>
+      <div class="container">
+      <div class="hidden">
+        <div class="navbar navbar-inverse navbar-fixed-top" >
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="landing.html">COMS4170</a>
+          </div>
+          <div class="collapse navbar-collapse">
+          </div>
+
+
+
+          </div><!--/.nav-collapse -->
         </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="index.html"></a></li>
-          </ul>
+
+        <br>
+        <br>
+        <br>
+        <center>
+          <div class="jumbotron">
+
+            <h2> Select a Date:</h2>
+
+            <button class="btn-info" id="newDate" type="submit" style="display:inline" >Create New</button>
+
+
+            <button class="btn-info" id="oldDate" type="submit" style="display:inline">Select Existing</button>
+            <br>
+            <br>
+            <div id="landing-date-planning" class="hidden">
+              <input type="text" id="location" class="form-control" placeholder="Location" autofocus>
+              <center>
+                <input type="text" size="20" id="startTime" placeholder="Start Time">
+                <input type="text" size="20" id="endTime" placeholder="End Time">
+              </center>
+              <br>
+
+              
+
+              <div id="venue1" class="hidden">
+                <div class="addVenue">
+                  <input type="text" id="venuename1" class="landing-form" placeholder="Venue 1" autofocus>
+
+                  <div class="trending">
+                    <label><input type="checkbox" id="trending1" name="Trending"> Trending </label>
+                  </div>
+
+
+                  <div class="price">
+
+
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$1"
+                    value = "small"
+                    checked = "checked" />
+                    <label for = "$1">$</label>
+                    <br>
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$$1"
+                    value = "medium" />
+                    <label for = "$$1">$$</label>
+                    <br>
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$$$1"
+                    value = "large" />
+                    <label for = "$$$1">$$$</label>
+                  </div>
+
+                </div>
+                <br>
+              </div>
+
+
+
+
         
 
+              <div id="venue2" class="hidden">
+                <div class="addVenue">
+                  <input type="text" id="venuename2" class="landing-form" placeholder="Venue 2" autofocus>
 
-</div><!--/.nav-collapse -->
-        </div>
-
-        <br>
-        <br>
-        <br>
-        <center>
-        <div class="jumbotron">
-      
-      <h2> Select a Date:</h2>
-      
-      <button class="btn-info" id="newDate" type="submit" style="display:inline" >Create New</button>
-      
-     
-      <button class="btn-info" id="oldDate" type="submit" style="display:inline">Select Existing</button>
-       <br>
-      <br>
-      <div id="landing-date-planning" class="hidden">
-        <input type="text" id="location" class="form-control" placeholder="Location" autofocus>
-        <center>
-          <input type="text" size="20" id="startField" placeholder="Start Time">
-          <input type="text" size="20" id="endField" placeholder="End Time">
-        </center>
-        <br>
-        <button class="btn btn-lg btn-primary btn-block" id="goDate" type="submit">Plan My Date!</button>
-        <form id="target">
-      </div>
-      <div id="bottomLogo">
-        <img src="img/poweredBy.jpg">
-      </div>
-      
-      </center>
-      
-    
-      <div class="header">
-
-        <h3 class="text-muted"></h3>
-      </div>
-
-      
-
- </div>
+                  <div class="trending">
+                    <label><input type="checkbox" id="trending2" name="Trending"> Trending </label>
+                  </div>
 
 
-
-      <div class="footer">
-      <p>&copy; Boar Square 2013</p>
-      </div>
+                  <div class="price">
 
 
-    </div> <!-- /container -->
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$2"
+                    value = "small"
+                    checked = "checked" />
+                    <label for = "$2">$</label>
+                    <br>
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$$2"
+                    value = "medium" />
+                    <label for = "$$2">$$</label>
+                    <br>
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$$$2"
+                    value = "large" />
+                    <label for = "$$$2">$$$</label>
+                  </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+                </div>
+                <br>
+              </div>
+
+              <div id="venue3" class="hidden">
+                <div class="addVenue">
+                  <input type="text" id="venuename3" class="landing-form" placeholder="Venue 3" autofocus>
+
+                  <div class="trending">
+                    <label><input type="checkbox" id="trending3" name="Trending"> Trending </label>
+                  </div>
+                  <div class="price">
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$3"
+                    value = "small"
+                    checked = "checked" />
+                    <label for = "$3">$</label>
+                    <br>
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$$3"
+                    value = "medium" />
+                    <label for = "$$3">$$</label>
+                    <br>
+                    <input type = "radio"
+                    name = "radSize"
+                    id = "$$$3"
+                    value = "large" />
+                    <label for = "$$$3">$$$</label>
+                  </div>
+                </div>
+              </div>
 
 
-    
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.js"><\/script>')</script>
-        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+              <button class="btn-info" id="addVenue" type="submit">Add Venue!</button>
+              <br>
+              <br>
+              <button class="btn btn-lg btn-primary btn-block" id="goDate" type="submit">Plan My Date!</button>
+              <!-- <button class="btn btn-lg btn-primary btn-block" id="goDate" type="submit" onclick="window.location.href='index.html'">Plan My Date!</button> -->
+              <form id="target">
+              </div>
+              <br>
 
-        <script src="js/vendor/bootstrap.min.js"></script>
-            <script type="text/javascript" src="js/vendor/jquery-1.10.1.js"></script>
 
-        <script src="js/landing.js"></script>
+              <div id="bottomLogo">
+                <img src="img/poweredBy.jpg">
+              </div>
+            </div>
 
-  </body>
-</html>
+
+
+            <div class="footer">
+              <p>&copy; Boar Square 2013</p>
+            </div>
+
+
+          </div> <!-- /container -->
+
+          <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+          <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+
+
+          <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.js"><\/script>')</script>
+          <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+          <script src="js/vendor/bootstrap.min.js"></script>
+          <script type="text/javascript" src="js/vendor/jquery-1.10.1.js"></script>
+
+          <script src="js/landing.js"></script>
+
+        </body>
+        </html>

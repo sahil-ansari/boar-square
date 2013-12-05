@@ -4,7 +4,7 @@
    Author's custom styles
    ========================================================================== */
 
-html {
+   html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -48,6 +48,60 @@ body {
 /* buttons for landing page */
 #landing-date-planning {
 
+
+}
+
+.addVenue {
+
+    max-width: 30%;
+    min-height: 150px;
+    background-color: #428bca;
+    opacity: 1;
+    border-radius: 6px;
+    margin-bottom: 2px;
+
+}
+
+#venue1 {
+
+}
+
+#venue2 {
+
+
+}
+
+#venue3 {
+   
+
+}
+
+.price {
+    float: right;
+    margin: 0 20px;
+
+}
+
+.trending {
+    float: right;
+    margin: 0 10px;
+}
+
+
+.landing-form {
+  width: 30%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555555;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
 =======
