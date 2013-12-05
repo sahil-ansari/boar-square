@@ -1,3 +1,41 @@
+ var environment = {
+    "Coffee": {
+        previousCategory: null, 
+        nextCategory: "Museum",
+        places: [ 
+            {name: "Stumptown", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
+        ] 
+    },
+    "Museum": {
+        previousCategory: "Coffee",
+        nextCategory: "Restaurant",
+        places: [
+            {name: "Met", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "History Museum", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Guggenheim", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
+        ]
+    },
+    "Restaurant": {
+        previousCategory: "Museum",
+        nextCategory: "Bar",
+        places: [
+            {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Thai Market", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
+        ]
+    }
+    ,
+    "Bar": {
+        previousCategory: "Restaurant",
+        nextCategory: null,
+        places: [
+            {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+        ] 
+    }
+};
+
+
+
 $(document).ready(function (){
 
     var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
@@ -14,7 +52,6 @@ $(document).ready(function (){
     var $duration = $('#duration')[0];
 
     function toVenueObject(v){ console.log("raw venue object from api:"); 
-
         console.dir(v);
         if('price' in v.venue)          //some places don't list prices which throws an error
             pr = Array(v.venue.price.tier+1).join('$');
@@ -39,7 +76,6 @@ $(document).ready(function (){
     }
     //console.dir($area);
     
-
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list
                           // of recommended nearby venues
@@ -58,8 +94,6 @@ $(document).ready(function (){
         },'text');
     });
 
-
-
     var map;
     var markersInMap = [];
 
@@ -75,37 +109,19 @@ $(document).ready(function (){
 
     var selectedPathOptions = {
         dashArray: null,
-        weight: 4,
+        weight: 8,
         opacity: 1.0
     };
     var possiblePathOptions = {
         dashArray: '5, 10',
-        weight: 3,
+        weight: 6,
         opacity: 0.5
     };
 
     initMap();
     setIteneraryIcons();
-    var currentLocations = [
-        [
-            {point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
-        ],
-        [
-            {point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-            {point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
-        ],
-        [
-            {point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-            {point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
-        ],
-        [
-            {point: [37.65, -122.3], selected: true, pathsTo: [], pathsFrom: []}
-        ]
-    ];
-
-    addLocations(currentLocations);
+   
+    addLocations(environment);
 
     function initMap() {
         var options ={
@@ -123,167 +139,200 @@ $(document).ready(function (){
     }
 
     function setIteneraryIcons() {
+        // category = environment[environment.keys[0]];
+        // column = $('#itenerary-column'); 
+
+        // idx = 0; 
+        // while (category != null) {
+        //     column.append("<div class='itenerary-item'> \
+        //       <span class='itenerary-icon'>1</span> \
+        //       <span class='itenerary-item-text'>" +Sick-ass Cofeee</span>
+        //     </div>
+
+
+        // }
         for (var i=0; i<iToColor.length; i++) {
             var name = '#itenerary' + (i+1);
+            var arrowName = '#itenerary-arrow' + (i+1);
             $(name).css('background-color', iToColor[i]);
+            $(arrowName).css('color', iToColor[i]);
         }
     }
-
-    $("#select2a").click(function() {
-        changeSelection('2a');
-    });
-    $("#select2b").click(function() {
-        changeSelection('2b');
-    });
 
     function changeSelection(indexKey) {
-        var letter = indexKey.substring(indexKey.length-1);
-        var iIndex = parseInt(indexKey.substring(0, indexKey.length-1)) - 1; // coerce to number
-        var jIndex = getJ(letter);
+        var pieces = indexKey.split('_');
 
-        /* clear the old relevant stuff */
-        var locOptions = currentLocations[iIndex];
-        for (var j=0; j<locOptions.length; j++) {
-            var loc = locOptions[j];
-            loc.selected = false;
-            loc.marker.setOpacity(0.5);
-            deselectPaths(loc.pathsTo);
-            deselectPaths(loc.pathsFrom);
-        }
+        category = pieces[0]; 
+        id = pieces[1]; 
 
-        /* highlight the new relevant stuff */
-        var newLoc = locOptions[jIndex];
-        newLoc.selected = true;
-        newLoc.marker.setOpacity(1.0);
-        if (iIndex > 0) {                 /* gotta highlight path to this guy */
-            var prevSelectedLoc = getSelectedLoc(currentLocations[iIndex-1]);
-            selectPathWithSource(newLoc.pathsTo, prevSelectedLoc);
-        }
-        if (iIndex < currentLocations.length - 1) {   /* gotta highlight path from this guy */
-            var nextSelectedLoc = getSelectedLoc(currentLocations[iIndex+1]);
-            selectPathWithSource(nextSelectedLoc.pathsTo, newLoc);
-        }
+        selectedCategory = environment[category]; 
+        selectedPlace = _(selectedCategory.places).find(function(place){ 
+            return place.marker._leaflet_id == indexKey;
+        });
+
+        currentlySelectedPlace = _(selectedCategory.places).find(function(place){
+            return place.selected
+        });
+
+        setMarkerSelected(currentlySelectedPlace, category, false); 
+        setMarkerSelected(selectedPlace, category,  true); 
     }
 
-    function deselectPaths(paths) {
-        for (var i=0; i<paths.length; i++) {
-            paths[i].line.setStyle(possiblePathOptions);
+    function setMarkerSelected(place, category, isSelected) {
+        place.selected = isSelected; 
+        
+        previousCategory = environment[category].previousCategory; 
+        nextCategory = environment[category].nextCategory; 
+
+        previousSelected = null; 
+        nextSelected = null; 
+
+        if (previousCategory) {
+            previousSelected = _(environment[previousCategory].places).find(function(place) {
+                return place.selected; 
+            });
+            
+            var prevPath = _(place.pathsTo).find(function (path) {
+                return path.adj.marker._leaflet_id == previousSelected.marker._leaflet_id;
+            });
         }
+        
+        if (nextCategory) {
+            nextSelected = _(environment[nextCategory].places).find(function(place) {
+                return place.selected; 
+            });  
+
+            var nextPath = _(place.pathsFrom).find(function (path) {
+                return path.adj.marker._leaflet_id == nextSelected.marker._leaflet_id;
+            });
+        }
+
+        if (isSelected) {
+            newOpacity = 1.0;
+            newOptions = selectedPathOptions;
+            
+        } else {
+            newOpacity = 0.5; 
+            newOptions = possiblePathOptions;
+        }
+
+        place.marker.setOpacity(newOpacity);
+        if(nextPath)
+            nextPath.edge.setStyle(newOptions);
+        if(prevPath)
+            prevPath.edge.setStyle(newOptions); 
     }
 
-    function selectPathWithSource(paths, source) {
-        for (var i=0; i<paths.length; i++) {
-            var path = paths[i];
-            if (path.source == source) {
-                path.line.setStyle(selectedPathOptions);
+    function createPaths(startLoc, destinations, lineColor) {
+        for (var i=0; i<destinations.length; i++) {
+            var selectedLine = L.polyline([startLoc.point, destinations[i].point]).addTo(map);
+            
+            if (startLoc.selected && destinations[i].selected) {
+                selectedLine.setStyle(selectedPathOptions);
+                drawArrows(selectedLine, lineColor, 0.8, 75);
             }
+            else {
+                selectedLine.setStyle(possiblePathOptions);
+                drawArrows(selectedLine, lineColor, 0.8, 120);
+            }
+            selectedLine.setStyle({color: lineColor});
+            startLoc.pathsFrom.push({edge: selectedLine, adj: destinations[i]});
+            destinations[i].pathsTo.push({edge: selectedLine, adj: startLoc});
         }
     }
+
 
     /* 
     takes an array of arrays of points, where each sub-array contains the options for location
     number one in date.
     */
     function addLocations(locations) {
-        for (var i=0; i<locations.length; i++) {
-            var locOptions = locations[i];
-            var iColor = iToColor[i];
+        idx = 0;
+        for (category in environment) {
+            typeOfPlace = environment[category];
+            var locOptions = typeOfPlace.places
+            typeOfPlace.color = iToColor[idx]; 
+
+            option_div = $('#option-column');
+            option_div.append("<div>");
+            option_div.append("<div id='category_header'><h3>" + category + " </h3></div>");
+
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
-                var marker;
-                if (loc.selected) {                     // the highlighted option
-                    marker = L.marker(loc.point);
-                    if (i < locations.length - 1) {
-                        var selectedLoc = getSelectedLoc(locations[i+1]);
-                        var unselectedLocs = getUnselectedLocs(locations[i+1]);
-                        var selectedLine = drawSelectedPath([loc.point, selectedLoc.point], iColor);      // highlighted line
-                        selectedLoc.pathsTo.push({'line': selectedLine, 'source': loc});
-                        loc.pathsFrom.push({'line': selectedLine, 'dest': selectedLoc});
+                
 
-                        drawPossiblePaths(loc, unselectedLocs, iColor); // dotted lines
-                    }
+                var marker = L.marker(loc.point);
+                
+                if (!loc.selected)  
+                    marker.setOpacity(0.5)                  
+
+                if (typeOfPlace.nextCategory) {
+                    nextTypeOfPlace = environment[typeOfPlace.nextCategory];
+                    createPaths(loc, nextTypeOfPlace.places, typeOfPlace.color); 
                 }
-                else {
-                    marker = L.marker(loc.point, {opacity: 0.5});
-                    if (i < locations.length - 1) {
-                        drawPossiblePaths(loc, locations[i+1], iColor); // all dotted lines
-                    }
-                }
+
                 marker.on('click', markerClicked);
                 marker.on('mouseover', markerMouseOver);
                 marker.on('mouseout', markerMouseLeft)
-                marker.bindLabel(getLabel(i, j), {
+               
+                marker.bindLabel(loc.name, {
                     noHide: true,
-                    className: 'marker-label',
+                    classcatgory: 'marker-label',
                 }).showLabel();
+               
                 marker.bindPopup('Yum yum yum yum yum a location description', {
                     closeButton: false,
                 });
+                
                 marker.addTo(map);
                 markersInMap.push(marker);
+                marker._leaflet_id = category + "_" + marker._leaflet_id;
+
+                
+                thumbnailDiv = $("<div/>", {
+                    "class": "place_thumbnail"
+                    
+                }).appendTo(option_div); 
+
+                $( "<img/>", {
+                  "src": "img/placeholder.jpg",
+                  "alt": "",
+                  "width": "60",
+                  "height": "60",
+                  "id": "t-"+ marker._leaflet_id,
+                  "class": "thumb",
+                  click: function(e) {
+                    marker_id = this.id.split('-')[1];
+                    thumbnailClicked(marker_id);
+                  }
+                }).appendTo(thumbnailDiv);
+                
+
+                thumbnailDiv.append(loc.name);
+
+
+                // just_added = option_div.children().last(); 
+                // just_added_thumbnail = just_added.children('img');
+                // just_added.click(function() {
+                //     thumbnailClicked(marker._leaflet_id)
+                // }
+                // )
+
+                
                 loc.marker = marker;
             }
+            idx += 1; 
+
+            option_div.append("<hr class='clear_both'></div>");
         }
     }
-
-    function getSelectedLoc(locArray) {
-        for (var i=0; i<locArray.length; i++) {
-            if (locArray[i].selected)
-                return locArray[i];
-        }
-        return null;
-    }
-
-    function getUnselectedLocs(locArray) {
-        return locArray.filter(function(loc) {
-            return loc.selected == false;
-        });
-    }
-
-    function getLabel(i, j) {
-        var jLabels = ['a', 'b', 'c', 'd'];
-        return (i+1) + jLabels[j];
-    }
-
-    function getJ(label) {
-        var labelToJ = {
-            'a': 0,
-            'b': 1,
-            'c': 2,
-            'd': 3
-        };
-        return labelToJ[label];
-    }
-
-    function drawPossiblePaths(startLoc, destinations, color) {
-        for (var i=0; i<destinations.length; i++) {
-            var dest = destinations[i];
-            var line = drawPossiblePath([startLoc.point, dest.point], color);
-            dest.pathsTo.push({'line': line, 'source': startLoc});
-            startLoc.pathsFrom.push({'line': line, 'dest': dest});
-        }
-    }
-
-    function drawSelectedPath(points, lineColor) {
-        var selectedLine = L.polyline(points, selectedPathOptions).addTo(map);
-        selectedLine.setStyle({color: lineColor});
-        drawArrows(selectedLine, lineColor, 0.8, 75);
-        return selectedLine;
-    }
-
-    function drawPossiblePath(points, lineColor) {
-        var possibleLine = L.polyline(points, possiblePathOptions).addTo(map);
-        possibleLine.setStyle({color: lineColor});
-        drawArrows(possibleLine, lineColor, 0.8, 120);
-        return possibleLine;
-    }
-
+  
     function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
         var arrow = L.polylineDecorator(line, {
             patterns: [
                 {
                     offset: '20%', repeat: repeatVal, 
-                    symbol: L.Symbol.arrowHead({pixelSize: 12, 
+                    symbol: L.Symbol.arrowHead({pixelSize: 20, 
                         pathOptions: {
                             color: arrowColor, 
                             weight: 3, 
@@ -310,15 +359,13 @@ $(document).ready(function (){
         markersInMap = [];
     }
 
-    $(document).on("click", ".marker-label", changePath);
-    function changePath(ev) {
-        var label = $(ev.target);
-        var key = label.html();
-        changeSelection(key);
+    function thumbnailClicked(leaflet_id){
+        changeSelection(leaflet_id);
     }
 
     function markerClicked(ev) {
-        console.log(ev);
+        tag = ev.target; 
+        changeSelection(tag._leaflet_id)
     }
 
     function markerMouseOver(ev) {

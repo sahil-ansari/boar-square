@@ -23,13 +23,23 @@ body {
 
 /* our three main columns */
 .long-col {
+    border-right: 1px #aaa solid;
+    margin-top: 5px;
+}
 
+#option-column {
+    overflow-y:auto;
+    height:650px;
+}
+
+#itenerary-column {
+    border: none;
 }
 
 /* the map, of course */
 #map {
     height: 100%;
-    min-height: 600px;
+    min-height: 650px;
 }
 
 .marker-label {
@@ -39,7 +49,15 @@ body {
     cursor: pointer;
 }
 
-<<<<<<< HEAD
+.centered {
+    text-align: center;
+}
+
+.itenerary-column-header {
+    padding-bottom: 10px;
+    text-align: center;
+}
+
 /* helper class for hiding */
 .hidden {
     display: none;
@@ -104,7 +122,19 @@ body {
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
-=======
+/* icon for third column */
+.itenerary-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.itenerary-item {
+
+}
+
 /* icon for third column */
 .itenerary-icon {
     width: 40px;
@@ -116,8 +146,33 @@ body {
     line-height: 35px;
     font-size: 1.5em;
 }
->>>>>>> 9ccbe4da3902cc65b3f24d31011075d08bb0c9dd
 
+.itenerary-item-text {
+    padding-left: 5px;
+    font-size: 1.2em;
+}
+
+.itenerary-arrow-transition {
+    text-align: center;
+}
+
+.place_thumbnail
+{
+    float: left;
+    width: 60px;
+    margin: 0 15px 15px 0;
+    padding: 5px;
+    text-align: center;
+}
+
+.thumb {
+  border: 1px solid gray ;
+}
+.thumb:hover {
+  border: 2px solid green;
+}
+
+.clear_both { clear: both; }
 
 
 
