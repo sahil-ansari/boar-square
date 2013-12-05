@@ -1,3 +1,38 @@
+ var environment = {
+    "Coffee": {
+        previousCategory: null, 
+        nextCategory: "Museum",
+        places: [ 
+            {name: "Stumptown", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
+        ] 
+    },
+    "Museum": {
+        previousCategory: "Coffee",
+        nextCategory: "Restaurant",
+        places: [
+            {name: "Met", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "History Museum", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Guggenheim", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
+        ]
+    },
+    "Restaurant": {
+        previousCategory: "Museum",
+        nextCategory: "Bar",
+        places: [
+            {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Thai Market", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
+        ]
+    },
+    "Bar": {
+        previousCategory: "Restaurant",
+        nextCategory: null,
+        places: [
+            {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+        ] 
+    }
+};
+
 $(document).ready(function (){
 
     var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
@@ -38,7 +73,6 @@ $(document).ready(function (){
     }
     //console.dir($area);
     
-
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list
                           // of recommended nearby venues
@@ -56,8 +90,6 @@ $(document).ready(function (){
     
         },'text');
     });
-
-
 
     var map;
     var markersInMap = [];
@@ -79,48 +111,13 @@ $(document).ready(function (){
     };
     var possiblePathOptions = {
         dashArray: '5, 10',
-        weight: 2,
+        weight: 6,
         opacity: 0.5
     };
 
     initMap();
     setIteneraryIcons();
    
-    var environment = {
-        "Coffee": {
-            previousCategory: null, 
-            nextCategory: "Museum",
-            places: [ 
-                {name: "Stumptown", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
-            ] 
-        },
-        "Museum": {
-            previousCategory: "Coffee",
-            nextCategory: "Restaurant",
-            places: [
-                {name: "Met", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-                {name: "History Museum", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-                {name: "Guggenheim", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
-            ]
-        },
-        "Restaurant": {
-            previousCategory: "Museum",
-            nextCategory: "Bar",
-            places: [
-                {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-                {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-                {name: "Thai Market", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
-            ]
-        },
-        "Bar": {
-            previousCategory: "Restaurant",
-            nextCategory: null,
-            places: [
-                {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
-            ] 
-        }
-    };
-
     addLocations(environment);
 
     function initMap() {
@@ -181,7 +178,7 @@ $(document).ready(function (){
             });
             
             var prevPath = _(place.pathsTo).find(function (path) {
-                return path.adj._leaflet_id == previousSelected._leaflet_id;
+                return path.adj.marker._leaflet_id == previousSelected.marker._leaflet_id;
             });
         }
         
@@ -191,23 +188,24 @@ $(document).ready(function (){
             });  
 
             var nextPath = _(place.pathsFrom).find(function (path) {
-                return path.adj._leaflet_id == nextSelected._leaflet_id;
+                return path.adj.marker._leaflet_id == nextSelected.marker._leaflet_id;
             });
         }
 
         if (isSelected) {
-            place.marker.setOpacity(1.0);
-            if(nextPath)
-                nextPath.edge.setStyle(selectedPathOptions);
-            if (prevPath)
-                prevPath.edge.setStyle(selectedPathOptions); 
+            newOpacity = 1.0;
+            newOptions = selectedPathOptions;
+            
         } else {
-            place.marker.setOpacity(0.5);
-            if(nextPath)
-                nextPath.edge.setStyle(possiblePathOptions);
-            if (prevPath)
-                prevPath.edge.setStyle(possiblePathOptions); 
+            newOptions = 0.5; 
+            newOptions = possiblePathOptions;
         }
+
+        place.marker.setOpacity(newOptions);
+        if(nextPath)
+            nextPath.edge.setStyle(newOptions);
+        if(prevPath)
+            prevPath.edge.setStyle(newOptions); 
     }
 
 
@@ -283,10 +281,10 @@ $(document).ready(function (){
                     symbol: L.Symbol.arrowHead({pixelSize: 20, 
                         pathOptions: {
                             color: arrowColor, 
-                            weight: 0, 
+                            weight: 3, 
                             stroke: true, 
                             opacity: arrowOpacity,
-                            fillOpacity: 0.0
+                            fillOpacity: 0.6
                         }
                     })
                 }
