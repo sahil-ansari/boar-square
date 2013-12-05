@@ -17,21 +17,21 @@
     },
     "Restaurant": {
         previousCategory: "Museum",
-        nextCategory: null,
+        nextCategory: "Bar",
         places: [
             {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
             {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
             {name: "Thai Market", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
         ]
     }
-    //,
-    // "Bar": {
-    //     previousCategory: "Restaurant",
-    //     nextCategory: null,
-    //     places: [
-    //         {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
-    //     ] 
-    // }
+    ,
+    "Bar": {
+        previousCategory: "Restaurant",
+        nextCategory: null,
+        places: [
+            {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+        ] 
+    }
 };
 
 
@@ -139,6 +139,18 @@ $(document).ready(function (){
     }
 
     function setIteneraryIcons() {
+        // category = environment[environment.keys[0]];
+        // column = $('#itenerary-column'); 
+
+        // idx = 0; 
+        // while (category != null) {
+        //     column.append("<div class='itenerary-item'> \
+        //       <span class='itenerary-icon'>1</span> \
+        //       <span class='itenerary-item-text'>" +Sick-ass Cofeee</span>
+        //     </div>
+
+
+        // }
         for (var i=0; i<iToColor.length; i++) {
             var name = '#itenerary' + (i+1);
             var arrowName = '#itenerary-arrow' + (i+1);
@@ -211,7 +223,6 @@ $(document).ready(function (){
             prevPath.edge.setStyle(newOptions); 
     }
 
-
     function createPaths(startLoc, destinations, lineColor) {
         for (var i=0; i<destinations.length; i++) {
             var selectedLine = L.polyline([startLoc.point, destinations[i].point]).addTo(map);
@@ -229,6 +240,7 @@ $(document).ready(function (){
             destinations[i].pathsTo.push({edge: selectedLine, adj: startLoc});
         }
     }
+
 
     /* 
     takes an array of arrays of points, where each sub-array contains the options for location
@@ -271,13 +283,34 @@ $(document).ready(function (){
                 marker.bindPopup('Yum yum yum yum yum a location description', {
                     closeButton: false,
                 });
-               
+                
+                marker.addTo(map);
+                markersInMap.push(marker);
                 marker._leaflet_id = category + "_" + marker._leaflet_id;
 
-                onClickCall = "thumbnailClicked(\'" + marker._leaflet_id + "\')"
-                option_div.append("<div class='place_thumbnail'> " +
-                                  " <img src='img/placeholder.jpg' alt='' width='60' height='60'><br />" + 
-                                  loc.name + "</div>")
+                
+                thumbnailDiv = $("<div/>", {
+                    "class": "place_thumbnail"
+                    
+                }).appendTo(option_div); 
+
+                $( "<img/>", {
+                  "src": "img/placeholder.jpg",
+                  "alt": "",
+                  "width": "60",
+                  "height": "60",
+                  "id": "t-"+ marker._leaflet_id,
+                  "class": "thumb",
+                  click: function(e) {
+                    marker_id = this.id.split('-')[1];
+                    thumbnailClicked(marker_id);
+                  }
+                }).appendTo(thumbnailDiv);
+                
+
+                thumbnailDiv.append(loc.name);
+
+
                 // just_added = option_div.children().last(); 
                 // just_added_thumbnail = just_added.children('img');
                 // just_added.click(function() {
@@ -285,8 +318,6 @@ $(document).ready(function (){
                 // }
                 // )
 
-                marker.addTo(map);
-                markersInMap.push(marker);
                 
                 loc.marker = marker;
             }

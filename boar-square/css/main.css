@@ -28,7 +28,8 @@ body {
 }
 
 #option-column {
-
+    overflow-y:auto;
+    height:650px;
 }
 
 #itenerary-column {
@@ -38,7 +39,7 @@ body {
 /* the map, of course */
 #map {
     height: 100%;
-    min-height: 600px;
+    min-height: 650px;
 }
 
 .marker-label {
@@ -108,6 +109,13 @@ body {
     margin: 0 15px 15px 0;
     padding: 5px;
     text-align: center;
+}
+
+.thumb {
+  border: 1px solid gray ;
+}
+.thumb:hover {
+  border: 2px solid green;
 }
 
 .clear_both { clear: both; }
