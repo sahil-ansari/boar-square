@@ -200,11 +200,11 @@ $(document).ready(function (){
             newOptions = selectedPathOptions;
             
         } else {
-            newOptions = 0.5; 
+            newOpacity = 0.5; 
             newOptions = possiblePathOptions;
         }
 
-        place.marker.setOpacity(newOptions);
+        place.marker.setOpacity(newOpacity);
         if(nextPath)
             nextPath.edge.setStyle(newOptions);
         if(prevPath)
