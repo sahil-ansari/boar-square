@@ -16,6 +16,18 @@ body {
     width: 100%;   
 }
 
+footer {
+    color: #666;
+    background: #222;
+    padding: 17px 0 18px 0;
+    border-top: 1px solid #000;
+}
+footer a {
+    color: #999;
+}
+footer a:hover {
+    color: #efefef;
+}
 /* override the bootstrap container width */
 .container {
     max-width: 95%;
@@ -29,7 +41,7 @@ body {
 
 #option-column {
     overflow-y:auto;
-    height:650px;
+    height:600px;
 }
 
 #itenerary-column {
@@ -39,7 +51,7 @@ body {
 /* the map, of course */
 #map {
     height: 100%;
-    min-height: 650px;
+    min-height: 600px;
 }
 
 .marker-label {

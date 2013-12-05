@@ -1,4 +1,6 @@
  var environment = {
+    "__START__": {nextCategory: "Coffee"},
+
     "Coffee": {
         previousCategory: null, 
         nextCategory: "Museum",
@@ -110,12 +112,14 @@ $(document).ready(function (){
     var selectedPathOptions = {
         dashArray: null,
         weight: 8,
-        opacity: 1.0
+        opacity: 1.0,
+        color: "#2a6496"
     };
     var possiblePathOptions = {
         dashArray: '5, 10',
         weight: 6,
-        opacity: 0.5
+        opacity: 0.5,
+        color: "#E6A45E"
     };
 
     initMap();
@@ -138,24 +142,27 @@ $(document).ready(function (){
         map.addLayer(cloudmade);
     }
 
+    function findSelectedInCategory(category) {
+        return _(environment[category].places).find(function(place) {
+            return place.selected;
+        })
+    }
+
     function setIteneraryIcons() {
-        // category = environment[environment.keys[0]];
-        // column = $('#itenerary-column'); 
+        category = environment.__START__.nextCategory;
+        column = $('#itenerary-div');
+        column.empty(); 
 
-        // idx = 0; 
-        // while (category != null) {
-        //     column.append("<div class='itenerary-item'> \
-        //       <span class='itenerary-icon'>1</span> \
-        //       <span class='itenerary-item-text'>" +Sick-ass Cofeee</span>
-        //     </div>
-
-
-        // }
-        for (var i=0; i<iToColor.length; i++) {
-            var name = '#itenerary' + (i+1);
-            var arrowName = '#itenerary-arrow' + (i+1);
-            $(name).css('background-color', iToColor[i]);
-            $(arrowName).css('color', iToColor[i]);
+        idx = 0; 
+        while (category != null) {
+            column.append("<div class='itenerary-item'> \
+                              <span class='itenerary-icon'>" + idx + "</span> \
+                              <span class='itenerary-item-text' id='itenerary_'" + category + "'>" + findSelectedInCategory(category).name + "</span> \
+                           </div>");
+            category = environment[category].nextCategory;
+            if (category)
+                column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-4x'></i></div>");
+            idx += 1; 
         }
     }
 
@@ -176,6 +183,12 @@ $(document).ready(function (){
 
         setMarkerSelected(currentlySelectedPlace, category, false); 
         setMarkerSelected(selectedPlace, category,  true); 
+
+        // itenerary_piece = $('#itenerary_' + category);
+        // itenerary_piece.fadeOut( "slow" );
+        // itenerary_piece.html = findSelectedInCategory(category).name; 
+        // itenerary_piece.fadeIn("slow");
+        setIteneraryIcons();
     }
 
     function setMarkerSelected(place, category, isSelected) {
@@ -229,13 +242,13 @@ $(document).ready(function (){
             
             if (startLoc.selected && destinations[i].selected) {
                 selectedLine.setStyle(selectedPathOptions);
-                drawArrows(selectedLine, lineColor, 0.8, 75);
+                // drawArrows(selectedLine, lineColor, 0.8, 75);
             }
             else {
                 selectedLine.setStyle(possiblePathOptions);
-                drawArrows(selectedLine, lineColor, 0.8, 120);
+                // drawArrows(selectedLine, lineColor, 0.8, 120);
             }
-            selectedLine.setStyle({color: lineColor});
+            // selectedLine.setStyle({color: lineColor});
             startLoc.pathsFrom.push({edge: selectedLine, adj: destinations[i]});
             destinations[i].pathsTo.push({edge: selectedLine, adj: startLoc});
         }
@@ -249,13 +262,15 @@ $(document).ready(function (){
     function addLocations(locations) {
         idx = 0;
         for (category in environment) {
+            if (category == '__START__')
+                continue;
             typeOfPlace = environment[category];
             var locOptions = typeOfPlace.places
             typeOfPlace.color = iToColor[idx]; 
 
             option_div = $('#option-column');
             option_div.append("<div>");
-            option_div.append("<div id='category_header'><h3>" + category + " </h3></div>");
+            option_div.append("<div id='category_header_" + category + "'><h3>" + category + " </h3></div>");
 
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
@@ -307,18 +322,7 @@ $(document).ready(function (){
                   }
                 }).appendTo(thumbnailDiv);
                 
-
-                thumbnailDiv.append(loc.name);
-
-
-                // just_added = option_div.children().last(); 
-                // just_added_thumbnail = just_added.children('img');
-                // just_added.click(function() {
-                //     thumbnailClicked(marker._leaflet_id)
-                // }
-                // )
-
-                
+                thumbnailDiv.append(loc.name);  
                 loc.marker = marker;
             }
             idx += 1; 
@@ -369,6 +373,11 @@ $(document).ready(function (){
     }
 
     function markerMouseOver(ev) {
+        tag = ev.target; 
+        // category = tag._leaflet_id.split("_")[0]
+
+        // option_div = $('#option-column');
+        // option_div.scrollTo("#category_header_" + category);    
         ev.target.openPopup();
     }
 
