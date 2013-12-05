@@ -80,27 +80,37 @@ body {
 
 }
 
-    /* icon for third column */
-    .itenerary-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 20px;
-        border: 2px solid black;
-        text-align: center;
-        display: inline-block;
-        line-height: 35px;
-        font-size: 1.5em;
-    }
+/* icon for third column */
+.itenerary-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 2px solid black;
+    text-align: center;
+    display: inline-block;
+    line-height: 35px;
+    font-size: 1.5em;
+}
 
-    .itenerary-item-text {
-        padding-left: 5px;
-        font-size: 1.2em;
-    }
+.itenerary-item-text {
+    padding-left: 5px;
+    font-size: 1.2em;
+}
 
-    .itenerary-arrow-transition {
-        text-align: center;
-    }
+.itenerary-arrow-transition {
+    text-align: center;
+}
 
+.place_thumbnail
+{
+    float: left;
+    width: 60px;
+    margin: 0 15px 15px 0;
+    padding: 5px;
+    text-align: center;
+}
+
+.clear_both { clear: both; }
 
 
 

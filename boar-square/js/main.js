@@ -17,21 +17,24 @@
     },
     "Restaurant": {
         previousCategory: "Museum",
-        nextCategory: "Bar",
+        nextCategory: null,
         places: [
             {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
             {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
             {name: "Thai Market", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
         ]
-    },
-    "Bar": {
-        previousCategory: "Restaurant",
-        nextCategory: null,
-        places: [
-            {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
-        ] 
     }
+    //,
+    // "Bar": {
+    //     previousCategory: "Restaurant",
+    //     nextCategory: null,
+    //     places: [
+    //         {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+    //     ] 
+    // }
 };
+
+
 
 $(document).ready(function (){
 
@@ -238,10 +241,16 @@ $(document).ready(function (){
             var locOptions = typeOfPlace.places
             typeOfPlace.color = iToColor[idx]; 
 
+            option_div = $('#option-column');
+            option_div.append("<div>");
+            option_div.append("<div id='category_header'><h3>" + category + " </h3></div>");
+
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
-                var marker = L.marker(loc.point);
+                
 
+                var marker = L.marker(loc.point);
+                
                 if (!loc.selected)  
                     marker.setOpacity(0.5)                  
 
@@ -254,7 +263,7 @@ $(document).ready(function (){
                 marker.on('mouseover', markerMouseOver);
                 marker.on('mouseout', markerMouseLeft)
                
-                marker.bindLabel(typeOfPlace.places[j].name, {
+                marker.bindLabel(loc.name, {
                     noHide: true,
                     classcatgory: 'marker-label',
                 }).showLabel();
@@ -264,12 +273,26 @@ $(document).ready(function (){
                 });
                
                 marker._leaflet_id = category + "_" + marker._leaflet_id;
+
+                onClickCall = "thumbnailClicked(\'" + marker._leaflet_id + "\')"
+                option_div.append("<div class='place_thumbnail'> " +
+                                  " <img src='img/placeholder.jpg' alt='' width='60' height='60'><br />" + 
+                                  loc.name + "</div>")
+                // just_added = option_div.children().last(); 
+                // just_added_thumbnail = just_added.children('img');
+                // just_added.click(function() {
+                //     thumbnailClicked(marker._leaflet_id)
+                // }
+                // )
+
                 marker.addTo(map);
                 markersInMap.push(marker);
                 
                 loc.marker = marker;
             }
             idx += 1; 
+
+            option_div.append("<hr class='clear_both'></div>");
         }
     }
   
@@ -305,10 +328,14 @@ $(document).ready(function (){
         markersInMap = [];
     }
 
+    function thumbnailClicked(leaflet_id){
+        changeSelection(leaflet_id);
+    }
+
     function markerClicked(ev) {
         tag = ev.target; 
         changeSelection(tag._leaflet_id)
-      }
+    }
 
     function markerMouseOver(ev) {
         ev.target.openPopup();
