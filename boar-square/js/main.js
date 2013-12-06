@@ -117,7 +117,8 @@ var categoryColors = {
     'Hot spots': {color: 'rgba(25, 25, 200, 0.8)', 'class': 'hotspots-color'}
 };  
 
-function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
+//function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
+function addToEnvironment(category, placeObject, new_selected) {
     if (!environment[category]){
         console.error("Category: " + category + " doesn't exist! Can't add: " + new_name + "!");
         return;
@@ -131,10 +132,11 @@ function addToEnvironment(category, new_name, new_address, new_point, new_select
 
     environment[category].places.push(
     {
-         name: new_name, 
-         address: new_address,
-         point: new_point,
-         selected: new_selected, 
+         name: placeObject.name,
+         address: placeObject.address,
+         point: placeObject.point,
+         selected: new_selected,
+         specificCategory: placeObject.specificCategory,
          pathsTo: [], 
          pathsFrom: []
     });
@@ -166,9 +168,9 @@ function addNewCategory(name, previous, color, date_time) {
 
  // what the api takes as 'section' parameter
 function toNearbyVenues(venues){ 
-  //  console.log("raw venue object from api:"); 
-   // console.dir(venues);
-        var tmp = [venues.length];
+    console.log("raw venue object from api:"); 
+    console.dir(venues);
+    var tmp = [venues.length];
     
     for(var i = 0; i<venues.length; i++)
     {
@@ -553,7 +555,7 @@ function queryFoursquare(queryString, sectionName) {
             //lat = nearbyVenues[i].point[0];  
             //lon = nearbyVenues[i].point[1];
 
-            addToEnvironment(thisCategory, v.name, v.address, v.point, selected);
+            addToEnvironment(thisCategory, v, selected);
         }
         searchVenuesCounter++;
     },'text');
@@ -579,7 +581,7 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         var bestMatch = data.response.venues[0];
         var niceMatch = rawVenueToOurVenue(bestMatch);
         console.log(niceMatch);
-        addToEnvironment("Restaurant", niceMatch.name, niceMatch.address, niceMatch.point, false);
+        addToEnvironment("Restaurant", niceMatch, false);
         clearMap();
         addLocations(environment); // this is not quite right
     }, 'text');
