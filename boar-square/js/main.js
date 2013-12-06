@@ -1,4 +1,5 @@
  var environment = {
+    //
     "__START__": {nextCategory: "Coffee"},
 
     "Coffee": {
