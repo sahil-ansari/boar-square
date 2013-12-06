@@ -50,10 +50,6 @@ var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
 var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
 var cats;
 
-var $area = $('#place')[0];        //jquery objects for each input field
-var $startTime = $('#start')[0];
-var $duration = $('#duration')[0];
-
 var placeID = "";   
 var nearbyVenues = [];
 
@@ -473,6 +469,10 @@ $(document).ready(function (){
             setCategoryRef(data);
     });
     
+    var $area = $('#place')[0];        //jquery objects for each input field
+    var $startTime = $('#start')[0];
+    var $duration = $('#duration')[0];
+
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list of nearby places
                                    // of recommended nearby venues
