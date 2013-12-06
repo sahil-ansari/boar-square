@@ -63,6 +63,9 @@ $(document).ready(function (){
     var $startTime = $('#start')[0];
     var $duration = $('#duration')[0];
 
+    // what the api takes as 'section' parameter
+    var fourqquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending', 'specials'];
+
     function toNearbyVenues(venues){ 
         console.log("raw venue object from api:"); 
         console.dir(venues);
@@ -70,37 +73,41 @@ $(document).ready(function (){
         
         for(var i = 0; i<venues.length;i++)
         {
-        //console.log(venues[i].venue.name);
+            //console.log(venues[i].venue.name);
 
-        if('price' in venues[i].venue)          //some places don't list prices which throws an error
-            pr = Array(venues[i].venue.price.tier+1).join('$');
-        else
-            pr = "not listed";
-        var categ = function (){
-            result = "";
-            for(var i = 0; i<cats.response.categorories.length;i++){
-                cats.response.categories[i];
+            if('price' in venues[i].venue)          //some places don't list prices which throws an error
+                pr = Array(venues[i].venue.price.tier+1).join('$');
+            else
+                pr = "not listed";
+            var categ = function (){
+                result = "";
+                for(var i = 0; i<cats.response.categorories.length;i++){
+                    cats.response.categories[i];
+                }
             }
-        }
 
-        var ven = {
-            name: venues[i].venue.name,
-            id: venues[i].venue.id,
-            point: [venues[i].venue.location.lat, venues[i].venue.location.lng],
-            rating: venues[i].venue.rating,
-            url: venues[i].venue.url,               //the business' website
-            checkInsCount: venues[i].venue.stats.checkinsCount,
-            price: pr,
-            tips: venues[i].tips[0].text,
-            point: [venues[i].venue.location.lat,venues[i].venue.location.lng],                    
-            specificCategory: venues[i].venue.categories[0].name,
-            address: venues[i].venue.location.address+ " "+venues[i].venue.location.postalCode
-            //status: v.venue.hours.status    //number to  $$$ amount
+            var ven = {
+                name: venues[i].venue.name,
+                id: venues[i].venue.id,
+                point: [venues[i].venue.location.lat, venues[i].venue.location.lng],
+                rating: venues[i].venue.rating,
+                url: venues[i].venue.url,               //the business' website
+                checkInsCount: venues[i].venue.stats.checkinsCount,
+                price: pr,
+                point: [venues[i].venue.location.lat,venues[i].venue.location.lng],                    
+                specificCategory: venues[i].venue.categories[0].name,
+                address: venues[i].venue.location.address+ " "+venues[i].venue.location.postalCode
+                //status: v.venue.hours.status    //number to  $$$ amount
 
             };
+            if (venues[i].tips && venues[i].tips.length >= 1) {
+                ven.tip = venues[i].tips[0].text;
+            }
+            else {
+                ven.tip = '';
+            }
             //console.dir(ven);
             tmp[i]= ven;//push[ven];
-
          }
          
         return tmp;
@@ -127,20 +134,27 @@ $(document).ready(function (){
                           // of recommended nearby venues
         area = this.value; 
         console.log(area);
-        $.getJSON('https://api.foursquare.com/v2/venues/explore?near='+area+'&client_id='
-            +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
 
-        nearbyVenues = data.response.groups[0].items; //all the nearby places
-        //console.dir(nearbyVenues);    
-        //var p = toVenueObject(nearbyVenues[14]);
-        var temp = toNearbyVenues(nearbyVenues);
+        for (var i=0; i < 3; i++) {
+            var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + area + 
+                '&section=' + fourqquareSections[i] +
+                '&limit=8' + 
+                '&client_id=' + clientId + 
+                '&client_secret=' + secret + 
+                '&v=20120625';
 
-        nearbyVenues = temp;
+            $.getJSON(queryString, function( data ) {
+                nearbyVenues = data.response.groups[0].items; //all the nearby places
+                //console.dir(nearbyVenues);    
+                //var p = toVenueObject(nearbyVenues[14]);
+                var temp = toNearbyVenues(nearbyVenues);
 
-        console.dir("our objects with the stuff we want:");
-        console.dir(nearbyVenues);
-        
-        },'text');
+                nearbyVenues = temp;
+
+                console.dir("our objects with the stuff we want:");
+                console.dir(nearbyVenues);
+            },'text');
+        };
     });
 
     var map;
@@ -161,7 +175,7 @@ $(document).ready(function (){
         Museum: 'rgba(0, 225, 75, 0.8)',
         Restaurant: 'rgba(225, 0, 25, 0.8)',
         Bar: 'rgba(200, 200, 200, 0.8)'
-    }
+    };
 
     var selectedPathOptions = {
         dashArray: null,
