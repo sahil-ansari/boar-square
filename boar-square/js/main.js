@@ -55,6 +55,7 @@ var nearbyVenues = [];
 
 var map;
 var markersInMap = [];
+var resetMap = false;
 
 var selectedPathOptions = {
     dashArray: null,
@@ -86,7 +87,7 @@ var iToColor = [
         "#FF9933"    // orange
 ];
 
-var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending', 'specials'];
+var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending'];
 
 function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
     if (!environment[category]){
@@ -132,8 +133,8 @@ function addNewCategory(name, previous, color, date_time) {
 
  // what the api takes as 'section' parameter
 function toNearbyVenues(venues){ 
-    console.log("raw venue object from api:"); 
-    console.dir(venues);
+  //  console.log("raw venue object from api:"); 
+   // console.dir(venues);
         var tmp = [venues.length];
     
     for(var i = 0; i<venues.length;i++)
@@ -183,15 +184,15 @@ function setCategoryRef(apiCategories){
     cats = apiCategories;
     console.log("hi");
     for(var i = 0;i<cats.response.categories.length;i++) {
-        console.log(cats.response.categories[i].name);
+     //   console.log(cats.response.categories[i].name);
     }
 }
 
-function initMap() {
+function initMap(lat,lon) {
     var options ={
-        center: new L.LatLng(37.7, -122.2),
+        center: new L.LatLng(lat, lon),
         //center: new L.LatLng(40.77, -73.94),
-        zoom: 10
+        zoom: 12
     };
 
     map = new L.Map('map', options);
@@ -464,19 +465,41 @@ function getRandomColor()  {
 }
 
 function queryFoursquare(queryString, sectionName) {
+
+    var lat,lon;
     $.getJSON(queryString, function( data ) {
 
-        console.log('objects from section ' + sectionName);
+       // console.log('objects from section ' + sectionName);
         nearbyVenues = data.response.groups[0].items; //all the nearby places
-        //console.dir(nearbyVenues);    
-        //var p = toVenueObject(nearbyVenues[14]);
+
         var temp = toNearbyVenues(nearbyVenues);
 
         nearbyVenues = temp;
 
-        console.dir("our objects with the stuff we want:");
-        console.dir(nearbyVenues);
+        if(resetMap)
+        {   
+            console.dir(nearbyVenues[0].point[0]);//.venue.location.lat);
+            map.panTo(new L.LatLng(nearbyVenues[0].point[0], nearbyVenues[0].point[1]));
+            resetMap = false;
+        }
+        //console.dir("our objects with the stuff we want:");
+        //console.dir(nearbyVenues);
+    
+        for (var i=0;i<nearbyVenues.length;i++)
+        {   
+            console.log(nearbyVenues[i]);
+            console.dir(nearbyVenues[i].point);
+            //lat = nearbyVenues[i].point[0];  
+            //lon = nearbyVenues[i].point[1];
+            addToEnvironment("Cookies", "insomnia", "123 town", nearbyVenues[i].point, true);
+
+        }
+            addLocations(environment);
     },'text');
+        
+
+
+
 }
 
 $(document).ready(function (){
@@ -488,10 +511,11 @@ $(document).ready(function (){
     var $area = $('#place')[0];        //jquery objects for each input field
     var $startTime = $('#start')[0];
     var $duration = $('#duration')[0];
+    
 
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list of nearby places
-                                   // of recommended nearby venues
+        resetMap = true;                  // of recommended nearby venues
         area = this.value; 
         console.log(area);
 
@@ -506,7 +530,7 @@ $(document).ready(function (){
         };
     });
 
-    initMap();
+    initMap(37.7,-122.2);
     setIteneraryIcons();
     addNewCategory("Cookies", "Coffee", "park-color", "11 AM")
     addToEnvironment("Cookies", "insomnia", "123 town", [37.8, -122.25], true);
