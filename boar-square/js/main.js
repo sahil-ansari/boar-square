@@ -5,28 +5,31 @@
         previousCategory: null, 
         nextCategory: "Museum",
         categoryColorClass: "coffee-color",
+        categoryDateTime: "1 PM",
         places: [ 
-            {name: "Stumptown", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
+            {name: "Stumptown", address: "123 town", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
         ] 
     },
     "Museum": {
         previousCategory: "Coffee",
         nextCategory: "Restaurant",
         categoryColorClass: "park-color",
+        categoryDateTime: "2 PM",
         places: [
-            {name: "Met", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-            {name: "History Museum", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {name: "Guggenheim", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
+            {name: "Met", address: "123 town", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "History Museum", address: "123 town", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Guggenheim", address: "123 town", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
         ]
     },
     "Restaurant": {
         previousCategory: "Museum",
         nextCategory: "Bar",
         categoryColorClass: "museum-color",
+        categoryDateTime: "3 PM",
         places: [
-            {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-            {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {name: "Thai Market", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
+            {name: "#1 Chinese Food", address: "123 town", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "Mels", address: "123 town", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Thai Market", address: "123 town", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
         ]
     }
     ,
@@ -34,8 +37,9 @@
         previousCategory: "Restaurant",
         nextCategory: null,
         categoryColorClass: "bar-color",
+        categoryDateTime: "4 PM",
         places: [
-            {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+            {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
         ] 
     }
 };
@@ -159,10 +163,12 @@ $(document).ready(function (){
 
         idx = 1; 
         while (category != null) {
+            var selected = findSelectedInCategory(category);
             column.append("<div class='itenerary-item'> \
-                              <span class='itenerary-icon'>" + idx + "</span> \
-                              <span class='itenerary-item-text' id='itenerary_'" + category + "'>" + findSelectedInCategory(category).name + "</span> \
-                           </div>");
+                              <div class='itenerary-item-text' id='itenerary_'" + category + "'>" + selected.name + "</div>" +
+                              "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
+                              selected.address + "</div>" + 
+                           "</div>");
             category = environment[category].nextCategory;
             if (category)
                 column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-4x'></i></div>");
@@ -272,9 +278,11 @@ $(document).ready(function (){
             var locOptions = typeOfPlace.places
             typeOfPlace.color = iToColor[idx]; 
 
-            option_div = $('#option-column');
+            var option_div = $('#option-column');
             option_div.append('<div class="category-options">');
-            option_div.append("<div id='category_header_" + category + "'><h3>" + category + " </h3></div>");
+            option_div.append("<div id='category_header_" + category + "'>");
+            var iconClass = '"itenerary-option-icon ' + typeOfPlace.categoryColorClass + '"';
+            option_div.append("<h3> <span class=" + iconClass + ">" + (idx+1) + "</span> " + category + " </h3></div>");
 
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
