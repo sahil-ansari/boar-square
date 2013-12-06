@@ -49,6 +49,7 @@
 var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
 var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
 var cats;
+var categoryIds = {};
 
 var placeID = "";   
 var nearbyVenues = [];
@@ -144,12 +145,6 @@ function toNearbyVenues(venues){
             pr = Array(venues[i].venue.price.tier+1).join('$');
         else
             pr = "not listed";
-        var categ = function (){
-            result = "";
-            for(var i = 0; i<cats.response.categorories.length;i++){
-                cats.response.categories[i];
-            }
-        }
 
         var ven = {
             name: venues[i].venue.name,
@@ -183,8 +178,14 @@ function setCategoryRef(apiCategories){
     cats = apiCategories;
     console.log("hi");
     for(var i = 0;i<cats.response.categories.length;i++) {
-        console.log(cats.response.categories[i].name);
-    }
+        var cat = cats.response.categories[i];
+        categoryIds[cat.name] = cat.id;
+        for (var j=0; j<cat.categories.length; j++) {
+            var subcat = cat.categories[j];
+            //categoryIds[subcat.name] = subcat.id;
+        }
+    } 
+    console.log(categoryIds);
 }
 
 function initMap() {
@@ -479,11 +480,34 @@ function queryFoursquare(queryString, sectionName) {
     },'text');
 }
 
+function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
+    var queryString = 'https://api.foursquare.com/v2/venues/search?' +
+        'query=' + venueTerms + 
+        '&near=' + location + 
+        '&intent=browse' + 
+        '&limit=5' +
+        '&client_id=' + clientId + 
+        '&client_secret=' + secret + 
+        '&v=20120625';
+    if (categoryName !== null) {
+        var categoryId = categoryIds[categoryName];
+        queryString += '&categoryId=' + categoryId;
+    }
+    $.getJSON(queryString, function(data) {
+        console.log(venueTerms + ' results:');
+        console.log(data);
+
+        var bestMatch = data.response.venues[0];
+    }, 'text');
+}
+
 $(document).ready(function (){
     $.getJSON('https://api.foursquare.com/v2/venues/categories?client_id='
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
             setCategoryRef(data);
     });
+
+    querySpecificVenueFoursquare('mels burger', 'New York City', null);
     
     var $area = $('#place')[0];        //jquery objects for each input field
     var $startTime = $('#start')[0];
@@ -504,6 +528,17 @@ $(document).ready(function (){
                 '&v=20120625';
             queryFoursquare(queryString, foursquareSections[i]);
         };
+    });
+
+    $('#specific-venue').submit(function() {
+        var venueTerms = $("#specific-venue-query").val();
+        var currentArea = $($area).html();
+        if (currentArea == '') {
+            currentArea = 'San Francisco';
+        }
+        querySpecificVenueFoursquare(venueTerms, currentArea, null);
+
+        return false;
     });
 
     initMap();
