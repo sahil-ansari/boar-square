@@ -335,9 +335,8 @@ number one in date.
 */
 function addLocations(locations) {
     idx = 0;
-    for (category in environment) {  
-        if (category == '__START__')
-            continue;                       //whoa thats cool- henry
+    category = environment["__START__"].nextCategory;
+    while(category != null ) { 
         var typeOfPlace = environment[category];
         var locOptions = typeOfPlace.places
         typeOfPlace.color = iToColor[idx]; 
@@ -402,6 +401,7 @@ function addLocations(locations) {
         idx += 1; 
 
         option_div.append("<hr class='clear_both'></div>");
+        category = environment[category].nextCategory;
     }
 }
 
