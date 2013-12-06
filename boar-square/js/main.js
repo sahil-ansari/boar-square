@@ -56,6 +56,7 @@ var nearbyVenues = [];
 
 var map;
 var markersInMap = [];
+var resetMap = false;
 
 var selectedPathOptions = {
     dashArray: null,
@@ -87,7 +88,7 @@ var iToColor = [
         "#FF9933"    // orange
 ];
 
-var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending', 'specials'];
+var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending'];
 
 function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
     if (!environment[category]){
@@ -110,6 +111,8 @@ function addToEnvironment(category, new_name, new_address, new_point, new_select
          pathsTo: [], 
          pathsFrom: []
     });
+
+    console.log(environment[category]);
 }
 
 function addNewCategory(name, previous, color, date_time) {
@@ -133,44 +136,49 @@ function addNewCategory(name, previous, color, date_time) {
 
  // what the api takes as 'section' parameter
 function toNearbyVenues(venues){ 
-    console.log("raw venue object from api:"); 
-    console.dir(venues);
+  //  console.log("raw venue object from api:"); 
+   // console.dir(venues);
         var tmp = [venues.length];
     
     for(var i = 0; i<venues.length;i++)
     {
         //console.log(venues[i].venue.name);
+        var ven = rawVenueToOurVenue(venues[i].venue, venues[i].tips);
 
-        if('price' in venues[i].venue)          //some places don't list prices which throws an error
-            pr = Array(venues[i].venue.price.tier+1).join('$');
-        else
-            pr = "not listed";
-
-        var ven = {
-            name: venues[i].venue.name,
-            id: venues[i].venue.id,
-            point: [venues[i].venue.location.lat, venues[i].venue.location.lng],
-            rating: venues[i].venue.rating,
-            url: venues[i].venue.url,               //the business' website
-            checkInsCount: venues[i].venue.stats.checkinsCount,
-            price: pr,
-            point: [venues[i].venue.location.lat,venues[i].venue.location.lng],                    
-            specificCategory: venues[i].venue.categories[0].name,
-            address: venues[i].venue.location.address+ " "+venues[i].venue.location.postalCode
-            //status: v.venue.hours.status    //number to  $$$ amount
-
-        };
-        if (venues[i].tips && venues[i].tips.length >= 1) {
-            ven.tip = venues[i].tips[0].text;
-        }
-        else {
-            ven.tip = '';
-        }
         //console.dir(ven);
         tmp[i]= ven;//push[ven];
      }
      
     return tmp;
+}
+
+function rawVenueToOurVenue(venue, tips) {
+    var ven = {
+        name: venue.name,
+        id: venue.id,
+        point: [venue.location.lat, venue.location.lng],
+        rating: venue.rating,
+        url: venue.url,               //the business' website
+        checkInsCount: venue.stats.checkinsCount,
+        point: [venue.location.lat, venue.location.lng],                    
+        specificCategory: venue.categories[0].name,
+        address: venue.location.address + " " + venue.location.postalCode
+        //status: v.venue.hours.status    //number to  $$$ amount
+    };
+
+    if('price' in venue)          //some places don't list prices which throws an error
+        ven.price = Array(venue.price.tier+1).join('$');
+    else
+        ven.price = "not listed";
+
+    if (tips && tips.length >= 1) {
+        ven.tip = tips[0].text;
+    }
+    else {
+        ven.tip = '';
+    }
+
+    return ven;
 }
 
 function setCategoryRef(apiCategories){
@@ -188,11 +196,11 @@ function setCategoryRef(apiCategories){
     console.log(categoryIds);
 }
 
-function initMap() {
+function initMap(lat,lon) {
     var options ={
-        center: new L.LatLng(37.7, -122.2),
+        center: new L.LatLng(lat, lon),
         //center: new L.LatLng(40.77, -73.94),
-        zoom: 10
+        zoom: 12
     };
 
     map = new L.Map('map', options);
@@ -465,19 +473,38 @@ function getRandomColor()  {
 }
 
 function queryFoursquare(queryString, sectionName) {
+
+    var lat,lon;
     $.getJSON(queryString, function( data ) {
 
-        console.log('objects from section ' + sectionName);
+       // console.log('objects from section ' + sectionName);
         nearbyVenues = data.response.groups[0].items; //all the nearby places
-        //console.dir(nearbyVenues);    
-        //var p = toVenueObject(nearbyVenues[14]);
+
         var temp = toNearbyVenues(nearbyVenues);
 
         nearbyVenues = temp;
 
-        console.dir("our objects with the stuff we want:");
-        console.dir(nearbyVenues);
+        if(resetMap)
+        {   
+            console.dir(nearbyVenues[0].point[0]);//.venue.location.lat);
+            map.panTo(new L.LatLng(nearbyVenues[0].point[0], nearbyVenues[0].point[1]));
+            resetMap = false;
+        }
+        //console.dir("our objects with the stuff we want:");
+        //console.dir(nearbyVenues);
+    
+        for (var i=0;i<nearbyVenues.length;i++)
+        {   
+            console.log(nearbyVenues[i]);
+            console.dir(nearbyVenues[i].point);
+            //lat = nearbyVenues[i].point[0];  
+            //lon = nearbyVenues[i].point[1];
+            addToEnvironment("Cookies", "insomnia", "123 town", nearbyVenues[i].point, true);
+
+        }
+            addLocations(environment);
     },'text');
+        
 }
 
 function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
@@ -498,6 +525,10 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         console.log(data);
 
         var bestMatch = data.response.venues[0];
+        var niceMatch = rawVenueToOurVenue(bestMatch);
+        console.log(niceMatch);
+        addToEnvironment("Cookies", niceMatch.name, niceMatch.address, niceMatch.point, false);
+        addLocations(environment); // this is not quite right
     }, 'text');
 }
 
@@ -512,10 +543,11 @@ $(document).ready(function (){
     var $area = $('#place')[0];        //jquery objects for each input field
     var $startTime = $('#start')[0];
     var $duration = $('#duration')[0];
+    
 
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list of nearby places
-                                   // of recommended nearby venues
+        resetMap = true;                  // of recommended nearby venues
         area = this.value; 
         console.log(area);
 
@@ -541,7 +573,7 @@ $(document).ready(function (){
         return false;
     });
 
-    initMap();
+    initMap(37.7,-122.2);
     setIteneraryIcons();
     addNewCategory("Cookies", "Coffee", "park-color", "11 AM")
     addToEnvironment("Cookies", "insomnia", "123 town", [37.8, -122.25], true);
