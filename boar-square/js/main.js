@@ -4,6 +4,7 @@
     "Coffee": {
         previousCategory: null, 
         nextCategory: "Museum",
+        categoryColorClass: "coffee-color",
         places: [ 
             {name: "Stumptown", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
         ] 
@@ -11,6 +12,7 @@
     "Museum": {
         previousCategory: "Coffee",
         nextCategory: "Restaurant",
+        categoryColorClass: "park-color",
         places: [
             {name: "Met", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
             {name: "History Museum", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
@@ -20,6 +22,7 @@
     "Restaurant": {
         previousCategory: "Museum",
         nextCategory: "Bar",
+        categoryColorClass: "museum-color",
         places: [
             {name: "#1 Chinese Food", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
             {name: "Mels", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
@@ -30,6 +33,7 @@
     "Bar": {
         previousCategory: "Restaurant",
         nextCategory: null,
+        categoryColorClass: "bar-color",
         places: [
             {name: "1020", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
         ] 
@@ -153,7 +157,7 @@ $(document).ready(function (){
         column = $('#itenerary-div');
         column.empty(); 
 
-        idx = 0; 
+        idx = 1; 
         while (category != null) {
             column.append("<div class='itenerary-item'> \
                               <span class='itenerary-icon'>" + idx + "</span> \
@@ -264,18 +268,17 @@ $(document).ready(function (){
         for (category in environment) {
             if (category == '__START__')
                 continue;
-            typeOfPlace = environment[category];
+            var typeOfPlace = environment[category];
             var locOptions = typeOfPlace.places
             typeOfPlace.color = iToColor[idx]; 
 
             option_div = $('#option-column');
-            option_div.append("<div>");
+            option_div.append('<div class="category-options">');
             option_div.append("<div id='category_header_" + category + "'><h3>" + category + " </h3></div>");
 
             for (var j=0; j<locOptions.length; j++) {
                 var loc = locOptions[j];
                 
-
                 var marker = L.marker(loc.point);
                 
                 if (!loc.selected)  
@@ -288,11 +291,11 @@ $(document).ready(function (){
 
                 marker.on('click', markerClicked);
                 marker.on('mouseover', markerMouseOver);
-                marker.on('mouseout', markerMouseLeft)
+                marker.on('mouseout', markerMouseLeft);
                
                 marker.bindLabel(loc.name, {
                     noHide: true,
-                    classcatgory: 'marker-label',
+                    className: 'marker-label ' + typeOfPlace.categoryColorClass,
                 }).showLabel();
                
                 marker.bindPopup('Yum yum yum yum yum a location description', {
@@ -303,7 +306,6 @@ $(document).ready(function (){
                 markersInMap.push(marker);
                 marker._leaflet_id = category + "_" + marker._leaflet_id;
 
-                
                 thumbnailDiv = $("<div/>", {
                     "class": "place_thumbnail"
                     

@@ -55,8 +55,7 @@ footer a:hover {
 }
 
 .marker-label {
-    background-color: rgb(255, 0, 0);
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 18px;
     cursor: pointer;
 }
@@ -90,7 +89,6 @@ footer a:hover {
 }
 
 .itenerary-item {
-
 }
 
 /* icon for third column */
@@ -112,6 +110,25 @@ footer a:hover {
 
 .itenerary-arrow-transition {
     text-align: center;
+}
+
+.coffee-color {
+    background-color: rgba(255, 215, 128, 0.8);
+}
+
+.park-color {
+    background-color: rgba(0, 225, 75, 0.8);
+}
+
+.museum-color {
+    background-color: rgba(225, 0, 25, 0.8);
+}
+
+.bar-color {
+    background-color: rgba(200, 200, 200, 0.8);
+}
+
+.category-options {
 }
 
 .place_thumbnail
