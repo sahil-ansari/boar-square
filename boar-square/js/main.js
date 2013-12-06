@@ -161,10 +161,16 @@ function rawVenueToOurVenue(venue, tips) {
         url: venue.url,               //the business' website
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
-        specificCategory: venue.categories[0].name,
         address: venue.location.address + " " + venue.location.postalCode
         //status: v.venue.hours.status    //number to  $$$ amount
     };
+
+    if (venue.categories.length >= 1) {
+        ven.specificCategory = venue.categories[0].name;
+    }
+    else {
+        ven.specificCategory = 'No category';
+    }
 
     if('price' in venue)          //some places don't list prices which throws an error
         ven.price = Array(venue.price.tier+1).join('$');
@@ -564,10 +570,12 @@ $(document).ready(function (){
 
     $('#specific-venue').submit(function() {
         var venueTerms = $("#specific-venue-query").val();
-        var currentArea = $($area).html();
+        var currentArea = $($area).val();
+        console.log('specific venue query');
         if (currentArea == '') {
             currentArea = 'San Francisco';
         }
+        console.log(currentArea);
         querySpecificVenueFoursquare(venueTerms, currentArea, null);
 
         return false;
