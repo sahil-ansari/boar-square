@@ -581,7 +581,7 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         var bestMatch = data.response.venues[0];
         var niceMatch = rawVenueToOurVenue(bestMatch);
         console.log(niceMatch);
-        addToEnvironment("Restaurant", niceMatch, false);
+        addToEnvironment("Restaurant", niceMatch, true);
         clearMap();
         addLocations(environment); // this is not quite right
     }, 'text');
