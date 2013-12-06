@@ -7,7 +7,7 @@
         categoryColorClass: "coffee-color",
         categoryDateTime: "1 PM",
         places: [ 
-            {name: "Stumptown", address: "123 town", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
+            {name: "Stumptown", address: "123 town", specificCategory: "Cool Coffee", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
         ] 
     },
     "Museum": {
@@ -16,9 +16,9 @@
         categoryColorClass: "park-color",
         categoryDateTime: "2 PM",
         places: [
-            {name: "Met", address: "123 town", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-            {name: "History Museum", address: "123 town", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {name: "Guggenheim", address: "123 town", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
+            {name: "The Met", address: "123 town", specificCategory: "Art Museum", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "History Museum", address: "123 town", specificCategory: "History Museum", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Guggenheim", address: "123 town", specificCategory: "Art Museum", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
         ]
     },
     "Restaurant": {
@@ -27,9 +27,9 @@
         categoryColorClass: "museum-color",
         categoryDateTime: "3 PM",
         places: [
-            {name: "#1 Chinese Food", address: "123 town", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-            {name: "Mels", address: "123 town", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {name: "Thai Market", address: "123 town", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
+            {name: "#1 Chinese Food", address: "123 town", specificCategory: "Chinese Restaurant", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
+            {name: "Mels", address: "123 town", specificCategory: "Burger bar", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+            {name: "Thai Market", address: "123 town", specificCategory: "Thai Restaurant", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
         ]
     }
     ,
@@ -39,7 +39,7 @@
         categoryColorClass: "bar-color",
         categoryDateTime: "4 PM",
         places: [
-            {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+            {name: "1020", address: "123 town", specificCategory: "College bar", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []}
         ] 
     }
 };
@@ -90,9 +90,10 @@ $(document).ready(function (){
             rating: venues[i].venue.rating,
             url: venues[i].venue.url,               //the business' website
             checkInsCount: venues[i].venue.stats.checkinsCount,
-            price: pr, 
+            price: pr,
+            tips: venues[i].tips[0].text,
             point: [venues[i].venue.location.lat,venues[i].venue.location.lng],                    
-            category : venues[i].venue.categories[0].name,
+            specificCategory: venues[i].venue.categories[0].name,
             address: venues[i].venue.location.address+ " "+venues[i].venue.location.postalCode
             //status: v.venue.hours.status    //number to  $$$ amount
 
@@ -136,12 +137,9 @@ $(document).ready(function (){
 
         nearbyVenues = temp;
 
-
         console.dir("our objects with the stuff we want:");
         console.dir(nearbyVenues);
         
-
-    
         },'text');
     });
 
@@ -363,7 +361,7 @@ $(document).ready(function (){
                     className: 'marker-label ' + typeOfPlace.categoryColorClass,
                 }).showLabel();
                
-                marker.bindPopup('Yum yum yum yum yum a location description', {
+                marker.bindPopup(loc.specificCategory + ' - ' + loc.address, {
                     closeButton: false,
                 });
                 
