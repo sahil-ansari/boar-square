@@ -29,8 +29,10 @@ $(function () {
             e.preventDefault();
             e.stopPropagation(); 
           var searchPlace = $('#location').val();
+
+          var query = 'location=' + searchPlace;
           
-          window.location.replace("./index.html");
+          window.location.replace("./index.html?" + query);
   
     });
     

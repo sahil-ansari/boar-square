@@ -1,6 +1,12 @@
- var environment = {
-    "__START__": {nextCategory: "Coffee"},
+ var blankEnvironment = {
+    "__START__": {nextCategory: null}
+ };
 
+ var environment = {
+    "__START__": {nextCategory: null}
+    //"__START__": {nextCategory: "Coffee"}
+
+    /*
     "Coffee": {
         previousCategory: null, 
         nextCategory: "Museum",
@@ -44,6 +50,7 @@
             {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
         ] 
     }
+    */
 };
 
 var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
@@ -52,11 +59,18 @@ var cats;
 var categoryIds = {};
 
 var placeID = "";   
-var nearbyVenues = [];
+var nearbyVenues = {};
 
 var map;
 var markersInMap = [];
-var resetMap = false;
+var mapInitiated = false;
+var resetMap = true;
+
+var searchVenuesCounter = 0;
+var searchVenuesCounterLimit;
+var mostRecentCategoryAdded = "__START__";
+var timeForNextDate = 1;
+var currentArea = null;
 
 var selectedPathOptions = {
     dashArray: null,
@@ -72,13 +86,6 @@ var possiblePathOptions = {
     color: "#E6A45E"
 };
 
-var categoryColors = {
-    Coffee: 'rgba(255, 215, 128, 0.8)',
-    Museum: 'rgba(0, 225, 75, 0.8)',
-    Restaurant: 'rgba(225, 0, 25, 0.8)',
-    Bar: 'rgba(200, 200, 200, 0.8)'
-};  
-
 var iToColor = [
         "#0099FF",   // blue
         "#00CC99",   // green
@@ -89,6 +96,26 @@ var iToColor = [
 ];
 
 var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending'];
+var foursquareSectionToCat = {
+    'food': 'Restaurant',
+    'drinks': 'Bar',
+    'coffee': 'Coffee',
+    'shops': 'Shopping',
+    'arts': 'Museum',
+    'outdoors': 'Outdoors',
+    'sights': 'Sights',
+    'trending': 'Hot spots'
+};
+var categoryColors = {
+    Coffee: {color: 'rgba(255, 215, 128, 0.8)', 'class': 'coffee-color'},
+    Museum: {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color'}, 
+    Restaurant: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color'},
+    Bar: {color: 'rgba(200, 200, 200, 0.8)', 'class': 'bar-color'},
+    Shopping: {color: 'rgba(155, 100, 200, 0.8)', 'class': 'shopping-color'},
+    Outdoors: {color: 'rgba(100, 150, 175, 0.8)', 'class': 'outdoors-color'},
+    Sights: {color: 'rgba(50, 75, 100, 0.8)', 'class': 'sights-color'},
+    'Hot spots': {color: 'rgba(25, 25, 200, 0.8)', 'class': 'hotspots-color'}
+};  
 
 function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
     if (!environment[category]){
@@ -120,7 +147,8 @@ function addNewCategory(name, previous, color, date_time) {
         console.error("Category: " + category + " already exists!");
     }
     
-    nextCat = environment[previous].nextCategory
+    console.log(previous);
+    var nextCat = environment[previous].nextCategory;
     environment[name] = {
         previousCategory: previous,
         nextCategory: nextCat, 
@@ -130,7 +158,9 @@ function addNewCategory(name, previous, color, date_time) {
     }
 
     environment[previous].nextCategory = name;
-    environment[nextCat].previousCategory = name;
+    if (nextCat != null) {
+        environment[nextCat].previousCategory = name;
+    }
 }
 
 
@@ -140,7 +170,7 @@ function toNearbyVenues(venues){
    // console.dir(venues);
         var tmp = [venues.length];
     
-    for(var i = 0; i<venues.length;i++)
+    for(var i = 0; i<venues.length; i++)
     {
         //console.log(venues[i].venue.name);
         var ven = rawVenueToOurVenue(venues[i].venue, venues[i].tips);
@@ -216,6 +246,7 @@ function initMap(lat,lon) {
         cloudmade = new L.TileLayer(cloudmadeUrl, {subdomains: subDomains, maxZoom: 18});
 
     map.addLayer(cloudmade);
+    mapInitiated = true;
 }
 
 function findSelectedInCategory(category) {
@@ -266,7 +297,7 @@ function changeSelection(indexKey) {
     setIteneraryIcons();
 
     var itenerary_piece = $('#itenerary_' + category);
-    itenerary_piece.css('color', categoryColors[category]);
+    itenerary_piece.css('color', categoryColors[category].color);
     itenerary_piece.css('font-weight', '700');
     setTimeout(function() {
         itenerary_piece.css('color', '#000');
@@ -446,6 +477,8 @@ function clearMap() {
     for (var i = 0; i < markersInMap.length; i++)
         map.removeLayer(markersInMap[i]);
     markersInMap = [];
+    $('#option-column').empty();
+    $('#option-column').append('<h2 class="major-column-header">Date template</h2>');
 }
 
 function thumbnailClicked(leaflet_id){
@@ -482,35 +515,48 @@ function queryFoursquare(queryString, sectionName) {
 
     var lat,lon;
     $.getJSON(queryString, function( data ) {
-
        // console.log('objects from section ' + sectionName);
-        nearbyVenues = data.response.groups[0].items; //all the nearby places
 
-        var temp = toNearbyVenues(nearbyVenues);
-
-        nearbyVenues = temp;
+        var thisCategory = foursquareSectionToCat[sectionName];
+        nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items); //all the nearby places
+        var theseVenues = nearbyVenues[thisCategory];
 
         if(resetMap)
         {   
-            console.dir(nearbyVenues[0].point[0]);//.venue.location.lat);
-            map.panTo(new L.LatLng(nearbyVenues[0].point[0], nearbyVenues[0].point[1]));
+            console.dir(theseVenues[0].point[0]);//.venue.location.lat);
+            if (!mapInitiated) {
+                initMap(theseVenues[0].point[0], theseVenues[0].point[1]);
+            }
+            else {
+                var center = new L.LatLng(theseVenues[0].point[0], theseVenues[0].point[1]);
+                map.panTo(center);
+            }
             resetMap = false;
         }
         //console.dir("our objects with the stuff we want:");
         //console.dir(nearbyVenues);
+
+        /* add the new category */
+        addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + " PM");
+        mostRecentCategoryAdded = thisCategory;
+        timeForNextDate += 1; // 1 hour change
     
-        for (var i=0;i<nearbyVenues.length;i++)
+        // just take the top 3 everytime for now
+        for (var i=0; i<3 && i<theseVenues.length; i++)
         {   
-            console.log(nearbyVenues[i]);
-            console.dir(nearbyVenues[i].point);
+            var v = theseVenues[i];
+            var selected = false;
+            if (i == 0)
+                selected = true;
+            //console.log(v);
+            //console.dir(v.point);
             //lat = nearbyVenues[i].point[0];  
             //lon = nearbyVenues[i].point[1];
-            addToEnvironment("Cookies", "insomnia", "123 town", nearbyVenues[i].point, true);
 
+            addToEnvironment(thisCategory, v.name, v.address, v.point, selected);
         }
-            addLocations(environment);
+        searchVenuesCounter++;
     },'text');
-        
 }
 
 function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
@@ -533,9 +579,45 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         var bestMatch = data.response.venues[0];
         var niceMatch = rawVenueToOurVenue(bestMatch);
         console.log(niceMatch);
-        addToEnvironment("Cookies", niceMatch.name, niceMatch.address, niceMatch.point, false);
+        addToEnvironment("Restaurant", niceMatch.name, niceMatch.address, niceMatch.point, false);
+        clearMap();
         addLocations(environment); // this is not quite right
     }, 'text');
+}
+
+// get the parameters in our url. Sourced from stackoverflow (sort of).
+function getUrlParams() {
+    var vars = {};
+    var terms = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < terms.length; i++) {
+        var termSplit = terms[i].split('=');
+        vars[termSplit[0]] = unescape(termSplit[1]);
+    }
+    return vars;
+}
+
+function doFoursquareSectionsSearch(locationName) {
+    foursquareSections.sort(function() { return 0.5 - Math.random() }); // sort the sections list
+
+    // only take the top 3.
+    // TODO: Have it take variable amount based on length of date
+    searchVenuesCounterLimit = 3;
+    for (var i=0; i<searchVenuesCounterLimit && i<foursquareSections.length; i++) {
+        var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + locationName + 
+            '&section=' + foursquareSections[i] +
+            '&limit=8' + 
+            '&client_id=' + clientId + 
+            '&client_secret=' + secret + 
+            '&v=20120625';
+        queryFoursquare(queryString, foursquareSections[i]);
+    };
+}
+
+function resetMapKeepingVariables() {
+    searchVenuesCounter = 0;
+    mostRecentCategoryAdded = "__START__";
+    timeForNextDate = 1;
+    environment = jQuery.extend(true, {}, blankEnvironment); // deep copy
 }
 
 $(document).ready(function (){
@@ -544,47 +626,58 @@ $(document).ready(function (){
             setCategoryRef(data);
     });
 
-    querySpecificVenueFoursquare('mels burger', 'New York City', null);
+    //querySpecificVenueFoursquare('mels burger', 'New York City', null);
     
     var $area = $('#place')[0];        //jquery objects for each input field
     var $startTime = $('#start')[0];
     var $duration = $('#duration')[0];
     
-
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list of nearby places
         resetMap = true;                  // of recommended nearby venues
-        area = this.value; 
+        area = this.value;
+        currentArea = area; 
         console.log(area);
 
-        for (var i=0; i < foursquareSections.length; i++) {
-            var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + area + 
-                '&section=' + foursquareSections[i] +
-                '&limit=8' + 
-                '&client_id=' + clientId + 
-                '&client_secret=' + secret + 
-                '&v=20120625';
-            queryFoursquare(queryString, foursquareSections[i]);
-        };
+        clearMap();
+        resetMapKeepingVariables();
+        doFoursquareSectionsSearch(area);
+        addNewLocationsOnceDone();
     });
 
     $('#specific-venue').submit(function() {
         var venueTerms = $("#specific-venue-query").val();
-        var currentArea = $($area).val();
         console.log('specific venue query');
-        if (currentArea == '') {
-            currentArea = 'San Francisco';
-        }
         console.log(currentArea);
         querySpecificVenueFoursquare(venueTerms, currentArea, null);
 
         return false;
     });
 
-    initMap(37.7,-122.2);
-    setIteneraryIcons();
-    addNewCategory("Cookies", "Coffee", "park-color", "11 AM")
-    addToEnvironment("Cookies", "insomnia", "123 town", [37.8, -122.25], true);
-    addToEnvironment("Coffee", "doodo", "123 town", [37.89, -122.25], false);
-    addLocations(environment);
+    //initMap(37.7,-122.2);
+    //setIteneraryIcons();
+    //addNewCategory("Cookies", "Coffee", "park-color", "11 AM")
+    //addToEnvironment("Cookies", "insomnia", "123 town", [37.8, -122.25], true);
+    //addToEnvironment("Coffee", "doodo", "123 town", [37.89, -122.25], false);
+    //addLocations(environment);
+
+    var initialQueryParams = getUrlParams();
+    console.log(initialQueryParams);
+    if (!initialQueryParams.location) {
+        initialQueryParams.location = 'San Francisco';
+    }
+    currentArea = initialQueryParams.location;
+    doFoursquareSectionsSearch(initialQueryParams.location);
+
+    function addNewLocationsOnceDone() {
+        if (searchVenuesCounter < searchVenuesCounterLimit) {
+            console.log('not done');
+            setTimeout(addNewLocationsOnceDone, 100);
+            return false;
+        }
+        console.log('doneeee');
+        addLocations(environment);
+        setIteneraryIcons();
+    }
+    addNewLocationsOnceDone();
 });
