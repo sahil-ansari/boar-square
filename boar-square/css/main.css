@@ -111,10 +111,12 @@ footer a:hover {
 }
 
 .itenerary-item-text {
-    font-size: 1.25em;
+    font-size: 1.5em;
+    text-align: center;
 }
 
 .itenerary-item-details {
+    text-align: right;
 }
 
 .itenerary-arrow-transition {

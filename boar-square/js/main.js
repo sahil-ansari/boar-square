@@ -117,6 +117,13 @@ $(document).ready(function (){
     ];
     iToColor.sort(function() { return 0.5 - Math.random() }); /* shuffle the color array */
 
+    var categoryColors = {
+        Coffee: 'rgba(255, 215, 128, 0.8)',
+        Museum: 'rgba(0, 225, 75, 0.8)',
+        Restaurant: 'rgba(225, 0, 25, 0.8)',
+        Bar: 'rgba(200, 200, 200, 0.8)'
+    }
+
     var selectedPathOptions = {
         dashArray: null,
         weight: 8,
@@ -157,21 +164,22 @@ $(document).ready(function (){
     }
 
     function setIteneraryIcons() {
-        category = environment.__START__.nextCategory;
+        var category = environment.__START__.nextCategory;
         column = $('#itenerary-div');
         column.empty(); 
 
         idx = 1; 
         while (category != null) {
             var selected = findSelectedInCategory(category);
+            var itenId = '"itenerary_' + category + '"';
             column.append("<div class='itenerary-item'> \
-                              <div class='itenerary-item-text' id='itenerary_'" + category + "'>" + selected.name + "</div>" +
+                              <div class='itenerary-item-text' id=" + itenId + ">" + selected.name + "</div>" +
                               "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
                               selected.address + "</div>" + 
                            "</div>");
             category = environment[category].nextCategory;
             if (category)
-                column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-4x'></i></div>");
+                column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
             idx += 1; 
         }
     }
@@ -179,8 +187,8 @@ $(document).ready(function (){
     function changeSelection(indexKey) {
         var pieces = indexKey.split('_');
 
-        category = pieces[0]; 
-        id = pieces[1]; 
+        var category = pieces[0]; 
+        var id = pieces[1]; 
 
         selectedCategory = environment[category]; 
         selectedPlace = _(selectedCategory.places).find(function(place){ 
@@ -194,11 +202,18 @@ $(document).ready(function (){
         setMarkerSelected(currentlySelectedPlace, category, false); 
         setMarkerSelected(selectedPlace, category,  true); 
 
-        // itenerary_piece = $('#itenerary_' + category);
+        setIteneraryIcons();
+
+        var itenerary_piece = $('#itenerary_' + category);
+        itenerary_piece.css('color', categoryColors[category]);
+        itenerary_piece.css('font-weight', '700');
+        setTimeout(function() {
+            itenerary_piece.css('color', '#000');
+            itenerary_piece.css('font-weight', '400');
+        }, 500);
         // itenerary_piece.fadeOut( "slow" );
         // itenerary_piece.html = findSelectedInCategory(category).name; 
         // itenerary_piece.fadeIn("slow");
-        setIteneraryIcons();
     }
 
     function setMarkerSelected(place, category, isSelected) {
