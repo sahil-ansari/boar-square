@@ -86,7 +86,7 @@ var iToColor = [
         "#FF9933"    // orange
 ];
 
-var fourqquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending', 'specials'];
+var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending', 'specials'];
 
 function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
     if (!environment[category]){
@@ -463,6 +463,22 @@ function getRandomColor()  {
     return color;
 }
 
+function queryFoursquare(queryString, sectionName) {
+    $.getJSON(queryString, function( data ) {
+
+        console.log('objects from section ' + sectionName);
+        nearbyVenues = data.response.groups[0].items; //all the nearby places
+        //console.dir(nearbyVenues);    
+        //var p = toVenueObject(nearbyVenues[14]);
+        var temp = toNearbyVenues(nearbyVenues);
+
+        nearbyVenues = temp;
+
+        console.dir("our objects with the stuff we want:");
+        console.dir(nearbyVenues);
+    },'text');
+}
+
 $(document).ready(function (){
     $.getJSON('https://api.foursquare.com/v2/venues/categories?client_id='
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
@@ -479,25 +495,14 @@ $(document).ready(function (){
         area = this.value; 
         console.log(area);
 
-        for (var i=0; i < 3; i++) {
+        for (var i=0; i < foursquareSections.length; i++) {
             var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + area + 
-                '&section=' + fourqquareSections[i] +
+                '&section=' + foursquareSections[i] +
                 '&limit=8' + 
                 '&client_id=' + clientId + 
                 '&client_secret=' + secret + 
                 '&v=20120625';
-
-            $.getJSON(queryString, function( data ) {
-                nearbyVenues = data.response.groups[0].items; //all the nearby places
-                //console.dir(nearbyVenues);    
-                //var p = toVenueObject(nearbyVenues[14]);
-                var temp = toNearbyVenues(nearbyVenues);
-
-                nearbyVenues = temp;
-
-                console.dir("our objects with the stuff we want:");
-                console.dir(nearbyVenues);
-            },'text');
+            queryFoursquare(queryString, foursquareSections[i]);
         };
     });
 
