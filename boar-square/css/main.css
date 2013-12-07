@@ -16,6 +16,18 @@ body {
     width: 100%;   
 }
 
+footer {
+    color: #666;
+    background: #222;
+    padding: 17px 0 18px 0;
+    border-top: 1px solid #000;
+}
+footer a {
+    color: #999;
+}
+footer a:hover {
+    color: #efefef;
+}
 /* override the bootstrap container width */
 .container {
     max-width: 95%;
@@ -29,7 +41,7 @@ body {
 
 #option-column {
     overflow-y:auto;
-    height:650px;
+    height:600px;
 }
 
 #itenerary-column {
@@ -39,12 +51,11 @@ body {
 /* the map, of course */
 #map {
     height: 100%;
-    min-height: 650px;
+    min-height: 600px;
 }
 
 .marker-label {
-    background-color: rgb(255, 0, 0);
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 18px;
     cursor: pointer;
 }
@@ -59,6 +70,9 @@ body {
 }
 
 
+.major-column-header {
+    text-align: center;
+}
 
 
 /* helper class for hiding */
@@ -146,17 +160,7 @@ width:100%;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
-/* icon for third column */
-.itenerary-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    border: 2px solid black;
-    text-align: center;
-}
-
 .itenerary-item {
-
 }
 
 /* icon for third column */
@@ -171,13 +175,64 @@ width:100%;
     font-size: 1.5em;
 }
 
+.itenerary-option-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 2px solid black;
+    text-align: center;
+    display: inline-block;
+    line-height: 35px;
+    font-size: 0.8em;
+    opacity: 0.9;
+}
+
 .itenerary-item-text {
-    padding-left: 5px;
-    font-size: 1.2em;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.itenerary-item-details {
+    text-align: right;
 }
 
 .itenerary-arrow-transition {
     text-align: center;
+}
+
+.coffee-color {
+    background-color: rgba(255, 215, 128, 0.8);
+}
+
+.park-color {
+    background-color: rgba(0, 225, 75, 0.8);
+}
+
+.restaurant-color {
+    background-color: rgba(225, 0, 25, 0.8);
+}
+
+.bar-color {
+    background-color: rgba(200, 200, 200, 0.8);
+}
+
+.shopping-color {
+    background-color: rgba(155, 100, 200, 0.8);
+}
+
+.outdoors-color {
+    background-color: rgba(100, 150, 175, 0.8);
+}
+
+.sights-color {
+    background-color: rgba(50, 75, 100, 0.8);
+}
+
+.hotspots-color {
+    background-color: rgba(25, 25, 200, 0.8);
+}
+
+.category-options {
 }
 
 .place_thumbnail
@@ -187,6 +242,7 @@ width:100%;
     margin: 0 15px 15px 0;
     padding: 5px;
     text-align: center;
+    cursor: pointer;
 }
 
 .thumb {

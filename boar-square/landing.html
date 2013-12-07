@@ -15,7 +15,7 @@
   <!-- Custom styles for this template -->
   <link href="css/main.css" rel="stylesheet">
   <link rel="stylesheet" href="css/dropdown-search.css" type="text/css" media="screen"/>
- <link rel="stylesheet" href="css/jquery.clockpick.1.2.9.css" type="text/css">
+  <link rel="stylesheet" href="css/jquery.clockpick.1.2.9.css" type="text/css">
 
 
 
@@ -64,23 +64,21 @@
             <br>
             <br>
             <div id="landing-date-planning" class="hidden">
-              <input type="text" id="location" class="form-control" size="1" placeholder="Location" autofocus>
+              <input type="text" id="location" class="form-control" onchange="check()" placeholder="Location" autofocus>
               <center>
-                <input class="btn-sm" type="text" size="10" id="startTime" placeholder="Start Time">
-                <input class="btn-sm" type="text" size="10" id="endTime" placeholder="End Time">
+                <input class="btn-sm" type="text" size="10" id="startTime" onchange="check()" placeholder="Start Time">
+                <input class="btn-sm" type="text" size="10" id="endTime" onchange="check()" placeholder="End Time">
               </center>
               <br>
 
 
+              <!-- All of the optional venues -->
               <div class="VenueGroup">
+
                 <div id="venue1" class="hidden">
                   <div class="addVenue">
 
-
-
-
-
-
+                    <!-- Dropdown Selection -->
                     <form id="ui_element" class="sb_wrapper" autofocus>
                       <p>
                         <span class="sb_down"></span>
@@ -101,19 +99,8 @@
                       </li>
                     </ul>
                   </form>
-
-      <!--                <li>
-      <div class="checkboxThree">
-        <input type="checkbox" value="1" id="Trending" name="Trending" />
-        <label for="Trending"></label>
-      </div></label>
-
-                    <div class="trending">
-                      <label><input type="checkbox" id="trending1" name="Trending"> Trending </label>
-                    </div> -->
-
-                    <center>
-                      <div class="price">
+                  <center>
+                 <!--      <div class="price">
 
 
                         <input type = "radio"
@@ -134,86 +121,122 @@
                         id = "$$$1"
                         value = "large" />
                         <label for = "$$$1">$$$</label>
-                      </div>
+                      </div> -->
                     </center>
                   </div>
                   <br>
                 </div>
 
 
-
-
-
+                <!-- Same as venue1, optional venue2 -->
 
                 <div id="venue2" class="hidden">
                   <div class="addVenue">
-                    <input type="text" id="venuename2" class="landing-form" placeholder="Venue 2" autofocus>
 
-                    <div class="trending">
-                      <label><input type="checkbox" id="trending2" name="Trending"> Trending </label>
-                    </div>
+                    <form id="ui_element" class="sb_wrapper" autofocus>
+                      <p>
+                        <span class="sb_down"></span>
+                        <input class="sb_input" type="text" placeholder="Venue 2" id="venuename2" />
+                        <input class="sb_search" type="submit" value="" />
+                      </p>
+                      <ul class="sb_dropdown" style="display:none;">
+                        <li class="sb_filter">Pick a Category</li>
+                        
+                        <li><img src="img/icons/food.jpg"> <input type="checkbox" id="Food" class="filters2" /><label for="Food">Food</label></li>
+                        <li><img src="img/icons/nightlife.jpg"> <input type="checkbox" id="Nightlife" class="filters2" /><label for="Nightlife">Nightlife</label></li>
+                        <li><img src="img/icons/coffee.jpg"> <input type="checkbox" id="Coffee" class="filters2" /><label for="Coffee">Coffee</label></li>
+                        <li><img src="img/icons/shopping.jpg"> <input type="checkbox" id="Shopping" class="filters2" /><label for="Shopping">Shopping</label></li>
+                        <li><img src="img/icons/arts.jpg"> <input type="checkbox" id="Museums" class="filters2" /><label for="Museums">Arts</label></li>
+                        <li><img src="img/icons/outdoors.jpg"> <input type="checkbox" id="Outdoors" class="filters2" /><label for="Outdoors">Outdoors</label></li>
+                        <li><img src="img/icons/sights.jpg"> <input type="checkbox" id="Sights" class="filters2" /><label for="Sights">Sights</label></li>
+
+                      </li>
+                    </ul>
+                  </form>
+                  <center>
+                 <!--      <div class="price">
 
 
-                    <div class="price">
+                        <input type = "radio"
+                        name = "radSize"
+                        id = "$1"
+                        value = "small"
+                        checked = "checked" />
+                        <label for = "$1">$</label>
 
+                        <input type = "radio"
+                        name = "radSize"
+                        id = "$$1"
+                        value = "medium" />
+                        <label for = "$$1">$$</label>
 
-                      <input type = "radio"
-                      name = "radSize"
-                      id = "$2"
-                      value = "small"
-                      checked = "checked" />
-                      <label for = "$2">$</label>
-                      <br>
-                      <input type = "radio"
-                      name = "radSize"
-                      id = "$$2"
-                      value = "medium" />
-                      <label for = "$$2">$$</label>
-                      <br>
-                      <input type = "radio"
-                      name = "radSize"
-                      id = "$$$2"
-                      value = "large" />
-                      <label for = "$$$2">$$$</label>
-                    </div>
-
+                        <input type = "radio"
+                        name = "radSize"
+                        id = "$$$1"
+                        value = "large" />
+                        <label for = "$$$1">$$$</label>
+                      </div> -->
+                    </center>
                   </div>
                   <br>
                 </div>
 
+                <!-- Same as venue1, optional venue3-->
                 <div id="venue3" class="hidden">
                   <div class="addVenue">
-                    <input type="text" id="venuename3" class="landing-form" placeholder="Venue 3" autofocus>
 
-                    <div class="trending">
-                      <label><input type="checkbox" id="trending3" name="Trending"> Trending </label>
-                    </div>
-                    <div class="price">
-                      <input type = "radio"
-                      name = "radSize"
-                      id = "$3"
-                      value = "small"
-                      checked = "checked" />
-                      <label for = "$3">$</label>
-                      <br>
-                      <input type = "radio"
-                      name = "radSize"
-                      id = "$$3"
-                      value = "medium" />
-                      <label for = "$$3">$$</label>
-                      <br>
-                      <input type = "radio"
-                      name = "radSize"
-                      id = "$$$3"
-                      value = "large" />
-                      <label for = "$$$3">$$$</label>
-                    </div>
+                    <form id="ui_element" class="sb_wrapper" autofocus>
+                      <p>
+                        <span class="sb_down"></span>
+                        <input class="sb_input" type="text" placeholder="Venue 3" id="venuename3" />
+                        <input class="sb_search" type="submit" value="" />
+                      </p>
+                      <ul class="sb_dropdown" style="display:none;">
+                        <li class="sb_filter">Pick a Category</li>
+                        
+                        <li><img src="img/icons/food.jpg"> <input type="checkbox" id="Food" class="filters3" /><label for="Food">Food</label></li>
+                        <li><img src="img/icons/nightlife.jpg"> <input type="checkbox" id="Nightlife" class="filters3" /><label for="Nightlife">Nightlife</label></li>
+                        <li><img src="img/icons/coffee.jpg"> <input type="checkbox" id="Coffee" class="filters3" /><label for="Coffee">Coffee</label></li>
+                        <li><img src="img/icons/shopping.jpg"> <input type="checkbox" id="Shopping" class="filters3" /><label for="Shopping">Shopping</label></li>
+                        <li><img src="img/icons/arts.jpg"> <input type="checkbox" id="Museums" class="filters3" /><label for="Museums">Arts</label></li>
+                        <li><img src="img/icons/outdoors.jpg"> <input type="checkbox" id="Outdoors" class="filters3" /><label for="Outdoors">Outdoors</label></li>
+                        <li><img src="img/icons/sights.jpg"> <input type="checkbox" id="Sights" class="filters3" /><label for="Sights">Sights</label></li>
+
+                      </li>
+                    </ul>
+                  </form>
+                  <center>
+                 <!--      <div class="price">
+
+
+                        <input type = "radio"
+                        name = "radSize"
+                        id = "$1"
+                        value = "small"
+                        checked = "checked" />
+                        <label for = "$1">$</label>
+
+                        <input type = "radio"
+                        name = "radSize"
+                        id = "$$1"
+                        value = "medium" />
+                        <label for = "$$1">$$</label>
+
+                        <input type = "radio"
+                        name = "radSize"
+                        id = "$$$1"
+                        value = "large" />
+                        <label for = "$$$1">$$$</label>
+                      </div> -->
+                    </center>
                   </div>
+                  <br>
                 </div>
+
               </div>
 
 
-              <button class="btn-primary" id="addVenue" type="submit">Add Venue!</button>
+              <button class="btn-primary hidden" id="addVenue"  type="submit">Add Venue (Optional)</button>
               <br>
               <br>
               <button class="btn btn-lg btn-success btn-primary btn-block" id="goDate" type="submit">Plan My Date!</button>
@@ -250,23 +273,32 @@
           <script src="js/vendor/bootstrap.min.js"></script>
           <script type="text/javascript" src="js/vendor/jquery-1.10.1.js"></script>
           <script src="js/landing.js"></script>
-      <script src="js/vendor/jquery.clockpick.1.2.9.min.js"></script>
+          <script src="js/vendor/jquery.clockpick.1.2.9.min.js"></script>
           <script type="text/javascript">
 
+           function check() {
+            console.dir(document.getElementById('startTime').value);
 
+            if(document.getElementById('location').value != ""){
+              $('#addVenue').hide();
+              $('#addVenue').removeClass("hidden");
+              $('#addVenue').fadeIn('slow');
+            }
+
+          }
 
 
           
+          // Autofills if a category is chosena
 
-
-            $('.filters1').click( 
-              function autofill(){
-                venuename1.value="(Category: "+this.id+")";
+          $('.filters1').click( 
+            function autofill(){
+              venuename1.value="(Category: "+this.id+")";
               // var object = document.getElementsByName('Food');
               // object.item(0).value="Autofill successful.";
             });
 
-            $(function() {
+          $(function() {
         /**
         * the element
         */
@@ -283,6 +315,7 @@
           .andSelf()
           .find('.sb_dropdown')
           .show();
+
         });
         
         /**
@@ -306,9 +339,5 @@
         });
       });
 </script>
-
-
-
-
 </body>
 </html>

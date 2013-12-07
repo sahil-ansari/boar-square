@@ -1,6 +1,7 @@
 $(function () {
 
   var venueCount=0;
+  var initialParameters;
 
   //If Create new is clicked
   $('#newDate').click( function() {
@@ -65,7 +66,7 @@ $(function () {
         e.stopPropagation(); 
 
 
-        var initialParameters = {
+        initialParameters = {
           'location': $('#location').val(),
           'startTime' : $('#startTime').val(),
           'endTime' : $('#endTime').val(),
@@ -73,10 +74,10 @@ $(function () {
           'price1' : $('#trending1').val(),
           'trending1' : $('#trending1').val(),
           'venueName2' : $('#venuename2').val(),
-          'price2' : 'eMGJpozcJOAm8pHDUOCW63RUnsSxhlwIU1nF9P5uHE',
+          'price2' : '',
           'trending2' : $('#trending2').val(),
           'venueName3' : $('#venuename3').val(),
-          'price3' : 'eMGJpozcJOAm8pHDUOCW63RUnsSxhlwIU1nF9P5uHE',
+          'price3' : '',
           'trending3' : $('#trending3').val(),
         };
 
@@ -87,23 +88,44 @@ $(function () {
 
 
 
-    $('#goDate').click(function(e) {
-            e.preventDefault();
-            e.stopPropagation(); 
-          var searchPlace = $('#location').val();
-          
-          
-  
-    });
-    
-  
+       $('#goDate').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation(); 
+      
+
+        var query = 'location=' + initialParameters.location;
+            // query+= '&startTime=' + initialParameters.startTime;
+            // query+= '&endTime=' + initialParameters.endTime;
+            // query+= '&venueName1=' + initialParameters.venuename1;
+            // query+= '&price1=' + initialParameters.price1;
+            // query+= '&trending1=' + initialParameters.trending1;
+            // query+= '&venueName2=' + initialParameters.venuename2;
+            // query+= '&price2=' + initialParameters.price2;
+            // query+= '&trending2=' + initialParameters.trending2;
+            // query+= '&venueName3=' + initialParameters.venuename3;
+            // query+= '&price3=' + initialParameters.price3;
+            // query+= '&trending3=' + initialParameters.trending3;
+            
+
+        window.location.replace("./index.html?" + query);
 
 
+      });
 
-$(document).ready(function (){
-  $("#startTime").clockpick();
-  $("#endTime").clockpick();
-  });
 
-  });
+       $(document).ready(function (){
+        $("#startTime").clockpick({
+          starthour : 8,
+          endhour : 23,
+        });
+
+        $("#endTime").clockpick({
+          starthour : 8,
+          endhour : 23,
+
+        });
+
+      });
+
+     });
 
