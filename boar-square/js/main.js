@@ -298,7 +298,13 @@ function changeSelection(indexKey) {
     setMarkerSelected(selectedPlace, category,  true); 
 
     setIteneraryIcons();
+    doIteneraryAnimation(category);
+    
+    selectedPlace.thumb.addClass('thumb_selected');
+    currentlySelectedPlace.thumb.removeClass('thumb_selected');
+}
 
+function doIteneraryAnimation(category) {
     var itenerary_piece = $('#itenerary_' + category);
     itenerary_piece.css('color', categoryColors[category].color);
     itenerary_piece.css('font-weight', '700');
@@ -408,6 +414,7 @@ function initLocations(locations) {
             var loc = locOptions[j];
             
             var marker = L.marker(loc.point);
+            loc.marker = marker;
             
             if (!loc.selected)  
                 marker.setOpacity(0.5)                  
@@ -436,30 +443,40 @@ function initLocations(locations) {
 
             var thumbnailDiv = $("<div/>", {
                 "class": "place_thumbnail"
-                
-            }).appendTo(category_div); 
-
-            $( "<img/>", {
-              "src": "img/placeholder.jpg",
-              "alt": "",
-              "width": "60",
-              "height": "60",
-              "id": "t-"+ marker._leaflet_id,
-              "class": "thumb_suggested",
-              click: function(e) {
-                marker_id = this.id.split('-')[1];
-                thumbnailClicked(marker_id);
-              }
-            }).appendTo(thumbnailDiv);
-            
-            thumbnailDiv.append(loc.name);  
-            loc.marker = marker;
+            }).appendTo(category_div);
+            loc.thumbnailDiv = thumbnailDiv; 
+            addThumbnail(loc, true);
         }
         idx += 1; 
 
         option_div.append("<hr class='clear_both'></div>");
         category = environment[category].nextCategory;
     }
+}
+
+function addThumbnail(loc, suggested) {
+    if (suggested)
+        var thumbnailClass = "thumb_suggested";
+    else
+        var thumbnailClass = "thumb_personal";
+
+    if (loc.selected) {
+        thumbnailClass += " thumb_selected";
+    }
+    var thumb = $( "<img/>", {
+      "src": "img/placeholder.jpg",
+      "alt": "",
+      "width": "60",
+      "height": "60",
+      "id": "t-"+ loc.marker._leaflet_id,
+      "class": thumbnailClass,
+      click: function(e) {
+        marker_id = this.id.split('-')[1];
+        thumbnailClicked(marker_id);
+      }
+    }).appendTo(loc.thumbnailDiv);
+    loc.thumbnailDiv.append(loc.name);
+    loc.thumb = thumb;
 }
 
 function addNewLocation(category, location, personal) {
@@ -473,9 +490,13 @@ function addNewLocation(category, location, personal) {
        });
 
        setMarkerSelected(currentlySelectedPlace, category, false); 
+       setIteneraryIcons();
+       doIteneraryAnimation(category);
+       currentlySelectedPlace.thumb.removeClass('thumb_selected');
     }
 
     var marker = L.marker(loc.point);
+    loc.marker = marker;
     if (!loc.selected)  
         marker.setOpacity(0.5)                  
 
@@ -509,33 +530,14 @@ function addNewLocation(category, location, personal) {
     markersInMap.push(marker);
     marker._leaflet_id = category + "_" + marker._leaflet_id;
 
-    thumbnailDiv = $("<div/>", {
+    var thumbnailDiv = $("<div/>", {
         "class": "place_thumbnail"
         
     }).appendTo(category_div); 
-
-    var thumbClass = "thumb_suggested";
-    if(personal) {
-        thumbClass = "thumb_personal";
-    }
-
-    $( "<img/>", {
-      "src": "img/placeholder.jpg",
-      "alt": "",
-      "width": "60",
-      "height": "60",
-      "id": "t-"+ marker._leaflet_id,
-      "class": thumbClass,
-      click: function(e) {
-        marker_id = this.id.split('-')[1];
-        thumbnailClicked(marker_id);
-      }
-    }).appendTo(thumbnailDiv);
+    loc.thumbnailDiv = thumbnailDiv;
+    addThumbnail(loc, !personal);
 
     category_div.width(category_div.width() + 85)
-
-    thumbnailDiv.append(loc.name);  
-    loc.marker = marker;
 }
 
 function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
