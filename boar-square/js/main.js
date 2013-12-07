@@ -165,7 +165,6 @@ function addNewCategory(name, previous, color, date_time) {
     }
 }
 
-
  // what the api takes as 'section' parameter
 function toNearbyVenues(venues){ 
     console.log("raw venue object from api:"); 
@@ -623,7 +622,35 @@ function resetMapKeepingVariables() {
     environment = jQuery.extend(true, {}, blankEnvironment); // deep copy
 }
 
+function save(queryObject,currentEnv, currentName) {
+    if (!currentName){
+        currentName = new Date().getTime();
+    }
+
+    envRep = []
+    category = currentEnv['__START__'].nextCategory;
+
+    while(category != null) {
+        envRep.push(currentEnv[category])
+        category = currentEnv[category].nextCategory;
+    }
+
+    console.log(envRep)
+    store.set(currentName,{env: envRep, q: queryObject});
+}
+
+function load(currentName) {
+    return store.get(currentName   )
+}
+
+
+
 $(document).ready(function (){
+    if (!store.enabled) {
+        console.error('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser')
+    }
+
+
     $.getJSON('https://api.foursquare.com/v2/venues/categories?client_id='
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
             setCategoryRef(data);
@@ -681,6 +708,13 @@ $(document).ready(function (){
         console.log('doneeee');
         addLocations(environment);
         setIteneraryIcons();
+
+
+        save("SomeQuery", environment, "myData");
+        data = load('myData');
+        console.log(store.getAll())
+
+
     }
     addNewLocationsOnceDone();
 });
