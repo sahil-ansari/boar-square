@@ -626,7 +626,8 @@ function queryFoursquare(queryString, sectionName) {
         mostRecentCategoryAdded = thisCategory;
         timeForNextDate += 1; // 1 hour change
     
-        // just take the top 3 everytime for now
+        // take 3 random ones for now (others are saved via cache)
+        theseVenues.sort(function() { return 0.5 - Math.random() });
         for (var i=0; i<3 && i<theseVenues.length; i++)
         {   
             var v = theseVenues[i];
@@ -692,7 +693,7 @@ function doFoursquareSectionsSearch(locationName) {
     for (var i=0; i<searchVenuesCounterLimit && i<foursquareSections.length; i++) {
         var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + locationName + 
             '&section=' + foursquareSections[i] +
-            '&limit=8' + 
+            '&limit=15' + 
             '&client_id=' + clientId + 
             '&client_secret=' + secret + 
             '&v=20120625';
