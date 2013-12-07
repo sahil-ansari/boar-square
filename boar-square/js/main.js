@@ -373,20 +373,30 @@ number one in date.
 function initLocations(locations) {
     var idx = 0;
     var category = environment["__START__"].nextCategory;
+    var option_column = $('#option-column');
+        var option_div = $("<div/>", {
+            "class": "category-options"
+        }).appendTo(option_column); 
     while(category != null ) { 
         var typeOfPlace = environment[category];
         var locOptions = typeOfPlace.places
         typeOfPlace.color = iToColor[idx]; 
 
-        var option_div = $('#option-column');
-        option_div.append('<div class="category-options">');
-        option_div.append("<div id='category_header_" + category + "'>");
+        var cat_header = $("<div/>", {
+            "id": "category_header_" + category
+        }).appendTo(option_div);
+
         var iconClass = '"itenerary-option-icon ' + typeOfPlace.categoryColorClass + '"';
-        option_div.append("<h3> <span class=" + iconClass + ">" + (idx+1) + "</span> " + category + " </h3></div>");
+        cat_header.append("<h3> <span class=" + iconClass + ">" + (idx+1) + "</span> " + category + " </h3></div>");
+        
+        var container_div = $("<div/>", {
+            "class": "wrapper"
+        }).appendTo(option_div);
+
         var category_div = $("<div/>", {
             "id": "category_div_" + category,
-            "class": "option-row"
-        }).appendTo(option_div)
+            "class": "option-row scrolls",
+        }).appendTo(container_div)
 
         for (var j=0; j<locOptions.length; j++) {
             var loc = locOptions[j];
@@ -429,7 +439,7 @@ function initLocations(locations) {
               "width": "60",
               "height": "60",
               "id": "t-"+ marker._leaflet_id,
-              "class": "thumb",
+              "class": "thumb_suggested",
               click: function(e) {
                 marker_id = this.id.split('-')[1];
                 thumbnailClicked(marker_id);
@@ -446,7 +456,7 @@ function initLocations(locations) {
     }
 }
 
-function addNewLocation(category, location) {
+function addNewLocation(category, location, personal) {
 
     var category_div = $("#category_div_" + category)
     var loc = location;
@@ -498,18 +508,25 @@ function addNewLocation(category, location) {
         
     }).appendTo(category_div); 
 
+    var thumbClass = "thumb_suggested";
+    if(personal) {
+        thumbClass = "thumb_personal";
+    }
+
     $( "<img/>", {
       "src": "img/placeholder.jpg",
       "alt": "",
       "width": "60",
       "height": "60",
       "id": "t-"+ marker._leaflet_id,
-      "class": "thumb",
+      "class": thumbClass,
       click: function(e) {
         marker_id = this.id.split('-')[1];
         thumbnailClicked(marker_id);
       }
     }).appendTo(thumbnailDiv);
+
+    category_div.width(category_div.width() + 85)
 
     thumbnailDiv.append(loc.name);  
     loc.marker = marker;
@@ -648,7 +665,7 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         var niceMatch = rawVenueToOurVenue(bestMatch);
         console.log(niceMatch);
         addedPlace = addToEnvironment("Restaurant", niceMatch, true);
-        addNewLocation("Restaurant", addedPlace);
+        addNewLocation("Restaurant", addedPlace, true);
         // clearMap();
         // initLocations(environment); // this is not quite right
     }, 'text');

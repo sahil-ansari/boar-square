@@ -41,14 +41,26 @@ footer a:hover {
 
 #option-column {
     overflow-y:auto;
-    overflow-x:auto;
     height:600px;
-    width:300px;
+
+        
 }
 
-.option-row {
-    overflow-x:auto;
-}
+.wrapper { 
+    /* -moz-border-radius: 5px; */
+    overflow-x:scroll;
+    float:left;
+    width:100%;
+    
+
+ }
+.scrolls { 
+    overflow-x: scroll;
+    overflow-y: hidden;
+    overflow : scroll; /* ! */
+    white-space : nowrap; /* ! */
+    width:255px;
+} 
 
 #itenerary-column {
     border: none;
@@ -244,27 +256,29 @@ width:100%;
 .place_thumbnail
 {
     float: left;
-    width: 60px;
+    width: 70px;
     margin: 0 15px 15px 0;
     padding: 5px;
     text-align: center;
     cursor: pointer;
+    white-space: normal;
+
 }
 
-.thumb {
-  border: 1px solid gray ;
+.thumb_personal {
+  border: 2px solid orange ;
 }
-.thumb:hover {
+
+.thumb_suggested {
+  border: 2px solid #428bca ;
+}
+
+.thumb_personal:hover 
+.thumb_suggested:hover {
   border: 2px solid green;
 }
 
 .clear_both { clear: both; }
-
-.container-outer { overflow: scroll; width: 400px; }
-.container-inner { width: 10000px; }
-
-
-
 
 
 
