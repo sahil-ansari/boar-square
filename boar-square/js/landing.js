@@ -59,7 +59,7 @@ $(function () {
 
 
        //Make a Date
-<<<<<<< HEAD
+
        $('#goDate').click(function(e) {
         e.preventDefault();
         e.stopPropagation(); 
@@ -86,17 +86,24 @@ $(function () {
       });
 
 
-     });
-=======
+
     $('#goDate').click(function(e) {
             e.preventDefault();
             e.stopPropagation(); 
           var searchPlace = $('#location').val();
           
-          window.location.replace("./index.html");
+          
   
     });
     
   
-});
->>>>>>> 4d312f773f6f7be738b10836e786aff9c6bc5b3c
+
+
+
+$(document).ready(function (){
+  $("#startTime").clockpick();
+  $("#endTime").clockpick();
+  });
+
+  });
+

@@ -58,6 +58,9 @@ body {
     text-align: center;
 }
 
+
+
+
 /* helper class for hiding */
 .hidden {
     display: none;
@@ -72,44 +75,65 @@ body {
 .addVenue {
 
     max-width: 30%;
-    min-height: 150px;
+    min-height: 100px;
     background-color: #428bca;
     opacity: 1;
     border-radius: 6px;
     margin-bottom: 2px;
+        margin: 0px;
+    padding:0px;
 
 }
 
+.VenueGroup {
+    overflow:hidden;
+    }
+
 #venue1 {
+    width:100%;
+    overflow:hidden;
+    float:left;
+    margin: 0px;
+    padding:0px;
+
+    position: relative;
 
 }
 
 #venue2 {
-
+width:100%;
+    overflow:hidden;
+    float:left;
+   margin: 0px;
+    padding:0px;
+    position: relative;
 
 }
 
 #venue3 {
    
-
+  width:100%;
+    overflow:hidden;
+    float:left;
+    position: relative;
 }
 
 .price {
     float: right;
-    margin: 0 20px;
+    margin: 0;
 
 }
 
 .trending {
     float: right;
-    margin: 0 10px;
+    margin: 0;
 }
 
 
 .landing-form {
-  width: 30%;
+  width: 40%;
   height: 34px;
-  padding: 6px 12px;
+  padding: 0px;
   font-size: 14px;
   line-height: 1.428571429;
   color: #555555;
