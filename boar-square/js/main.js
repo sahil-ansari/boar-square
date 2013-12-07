@@ -6,51 +6,51 @@
     "__START__": {nextCategory: null}
     //"__START__": {nextCategory: "Coffee"}
 
-    /*
-    "Coffee": {
-        previousCategory: null, 
-        nextCategory: "Museum",
-        categoryColorClass: "coffee-color",
-        categoryDateTime: "1 PM",
-        places: [ 
-            {name: "Stumptown", address: "123 town", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
-            // ,{name: "doodo", address: "123 town", point: [37.89, -122.25], selected: false, pathsTo: [], pathsFrom: []}
+    
+    // "Coffee": {
+    //     previousCategory: null, 
+    //     nextCategory: "Museum",
+    //     categoryColorClass: "coffee-color",
+    //     categoryDateTime: "1 PM",
+    //     places: [ 
+    //         {name: "Stumptown", address: "123 town", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
+    //         // ,{name: "doodo", address: "123 town", point: [37.89, -122.25], selected: false, pathsTo: [], pathsFrom: []}
         
-        ] 
-    },
-    "Museum": {
-        previousCategory: "Coffee",
-        nextCategory: "Restaurant",
-        categoryColorClass: "park-color",
-        categoryDateTime: "2 PM",
-        places: [
-            {name: "Met", address: "123 town", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-            {name: "History Museum", address: "123 town", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {name: "Guggenheim", address: "123 town", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
-        ]
-    },
-    "Restaurant": {
-        previousCategory: "Museum",
-        nextCategory: "Bar",
-        categoryColorClass: "museum-color",
-        categoryDateTime: "3 PM",
-        places: [
-            {name: "#1 Chinese Food", address: "123 town", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-            {name: "Mels", address: "123 town", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-            {name: "Thai Market", address: "123 town", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
-        ]
-    }
-    ,
-    "Bar": {
-        previousCategory: "Restaurant",
-        nextCategory: null,
-        categoryColorClass: "bar-color",
-        categoryDateTime: "4 PM",
-        places: [
-            {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
-        ] 
-    }
-    */
+    //     ] 
+    // },
+    // "Museum": {
+    //     previousCategory: "Coffee",
+    //     nextCategory: "Restaurant",
+    //     categoryColorClass: "park-color",
+    //     categoryDateTime: "2 PM",
+    //     places: [
+    //         {name: "Met", address: "123 town", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
+    //         {name: "History Museum", address: "123 town", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+    //         {name: "Guggenheim", address: "123 town", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
+    //     ]
+    // },
+    // "Restaurant": {
+    //     previousCategory: "Museum",
+    //     nextCategory: "Bar",
+    //     categoryColorClass: "museum-color",
+    //     categoryDateTime: "3 PM",
+    //     places: [
+    //         {name: "#1 Chinese Food", address: "123 town", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
+    //         {name: "Mels", address: "123 town", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
+    //         {name: "Thai Market", address: "123 town", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
+    //     ]
+    // }
+    // ,
+    // "Bar": {
+    //     previousCategory: "Restaurant",
+    //     nextCategory: null,
+    //     categoryColorClass: "bar-color",
+    //     categoryDateTime: "4 PM",
+    //     places: [
+    //         {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
+    //     ] 
+    // }
+    
 };
 
 var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
@@ -71,6 +71,9 @@ var searchVenuesCounterLimit;
 var mostRecentCategoryAdded = "__START__";
 var timeForNextDate = 1;
 var currentArea = null;
+
+var the_lat;
+var the_lon;
 
 var selectedPathOptions = {
     dashArray: null,
@@ -231,6 +234,8 @@ function setCategoryRef(apiCategories){
 }
 
 function initMap(lat,lon) {
+    the_lon = lon; 
+    the_lat = lat; 
     var options ={
         center: new L.LatLng(lat, lon),
         //center: new L.LatLng(40.77, -73.94),
@@ -377,6 +382,7 @@ function initLocations(locations) {
         var option_div = $("<div/>", {
             "class": "category-options"
         }).appendTo(option_column); 
+   
     while(category != null ) { 
         var typeOfPlace = environment[category];
         var locOptions = typeOfPlace.places
@@ -708,27 +714,25 @@ function resetMapKeepingVariables() {
     environment = jQuery.extend(true, {}, blankEnvironment); // deep copy
 }
 
-function save(queryObject,currentEnv, currentName) {
-    if (!currentName){
-        currentName = new Date().getTime();
+function loadFromStore(saveName) {
+    data = load_boar_sq("myData"); 
+
+    savedEnv = data.env; 
+    thisCategory = savedEnv['__START__'].nextCategory;
+    while (thisCategory != null) {
+        addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + " PM");
+        mostRecentCategoryAdded = thisCategory;
+        timeForNextDate += 1; // 1 hour change
+
+        _(savedEnv[thisCategory].places).each(function(savedPlace){
+            addToEnvironment(thisCategory, savedPlace, savedPlace.selected); 
+        }); 
+
+        thisCategory = savedEnv[thisCategory].nextCategory;
     }
 
-    envRep = []
-    category = currentEnv['__START__'].nextCategory;
-
-    while(category != null) {
-        envRep.push(currentEnv[category])
-        category = currentEnv[category].nextCategory;
-    }
-
-    console.log(envRep)
-    store.set(currentName,{env: envRep, q: queryObject});
+    initMap(data.loc[0], data.loc[1]);
 }
-
-function load(currentName) {
-    return store.get(currentName   )
-}
-
 
 
 $(document).ready(function (){
@@ -784,6 +788,9 @@ $(document).ready(function (){
     }
     currentArea = initialQueryParams.location;
     doFoursquareSectionsSearch(initialQueryParams.location);
+    // loadFromStore("myData");
+    // initLocations(environment);
+    // setIteneraryIcons();
 
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
@@ -794,11 +801,15 @@ $(document).ready(function (){
         console.log('doneeee');
         initLocations(environment);
         setIteneraryIcons();
-
-
-        // save("SomeQuery", environment, "myData");
+        save_boar_sq({
+                      q: initialQueryParams, 
+                      env: environment,
+                      loc: [the_lat, the_lon],
+                      },  
+                      "myData");
         // data = load('myData');
-        // console.log(store.getAll())
+        // console.log(load_boar_sq("myData"));
+
 
 
     }
