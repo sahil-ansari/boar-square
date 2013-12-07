@@ -124,14 +124,7 @@ function addToEnvironment(category, placeObject, new_selected) {
         return;
     }
 
-    if (new_selected){
-        _(environment[category].places).each(function(place) {
-            place.selected = false; 
-        });   
-    }
-
-    environment[category].places.push(
-    {
+    newPlace = {
          name: placeObject.name,
          address: placeObject.address,
          point: placeObject.point,
@@ -139,9 +132,13 @@ function addToEnvironment(category, placeObject, new_selected) {
          specificCategory: placeObject.specificCategory,
          pathsTo: [], 
          pathsFrom: []
-    });
+    }
 
-    console.log(environment[category]);
+    environment[category].places.push( newPlace ); 
+        console.log(environment[category]);
+
+    return newPlace;
+
 }
 
 function addNewCategory(name, previous, color, date_time) {
@@ -304,9 +301,6 @@ function changeSelection(indexKey) {
         itenerary_piece.css('color', '#000');
         itenerary_piece.css('font-weight', '400');
     }, 500);
-    // itenerary_piece.fadeOut( "slow" );
-    // itenerary_piece.html = findSelectedInCategory(category).name; 
-    // itenerary_piece.fadeIn("slow");
 }
 
 function setMarkerSelected(place, category, isSelected) {
@@ -376,9 +370,9 @@ function createPaths(startLoc, destinations, lineColor) {
 takes an array of arrays of points, where each sub-array contains the options for location
 number one in date.
 */
-function addLocations(locations) {
-    idx = 0;
-    category = environment["__START__"].nextCategory;
+function initLocations(locations) {
+    var idx = 0;
+    var category = environment["__START__"].nextCategory;
     while(category != null ) { 
         var typeOfPlace = environment[category];
         var locOptions = typeOfPlace.places
@@ -389,6 +383,10 @@ function addLocations(locations) {
         option_div.append("<div id='category_header_" + category + "'>");
         var iconClass = '"itenerary-option-icon ' + typeOfPlace.categoryColorClass + '"';
         option_div.append("<h3> <span class=" + iconClass + ">" + (idx+1) + "</span> " + category + " </h3></div>");
+        var category_div = $("<div/>", {
+            "id": "category_div_" + category,
+            "class": "option-row"
+        }).appendTo(option_div)
 
         for (var j=0; j<locOptions.length; j++) {
             var loc = locOptions[j];
@@ -399,7 +397,7 @@ function addLocations(locations) {
                 marker.setOpacity(0.5)                  
 
             if (typeOfPlace.nextCategory) {
-                nextTypeOfPlace = environment[typeOfPlace.nextCategory];
+                var nextTypeOfPlace = environment[typeOfPlace.nextCategory];
                 createPaths(loc, nextTypeOfPlace.places, typeOfPlace.color); 
             }
 
@@ -420,10 +418,10 @@ function addLocations(locations) {
             markersInMap.push(marker);
             marker._leaflet_id = category + "_" + marker._leaflet_id;
 
-            thumbnailDiv = $("<div/>", {
+            var thumbnailDiv = $("<div/>", {
                 "class": "place_thumbnail"
                 
-            }).appendTo(option_div); 
+            }).appendTo(category_div); 
 
             $( "<img/>", {
               "src": "img/placeholder.jpg",
@@ -446,6 +444,75 @@ function addLocations(locations) {
         option_div.append("<hr class='clear_both'></div>");
         category = environment[category].nextCategory;
     }
+}
+
+function addNewLocation(category, location) {
+
+    var category_div = $("#category_div_" + category)
+    var loc = location;
+
+    if (loc.selected) {
+       var currentlySelectedPlace = _(environment[category].places).find(function(place){
+        return place.selected
+       });
+
+       setMarkerSelected(currentlySelectedPlace, category, false); 
+    }
+
+    var marker = L.marker(loc.point);
+    if (!loc.selected)  
+        marker.setOpacity(0.5)                  
+
+    typeOfPlace = environment[category];
+    if (typeOfPlace.nextCategory) {
+        nextTypeOfPlace = typeOfPlace.nextCategory;
+        createPaths(loc, environment[nextTypeOfPlace].places, typeOfPlace.color); 
+    }
+
+    if(typeOfPlace.previousCategory) {
+        prevTypeOfPlace = typeOfPlace.previousCategory;
+        _(environment[prevTypeOfPlace].places).each(function(place){ 
+            createPaths(place, [loc], null);
+        });
+    }
+
+    marker.on('click', markerClicked);
+    marker.on('mouseover', markerMouseOver);
+    marker.on('mouseout', markerMouseLeft);
+   
+    marker.bindLabel(loc.name, {
+        noHide: true,
+        className: 'marker-label ' + typeOfPlace.categoryColorClass,
+    }).showLabel();
+   
+    marker.bindPopup(loc.specificCategory + ' - ' + loc.address, {
+        closeButton: false,
+    });
+    
+    marker.addTo(map);
+    markersInMap.push(marker);
+    marker._leaflet_id = category + "_" + marker._leaflet_id;
+
+    thumbnailDiv = $("<div/>", {
+        "class": "place_thumbnail"
+        
+    }).appendTo(category_div); 
+
+    $( "<img/>", {
+      "src": "img/placeholder.jpg",
+      "alt": "",
+      "width": "60",
+      "height": "60",
+      "id": "t-"+ marker._leaflet_id,
+      "class": "thumb",
+      click: function(e) {
+        marker_id = this.id.split('-')[1];
+        thumbnailClicked(marker_id);
+      }
+    }).appendTo(thumbnailDiv);
+
+    thumbnailDiv.append(loc.name);  
+    loc.marker = marker;
 }
 
 function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
@@ -580,9 +647,10 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         var bestMatch = data.response.venues[0];
         var niceMatch = rawVenueToOurVenue(bestMatch);
         console.log(niceMatch);
-        addToEnvironment("Restaurant", niceMatch, true);
-        clearMap();
-        addLocations(environment); // this is not quite right
+        addedPlace = addToEnvironment("Restaurant", niceMatch, true);
+        addNewLocation("Restaurant", addedPlace);
+        // clearMap();
+        // initLocations(environment); // this is not quite right
     }, 'text');
 }
 
@@ -689,7 +757,7 @@ $(document).ready(function (){
     //addNewCategory("Cookies", "Coffee", "park-color", "11 AM")
     //addToEnvironment("Cookies", "insomnia", "123 town", [37.8, -122.25], true);
     //addToEnvironment("Coffee", "doodo", "123 town", [37.89, -122.25], false);
-    //addLocations(environment);
+    //initLocations(environment);
 
     var initialQueryParams = getUrlParams();
     console.log(initialQueryParams);
@@ -706,13 +774,13 @@ $(document).ready(function (){
             return false;
         }
         console.log('doneeee');
-        addLocations(environment);
+        initLocations(environment);
         setIteneraryIcons();
 
 
-        save("SomeQuery", environment, "myData");
-        data = load('myData');
-        console.log(store.getAll())
+        // save("SomeQuery", environment, "myData");
+        // data = load('myData');
+        // console.log(store.getAll())
 
 
     }
