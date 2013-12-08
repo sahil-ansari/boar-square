@@ -220,9 +220,11 @@ function rawVenueToOurVenue(venue, tips, section) {
         ven.tip = '';
     }
 
-    if (venue.photos.count > 0) {
-        var photogroups = venue.photos.groups;
-        var photoZone = photogroups[0].items[0];
+    var photogroups = venue.photos.groups;
+    if (photogroups.length > 0) {
+        var photoZone = photogroups[photogroups.length - 1].items[0];
+        console.log(photogroups);
+        console.log(photoZone);
         ven.photo = photoZone.prefix + 'original' + photoZone.suffix;
     }
     else {
@@ -253,7 +255,7 @@ function initMap(lat,lon) {
     var options ={
         center: new L.LatLng(lat, lon),
         //center: new L.LatLng(40.77, -73.94),
-        zoom: 12
+        zoom: 15
     };
 
     map = new L.Map('map', options);
@@ -727,6 +729,8 @@ function doFoursquareSectionsSearch(locationName) {
             '&section=' + foursquareSections[i] +
             '&limit=15' + 
             '&venuePhotos=1' + 
+            '&time=any' +
+            '&day=any' + 
             '&client_id=' + clientId + 
             '&client_secret=' + secret + 
             '&v=20120625';
