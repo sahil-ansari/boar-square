@@ -411,11 +411,13 @@ function initLocations(locations) {
         typeOfPlace.color = iToColor[idx]; 
 
         var cat_header = $("<div/>", {
-            "id": "category_header_" + category
+            "id": "category_header_" + category,
+            "class": "category-header"
         }).appendTo(option_div);
 
         var iconClass = '"itenerary-option-icon ' + typeOfPlace.categoryColorClass + '"';
-        cat_header.append("<h3> <span class=" + iconClass + ">" + (idx+1) + "</span> " + category + " </h3></div>");
+        cat_header.append("<span class=" + iconClass + ">" + (idx+1) + "</span> " + category);
+        cat_header.append("<span class='refresh-icon'><i class='fa fa-refresh'></i>");
         
         var container_div = $("<div/>", {
             "class": "wrapper"
