@@ -123,7 +123,7 @@ var categoryColors = {
 //function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
 function addToEnvironment(category, placeObject, new_selected) {
     if (!environment[category]){
-        console.error("Category: " + category + " doesn't exist! Can't add: " + new_name + "!");
+        console.error("Category: " + category + " doesn't exist! Can't add: " + placeObject.name + "!");
         return;
     }
 
@@ -210,7 +210,8 @@ function rawVenueToOurVenue(venue, tips) {
         ven.tip = '';
     }
 
-    var photoZone = venue.photos.groups[0].items[0];
+    var photogroups = venue.photos.groups;
+    var photoZone = photogroups[photogroups.length - 1].items[0];
     ven.photo = photoZone.prefix + 'original' + photoZone.suffix;
     return ven;
 }
@@ -669,12 +670,21 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         console.log(data);
 
         var bestMatch = data.response.venues[0];
-        var niceMatch = rawVenueToOurVenue(bestMatch);
-        console.log(niceMatch);
-        addedPlace = addToEnvironment("Restaurant", niceMatch, true);
-        addNewLocation("Restaurant", addedPlace, true);
-        // clearMap();
-        // initLocations(environment); // this is not quite right
+        console.log(bestMatch.id);
+        var photoQuery = 'https://api.foursquare.com/v2/venues/' + bestMatch.id + '/photos?' +
+            'limit=1' + 
+            '&client_id=' + clientId + 
+            '&client_secret=' + secret + 
+            '&v=20120625';
+        $.getJSON(photoQuery, function(photoData) {
+            var photos = photoData.response.photos;
+            console.log(photos);
+            bestMatch.photos = photos;
+            var niceMatch = rawVenueToOurVenue(bestMatch);
+            console.log(niceMatch);
+            addedPlace = addToEnvironment("Restaurant", niceMatch, true);
+            addNewLocation("Restaurant", addedPlace, true);
+        })        
     }, 'text');
 }
 
