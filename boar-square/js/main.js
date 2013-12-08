@@ -128,10 +128,11 @@ var sectionToIcon = {
     'outdoors': 'img/icons/outdoors.jpg',
     'sights': 'img/icons/sights.jpg',
     'trending': 'img/icons/trending.jpg'
-}
+};
+var nextToSuggest = {};
 
 //function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
-function addToEnvironment(category, placeObject, new_selected) {
+function addToEnvironment(category, placeObject, new_selected, suggested) {
     if (!environment[category]){
         console.error("Category: " + category + " doesn't exist! Can't add: " + placeObject.name + "!");
         return;
@@ -139,6 +140,7 @@ function addToEnvironment(category, placeObject, new_selected) {
 
     var newPlace = jQuery.extend(true, {
         selected: new_selected,
+        suggested: suggested,
         pathsTo: [],
         pathsFrom: []
     }, placeObject); // deep copy
@@ -398,9 +400,9 @@ function initLocations(locations) {
     var idx = 0;
     var category = environment["__START__"].nextCategory;
     var option_column = $('#option-column');
-        var option_div = $("<div/>", {
-            "class": "category-options"
-        }).appendTo(option_column); 
+    var option_div = $("<div/>", {
+        "class": "category-options"
+    }).appendTo(option_column); 
    
     while(category != null ) { 
         var typeOfPlace = environment[category];
@@ -414,10 +416,16 @@ function initLocations(locations) {
 
         var iconClass = '"itenerary-option-icon ' + typeOfPlace.categoryColorClass + '"';
         cat_header.append("<span class=" + iconClass + ">" + (idx+1) + "</span> " + category);
-        cat_header.append("<span class='refresh-icon'><i class='fa fa-refresh'></i>");
+        var refresher = $("<a/>", {
+            "class": 'refresh-icon',
+            "id": "category_refresh_" + category,
+            "click": refreshCategorySuggestions
+        }).appendTo(cat_header);
+        refresher.append("<i class='fa fa-refresh'></i>");
+        //cat_header.append("<a class='refresh-icon'><i class='fa fa-refresh'></i></a>");
         
         var container_div = $("<div/>", {
-            "class": "wrapper"
+            "class": "category-div-wrapper"
         }).appendTo(option_div);
 
         var category_div = $("<div/>", {
@@ -452,9 +460,9 @@ function initLocations(locations) {
                 closeButton: false,
             });
             
-            marker.addTo(map);
             markersInMap.push(marker);
             marker._leaflet_id = category + "_" + marker._leaflet_id;
+            marker.addTo(map);
 
             var thumbnailDiv = $("<div/>", {
                 "class": "place_thumbnail"
@@ -467,6 +475,19 @@ function initLocations(locations) {
         option_div.append("<hr class='clear_both'></div>");
         category = environment[category].nextCategory;
     }
+}
+
+function refreshCategorySuggestions(ev) {
+    var target_id = ev.currentTarget.id;
+    var sections = target_id.split('_');
+    var category = sections[sections.length-1];
+    addSuggestions(category, nextToSuggest[category]);
+    clearMap();
+    initLocations(environment);
+    setIteneraryIcons();
+    setCategoryDivWidth(category);
+
+    return false;
 }
 
 function addThumbnail(loc, suggested) {
@@ -483,8 +504,8 @@ function addThumbnail(loc, suggested) {
       //"src": "img/placeholder.jpg",
       "src": loc.photo,
       "alt": "",
-      "width": "60",
-      "height": "60",
+      "width": "100",
+      "height": "100",
       "id": "t-"+ loc.marker._leaflet_id,
       "class": thumbnailClass,
       click: function(e) {
@@ -497,7 +518,7 @@ function addThumbnail(loc, suggested) {
 }
 
 function addNewLocation(category, location, personal) {
-    var category_div = $("#category_div_" + category)
+    var category_div = $("#category_div_" + category);
     var loc = location;
 
     if (loc.selected) {
@@ -553,7 +574,13 @@ function addNewLocation(category, location, personal) {
     loc.thumbnailDiv = thumbnailDiv;
     addThumbnail(loc, !personal);
 
-    category_div.width(category_div.width() + 85)
+    setCategoryDivWidth(category);
+}
+
+function setCategoryDivWidth(category) {
+    var category_div = $("#category_div_" + category);
+    var numIcons = environment[category].places.length;
+    category_div.width(numIcons * 110);
 }
 
 function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
@@ -576,7 +603,6 @@ function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
     markersInMap.push(arrow);
 }
 
-$("#clearMap").click(clearMap);
 function clearMap() {
     for(i in map._layers) {
         if(map._layers[i]._path != undefined) {
@@ -650,21 +676,29 @@ function queryFoursquare(queryString, sectionName) {
     
         // take 3 random ones for now (others are saved via cache)
         theseVenues.sort(function() { return 0.5 - Math.random() });
-        for (var i=0; i<3 && i<theseVenues.length; i++)
-        {   
-            var v = theseVenues[i];
-            var selected = false;
-            if (i == 0)
-                selected = true;
-            //console.log(v);
-            //console.dir(v.point);
-            //lat = nearbyVenues[i].point[0];  
-            //lon = nearbyVenues[i].point[1];
-
-            addToEnvironment(thisCategory, v, selected);
-        }
+        addSuggestions(thisCategory, 0);
+        
         searchVenuesCounter++;
     },'text');
+}
+
+function addSuggestions(category, lastIndex) {
+    var endIndex = lastIndex + 3;
+    var venues = nearbyVenues[category];
+    environment[category].places = environment[category].places.filter(function(el) {
+        return !el.suggested;
+    });
+    for (var i=lastIndex; i<endIndex && i<venues.length; i++) {   
+        var v = venues[i];
+        var selected = false;
+        if (i == lastIndex && environment[category].places.length == 0) // nothing else in there
+            selected = true;
+
+        addToEnvironment(category, v, selected, true);
+    }
+    nextToSuggest[category] = endIndex;
+    if (endIndex >= venues.length)
+        nextToSuggest[category] = 0;
 }
 
 function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
@@ -695,7 +729,7 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
             var photos = photoData.response.photos;
             bestMatch.photos = photos;
             var niceMatch = rawVenueToOurVenue(bestMatch, 'food');
-            addedPlace = addToEnvironment("Restaurant", niceMatch, true);
+            addedPlace = addToEnvironment("Restaurant", niceMatch, true, false);
             addNewLocation("Restaurant", addedPlace, true);
         })        
     }, 'text');
@@ -751,7 +785,7 @@ function loadFromStore(saveName) {
         timeForNextDate += 1; // 1 hour change
 
         _(savedEnv[thisCategory].places).each(function(savedPlace){
-            addToEnvironment(thisCategory, savedPlace, savedPlace.selected); 
+            addToEnvironment(thisCategory, savedPlace, savedPlace.selected, true); 
         }); 
 
         thisCategory = savedEnv[thisCategory].nextCategory;
