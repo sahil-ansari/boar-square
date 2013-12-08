@@ -127,21 +127,16 @@ function addToEnvironment(category, placeObject, new_selected) {
         return;
     }
 
-    newPlace = {
-         name: placeObject.name,
-         address: placeObject.address,
-         point: placeObject.point,
-         selected: new_selected,
-         specificCategory: placeObject.specificCategory,
-         pathsTo: [], 
-         pathsFrom: []
-    }
+    var newPlace = jQuery.extend(true, {
+        selected: new_selected,
+        pathsTo: [],
+        pathsFrom: []
+    }, placeObject); // deep copy
 
     environment[category].places.push( newPlace ); 
-        console.log(environment[category]);
+    console.log(environment[category]);
 
     return newPlace;
-
 }
 
 function addNewCategory(name, previous, color, date_time) {
@@ -192,7 +187,7 @@ function rawVenueToOurVenue(venue, tips) {
         url: venue.url,               //the business' website
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
-        address: venue.location.address + " " + venue.location.postalCode
+        address: venue.location.address + ", " + venue.location.postalCode
         //status: v.venue.hours.status    //number to  $$$ amount
     };
 
@@ -215,6 +210,8 @@ function rawVenueToOurVenue(venue, tips) {
         ven.tip = '';
     }
 
+    var photoZone = venue.photos.groups[0].items[0];
+    ven.photo = photoZone.prefix + 'original' + photoZone.suffix;
     return ven;
 }
 
@@ -463,8 +460,11 @@ function addThumbnail(loc, suggested) {
     if (loc.selected) {
         thumbnailClass += " thumb_selected";
     }
+    console.log(loc.photo);
+    console.log(loc);
     var thumb = $( "<img/>", {
-      "src": "img/placeholder.jpg",
+      //"src": "img/placeholder.jpg",
+      "src": loc.photo,
       "alt": "",
       "width": "60",
       "height": "60",
@@ -480,7 +480,6 @@ function addThumbnail(loc, suggested) {
 }
 
 function addNewLocation(category, location, personal) {
-
     var category_div = $("#category_div_" + category)
     var loc = location;
 
@@ -605,11 +604,9 @@ function getRandomColor()  {
 }
 
 function queryFoursquare(queryString, sectionName) {
-
     var lat,lon;
     $.getJSON(queryString, function( data ) {
        // console.log('objects from section ' + sectionName);
-
         var thisCategory = foursquareSectionToCat[sectionName];
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
@@ -659,6 +656,7 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         '&near=' + location + 
         '&intent=browse' + 
         '&limit=5' +
+        '&venuePhotos=1' +
         '&client_id=' + clientId + 
         '&client_secret=' + secret + 
         '&v=20120625';
@@ -702,6 +700,7 @@ function doFoursquareSectionsSearch(locationName) {
         var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + locationName + 
             '&section=' + foursquareSections[i] +
             '&limit=15' + 
+            '&venuePhotos=1' + 
             '&client_id=' + clientId + 
             '&client_secret=' + secret + 
             '&v=20120625';
