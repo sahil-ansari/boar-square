@@ -59,8 +59,17 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active">
+            <li>
               <input type="text" id="place" class='form-control' placeholder="location search" style='height: 51px' enabled>
+            </li>
+            <li>
+              <input class="form-control" type="text" id="startTime" placeholder="Start Time" style='height: 51px'>
+            </li>
+            <li>
+              <input class="form-control" type="text" id="endTime" placeholder="End Time" style='height: 51px'>
+            </li>
+            <li>
+              <input type="submit" id="submit" value="make me a daateee" disabled>
             </li>
           </ul>
           <form class="navbar-form navbar-right" id="specific-venue">
@@ -93,11 +102,12 @@
     </body>
     
     <footer> 
-        <div class="container">
-        <input class="btn-sm" type="text" size="10" id="startTime" placeholder="Start Time" style='width: 15%'>
-                <input class="btn-sm" type="text" size="10" id="endTime" placeholder="End Time" style='width: 15%'>
-
+        <div class="container" id="footer-loc">
+          <!--
+          <input class="btn-sm" type="text" size="10" id="startTime" placeholder="Start Time" style='width: 15%'>
+          <input class="btn-sm" type="text" size="10" id="endTime" placeholder="End Time" style='width: 15%'>
           <input type="submit" id="submit" value="make me a daateee" style='width: 15%;'disabled>
+        -->
         </div>
    </footer>
   

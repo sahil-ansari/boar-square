@@ -118,7 +118,17 @@ var categoryColors = {
     Outdoors: {color: 'rgba(100, 150, 175, 0.8)', 'class': 'outdoors-color'},
     Sights: {color: 'rgba(50, 75, 100, 0.8)', 'class': 'sights-color'},
     'Hot spots': {color: 'rgba(25, 25, 200, 0.8)', 'class': 'hotspots-color'}
-};  
+};
+var sectionToIcon = {
+    'food': 'img/icons/food.jpg',
+    'drinks': 'img/icons/nightlife.jpg',
+    'coffee': 'img/icons/coffee.jpg',
+    'shops': 'img/icons/shopping.jpg',
+    'arts': 'img/icons/arts.jpg',
+    'outdoors': 'img/icons/outdoors.jpg',
+    'sights': 'img/icons/sights.jpg',
+    'trending': 'img/icons/trending.jpg'
+}
 
 //function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
 function addToEnvironment(category, placeObject, new_selected) {
@@ -161,7 +171,7 @@ function addNewCategory(name, previous, color, date_time) {
 }
 
  // what the api takes as 'section' parameter
-function toNearbyVenues(venues){ 
+function toNearbyVenues(venues, section){ 
     console.log("raw venue object from api:"); 
     console.dir(venues);
     var tmp = [venues.length];
@@ -169,7 +179,7 @@ function toNearbyVenues(venues){
     for(var i = 0; i<venues.length; i++)
     {
         //console.log(venues[i].venue.name);
-        var ven = rawVenueToOurVenue(venues[i].venue, venues[i].tips);
+        var ven = rawVenueToOurVenue(venues[i].venue, venues[i].tips, section);
 
         //console.dir(ven);
         tmp[i]= ven;//push[ven];
@@ -178,7 +188,7 @@ function toNearbyVenues(venues){
     return tmp;
 }
 
-function rawVenueToOurVenue(venue, tips) {
+function rawVenueToOurVenue(venue, tips, section) {
     var ven = {
         name: venue.name,
         id: venue.id,
@@ -210,9 +220,15 @@ function rawVenueToOurVenue(venue, tips) {
         ven.tip = '';
     }
 
-    var photogroups = venue.photos.groups;
-    var photoZone = photogroups[photogroups.length - 1].items[0];
-    ven.photo = photoZone.prefix + 'original' + photoZone.suffix;
+    if (venue.photos.count > 0) {
+        var photogroups = venue.photos.groups;
+        var photoZone = photogroups[0].items[0];
+        ven.photo = photoZone.prefix + 'original' + photoZone.suffix;
+    }
+    else {
+        ven.photo = sectionToIcon[section];
+    }
+
     return ven;
 }
 
@@ -609,7 +625,7 @@ function queryFoursquare(queryString, sectionName) {
     $.getJSON(queryString, function( data ) {
        // console.log('objects from section ' + sectionName);
         var thisCategory = foursquareSectionToCat[sectionName];
-        nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items); //all the nearby places
+        nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
 
         if(resetMap)
@@ -680,7 +696,7 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
             var photos = photoData.response.photos;
             console.log(photos);
             bestMatch.photos = photos;
-            var niceMatch = rawVenueToOurVenue(bestMatch);
+            var niceMatch = rawVenueToOurVenue(bestMatch, 'food');
             console.log(niceMatch);
             addedPlace = addToEnvironment("Restaurant", niceMatch, true);
             addNewLocation("Restaurant", addedPlace, true);
@@ -745,6 +761,13 @@ function loadFromStore(saveName) {
     initMap(data.loc[0], data.loc[1]);
 }
 
+function setFooterDescription(queryParams) {
+    var d = "A date in " + queryParams.location + 
+        " from " + queryParams.startTime + 
+        " to " + queryParams.endTime +
+        ". Have fun!";
+    $('#footer-loc').html(d);
+}
 
 $(document).ready(function (){
     if (!store.enabled) {
@@ -797,8 +820,15 @@ $(document).ready(function (){
     if (!initialQueryParams.location) {
         initialQueryParams.location = 'San Francisco';
     }
+    if (!initialQueryParams.startTime) {
+        initialQueryParams.startTime = "3:00";
+    }
+    if (!initialQueryParams.endTime) {
+        initialQueryParams.endTime = "6:00";
+    }
     currentArea = initialQueryParams.location;
     doFoursquareSectionsSearch(initialQueryParams.location);
+    setFooterDescription(initialQueryParams);
     // loadFromStore("myData");
     // initLocations(environment);
     // setIteneraryIcons();
@@ -820,9 +850,6 @@ $(document).ready(function (){
                       "myData");
         // data = load('myData');
         // console.log(load_boar_sq("myData"));
-
-
-
     }
     addNewLocationsOnceDone();
 
@@ -831,13 +858,12 @@ $(document).ready(function (){
           endhour : 23,
           layout : "horizontal",
           event : "mouseover"
-        });
+    });
 
-        $("#endTime").clockpick({
-          starthour : 8,
-          endhour : 23,
-          layout : "horizontal",
-          event : "mouseover"
-
-        });
+    $("#endTime").clockpick({
+      starthour : 8,
+      endhour : 23,
+      layout : "horizontal",
+      event : "mouseover"
+    });
 });

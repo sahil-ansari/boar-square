@@ -13,13 +13,17 @@
 
 body {
     height: 100%;
-    width: 100%;   
+    width: 100%;
 }
 
 footer {
-    color: #666;
+    color: #fff;
     background: #222;
-    padding: 17px 0 18px 0;
+    margin-left: -30px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.75em;
+    letter-spacing: 0.05em;
     border-top: 1px solid #000;
 }
 footer a {
@@ -28,6 +32,7 @@ footer a {
 footer a:hover {
     color: #efefef;
 }
+
 /* override the bootstrap container width */
 .container {
     max-width: 95%;
