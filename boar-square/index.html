@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/jquery.clockpick.1.2.9.css" type="text/css">
         <style>
             body {
                 padding-top: 50px;
@@ -39,6 +40,7 @@
         <script src="js/vendor/store.js"></script>
         <script src="js/io.js"></script> 
         <script src="js/main.js"></script>
+        <script src="js/vendor/jquery.clockpick.1.2.9.min.js"></script>
 
     </head>
     <body>
@@ -92,8 +94,9 @@
     
     <footer> 
         <div class="container">
-          <input type="text"  id="start" value="start time(not set up)" style='width: 15%;'disabled>
-          <input type="text"  id="duration" value="duration(not set up)" style='width: 15%;'disabled>
+        <input class="btn-sm" type="text" size="10" id="startTime" placeholder="Start Time" style='width: 15%'>
+                <input class="btn-sm" type="text" size="10" id="endTime" placeholder="End Time" style='width: 15%'>
+
           <input type="submit" id="submit" value="make me a daateee" style='width: 15%;'disabled>
         </div>
    </footer>

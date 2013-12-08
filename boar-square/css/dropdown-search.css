@@ -107,7 +107,7 @@ span.sb_down{
 	background-image:url(../img/icons/down.png);
 }
 input.sb_search{
-	background:#f2f2f2 url(../img/icons/search.png) no-repeat center center;
+	background:#f2f2f2 url(../img/icons/trending.jpg) no-repeat center center;
 	height:40px;
 	width:50px;
 	float:left;
@@ -124,74 +124,3 @@ input.sb_search:hover{
 }
 
 
-/**
- * Checkbox Three
- */
-.checkboxThree {
-	width: 120px;
-	height: 40px;
-	background: #333;
-	margin: 20px 60px;
-
-	border-radius: 50px;
-	position: relative;
-
-	z-index: 10;
-}
-
-/**
- * Create the text for the On position
- */
-.checkboxThree:before {
-	content: '';
-	position: absolute;
-	top: 12px;
-	left: 13px;
-	height: 2px;
-	color: #26ca28;
-	font-size: 16px;
-}
-
-/**
- * Create the label for the off position
- */
-.checkboxThree:after {
-	content: "Trending";
-	position: absolute;
-	top: 12px;
-	left: 84px;
-	height: 2px;
-	color: #111;
-	font-size: 16px;
-}
-
-/**
- * Create the pill to click
- */
-.checkboxThree label {
-	display: block;
-	width: 52px;
-	height: 22px;
-	border-radius: 50px;
-
-	-webkit-transition: all .5s ease;
-	-moz-transition: all .5s ease;
-	-o-transition: all .5s ease;
-	-ms-transition: all .5s ease;
-	transition: all .5s ease;
-	cursor: pointer;
-	position: absolute;
-	top: 9px;
-	z-index: 1;
-	left: 12px;
-	background: #ddd;
-}
-
-/**
- * Create the checkbox event for the label
- * @type {[type]}
- */
-.checkboxThree input[type=checkbox]:checked + label {
-	left: 60px;
-	background: #26ca28;
-}

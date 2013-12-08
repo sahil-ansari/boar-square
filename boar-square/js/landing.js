@@ -1,7 +1,23 @@
 $(function () {
 
   var venueCount=0;
-  var initialParameters;
+  initialParameters = {
+          'location': $('#location').val(),
+          'startTime' : $('#startTime').val(),
+          'endTime' : $('#endTime').val(),
+          'venueName1' : $('#venuename1').val(),
+          'category1' : '',
+          'price1' : $('#trending1').val(),
+          'trending1' : $('#trending1').val(),
+          'venueName2' : $('#venuename2').val(),
+          'category2' : '',
+          'price2' : '',
+          'trending2' : $('#trending2').val(),
+          'venueName3' : $('#venuename3').val(),
+          'category3' : '',
+          'price3' : '',
+          'trending3' : $('#trending3').val(),
+        };
 
   //If Create new is clicked
   $('#newDate').click( function() {
@@ -71,20 +87,31 @@ $(function () {
           'startTime' : $('#startTime').val(),
           'endTime' : $('#endTime').val(),
           'venueName1' : $('#venuename1').val(),
-          'price1' : $('#trending1').val(),
-          'trending1' : $('#trending1').val(),
+          'category1' : '',
+          'price1' : $('input[name=price1]:checked').val(),
           'venueName2' : $('#venuename2').val(),
+          'category2' : '',
           'price2' : '',
-          'trending2' : $('#trending2').val(),
           'venueName3' : $('#venuename3').val(),
+          'category3' : '',
           'price3' : '',
-          'trending3' : $('#trending3').val(),
         };
 
         console.dir(initialParameters);
 
 
       });
+
+        $('.filters1').click( 
+            function autofill(){
+              venuename1.value="(Category: "+this.id+")";
+              initialParameters.category1=this.id;
+               $('#category1params').hide();
+              $('#category1params').removeClass("hidden");
+              $('#category1params').fadeIn('slow');
+console.dir();
+
+            });
 
 
 
@@ -97,14 +124,15 @@ $(function () {
             // query+= '&startTime=' + initialParameters.startTime;
             // query+= '&endTime=' + initialParameters.endTime;
             // query+= '&venueName1=' + initialParameters.venuename1;
+            // query+= '&category1=' + initialParameters.category1;
             // query+= '&price1=' + initialParameters.price1;
-            // query+= '&trending1=' + initialParameters.trending1;
+            // query+= '&category2=' + initialParameters.category2;
             // query+= '&venueName2=' + initialParameters.venuename2;
             // query+= '&price2=' + initialParameters.price2;
-            // query+= '&trending2=' + initialParameters.trending2;
+            // query+= '&category3=' + initialParameters.category3;
             // query+= '&venueName3=' + initialParameters.venuename3;
             // query+= '&price3=' + initialParameters.price3;
-            // query+= '&trending3=' + initialParameters.trending3;
+
             
 
         window.location.replace("./index.html?" + query);
@@ -117,11 +145,15 @@ $(function () {
         $("#startTime").clockpick({
           starthour : 8,
           endhour : 23,
+          layout : "horizontal",
+          event : "mouseover"
         });
 
         $("#endTime").clockpick({
           starthour : 8,
           endhour : 23,
+          layout : "horizontal",
+          event : "mouseover"
 
         });
 

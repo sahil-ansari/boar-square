@@ -100,28 +100,34 @@
                     </ul>
                   </form>
                   <center>
-                 <!--      <div class="price">
+                  <br>
+
+                      <div id="category1params" class="hidden">
 
 
                         <input type = "radio"
-                        name = "radSize"
+                        name = "price1"
                         id = "$1"
-                        value = "small"
+                        value = "1"
                         checked = "checked" />
-                        <label for = "$1">$</label>
-
+                        <label for = "$1">  $</label>
+  
                         <input type = "radio"
-                        name = "radSize"
+                        name = "price1"
                         id = "$$1"
-                        value = "medium" />
-                        <label for = "$$1">$$</label>
+                        value = "2" />
+                        <label for = "$$1">  $$</label>
 
                         <input type = "radio"
-                        name = "radSize"
+                        name = "price1"
                         id = "$$$1"
-                        value = "large" />
-                        <label for = "$$$1">$$$</label>
-                      </div> -->
+                        value = "3" />
+                        <label for = "$$$1">  $$$</label>
+
+                        <br>
+
+                      </div>
+
                     </center>
                   </div>
                   <br>
@@ -236,10 +242,10 @@
               </div>
 
 
-              <button class="btn-primary hidden" id="addVenue"  type="submit">Add Venue (Optional)</button>
+              <button class="btn-primary hidden btn-sm" id="addVenue"  type="submit">Add Venue (Optional)</button>
               <br>
               <br>
-              <button class="btn btn-lg btn-success btn-primary btn-block" id="goDate" type="submit">Plan My Date!</button>
+              <button class="btn btn-lg btn-success btn-primary btn-block hidden" id="goDate" type="submit">Plan My Date!</button>
               <!-- <button class="btn btn-success btn-large btn-primary btn-block" id="goDate" type="submit" onclick="window.location.href='index.html'">Plan My Date!</button> -->
               <form id="target">
               </div>
@@ -283,6 +289,10 @@
               $('#addVenue').hide();
               $('#addVenue').removeClass("hidden");
               $('#addVenue').fadeIn('slow');
+
+              $('#goDate').hide();
+              $('#goDate').removeClass("hidden");
+              $('#goDate').fadeIn('slow');
             }
 
           }
@@ -291,12 +301,7 @@
           
           // Autofills if a category is chosena
 
-          $('.filters1').click( 
-            function autofill(){
-              venuename1.value="(Category: "+this.id+")";
-              // var object = document.getElementsByName('Food');
-              // object.item(0).value="Autofill successful.";
-            });
+         
 
           $(function() {
         /**
