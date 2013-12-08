@@ -144,7 +144,7 @@ function addToEnvironment(category, placeObject, new_selected) {
     }, placeObject); // deep copy
 
     environment[category].places.push( newPlace ); 
-    console.log(environment[category]);
+    //console.log(environment[category]);
 
     return newPlace;
 }
@@ -154,7 +154,7 @@ function addNewCategory(name, previous, color, date_time) {
         console.error("Category: " + category + " already exists!");
     }
     
-    console.log(previous);
+    //console.log(previous);
     var nextCat = environment[previous].nextCategory;
     environment[name] = {
         previousCategory: previous,
@@ -172,8 +172,8 @@ function addNewCategory(name, previous, color, date_time) {
 
  // what the api takes as 'section' parameter
 function toNearbyVenues(venues, section){ 
-    console.log("raw venue object from api:"); 
-    console.dir(venues);
+    //log("raw venue object from api:"); 
+    //console.dir(venues);
     var tmp = [venues.length];
     
     for(var i = 0; i<venues.length; i++)
@@ -223,8 +223,6 @@ function rawVenueToOurVenue(venue, tips, section) {
     var photogroups = venue.photos.groups;
     if (photogroups.length > 0) {
         var photoZone = photogroups[photogroups.length - 1].items[0];
-        console.log(photogroups);
-        console.log(photoZone);
         ven.photo = photoZone.prefix + 'original' + photoZone.suffix;
     }
     else {
@@ -235,7 +233,6 @@ function rawVenueToOurVenue(venue, tips, section) {
 }
 
 function setCategoryRef(apiCategories){
-    console.dir(apiCategories);
     cats = apiCategories;
     console.log("hi");
     for(var i = 0;i<cats.response.categories.length;i++) {
@@ -246,7 +243,7 @@ function setCategoryRef(apiCategories){
             //categoryIds[subcat.name] = subcat.id;
         }
     } 
-    console.log(categoryIds);
+    //console.log(categoryIds);
 }
 
 function initMap(lat,lon) {
@@ -479,8 +476,7 @@ function addThumbnail(loc, suggested) {
     if (loc.selected) {
         thumbnailClass += " thumb_selected";
     }
-    console.log(loc.photo);
-    console.log(loc);
+    //console.log(loc.photo);
     var thumb = $( "<img/>", {
       //"src": "img/placeholder.jpg",
       "src": loc.photo,
@@ -632,7 +628,7 @@ function queryFoursquare(queryString, sectionName) {
 
         if(resetMap)
         {   
-            console.dir(theseVenues[0].point[0]);//.venue.location.lat);
+            //console.dir(theseVenues[0].point[0]);//.venue.location.lat);
             if (!mapInitiated) {
                 initMap(theseVenues[0].point[0], theseVenues[0].point[1]);
             }
@@ -684,11 +680,10 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         queryString += '&categoryId=' + categoryId;
     }
     $.getJSON(queryString, function(data) {
-        console.log(venueTerms + ' results:');
-        console.log(data);
+        //console.log(venueTerms + ' results:');
 
         var bestMatch = data.response.venues[0];
-        console.log(bestMatch.id);
+        //console.log(bestMatch.id);
         var photoQuery = 'https://api.foursquare.com/v2/venues/' + bestMatch.id + '/photos?' +
             'limit=1' + 
             '&client_id=' + clientId + 
@@ -696,10 +691,8 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
             '&v=20120625';
         $.getJSON(photoQuery, function(photoData) {
             var photos = photoData.response.photos;
-            console.log(photos);
             bestMatch.photos = photos;
             var niceMatch = rawVenueToOurVenue(bestMatch, 'food');
-            console.log(niceMatch);
             addedPlace = addToEnvironment("Restaurant", niceMatch, true);
             addNewLocation("Restaurant", addedPlace, true);
         })        
@@ -715,7 +708,7 @@ function getUrlParams() {
         vars[termSplit[0]] = unescape(termSplit[1]);
     }
     return vars;
-    console.dir(vars);
+    //console.dir(vars);
 }
 
 function doFoursquareSectionsSearch(locationName) {
@@ -795,7 +788,6 @@ $(document).ready(function (){
         resetMap = true;                  // of recommended nearby venues
         area = this.value;
         currentArea = area; 
-        console.log(area);
 
         clearMap();
         resetMapKeepingVariables();
@@ -805,8 +797,8 @@ $(document).ready(function (){
 
     $('#specific-venue').submit(function() {
         var venueTerms = $("#specific-venue-query").val();
-        console.log('specific venue query');
-        console.log(currentArea);
+       // console.log('specific venue query');
+        //console.log(currentArea);
         querySpecificVenueFoursquare(venueTerms, currentArea, null);
 
         return false;
@@ -820,7 +812,7 @@ $(document).ready(function (){
     //initLocations(environment);
 
     var initialQueryParams = getUrlParams();
-    console.log(initialQueryParams);
+    //console.log(initialQueryParams);
     if (!initialQueryParams.location) {
         initialQueryParams.location = 'San Francisco';
     }
@@ -839,11 +831,10 @@ $(document).ready(function (){
 
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
-            console.log('not done');
+            //console.log('not done');
             setTimeout(addNewLocationsOnceDone, 100);
             return false;
         }
-        console.log('doneeee');
         initLocations(environment);
         setIteneraryIcons();
         save_boar_sq({
