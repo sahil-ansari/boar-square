@@ -654,11 +654,27 @@ function queryFoursquare(queryString, sectionName) {
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
 
+        var totalLatitudes=0, totalLongitudes=0, avLat=0,avLong=0;
+
+        for(var i = 0;i<theseVenues.length;i++)
+        {
+            totalLatitudes += theseVenues[i].point[0];
+            totalLongitudes += theseVenues[i].point[1];
+
+        }
+        avLat = totalLatitudes / theseVenues.length;
+        avLon = totalLongitudes / theseVenues.length;
+        console.log("la: "+avLat+"lo: "+avLon);
+
+
+        //console.dir(theseVenues);
+
         if(resetMap)
         {   
             //console.dir(theseVenues[0].point[0]);//.venue.location.lat);
             if (!mapInitiated) {
-                initMap(theseVenues[0].point[0], theseVenues[0].point[1]);
+                //initMap(theseVenues[0].point[0], theseVenues[0].point[1]);
+                initMap(avLat, avLon);
             }
             else {
                 var center = new L.LatLng(theseVenues[0].point[0], theseVenues[0].point[1]);
@@ -887,14 +903,12 @@ $(document).ready(function (){
     $("#startTime").clockpick({
           starthour : 8,
           endhour : 23,
-          layout : "horizontal",
           event : "mouseover"
     });
 
     $("#endTime").clockpick({
       starthour : 8,
       endhour : 23,
-      layout : "horizontal",
       event : "mouseover"
     });
 });
