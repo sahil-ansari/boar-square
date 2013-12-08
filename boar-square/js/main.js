@@ -869,7 +869,6 @@ $(document).ready(function (){
     $("#startTime").clockpick({
           starthour : 8,
           endhour : 23,
-          layout : "horizontal",
           event : "mouseover"
     });
 
