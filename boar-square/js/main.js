@@ -676,9 +676,13 @@ function getRandomColor()  {
     return color;
 }
 
+console.log($.support.cors);
+
 function queryFoursquare(queryString, sectionName) {
+    $('#notFound').css('visibility','hidden');
+
     var lat,lon;
-    $.getJSON(queryString, function( data ) {
+    var search = $.getJSON(queryString, function( data ) {
        // console.log('objects from section ' + sectionName);
         var thisCategory = foursquareSectionToCat[sectionName];
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
@@ -693,9 +697,6 @@ function queryFoursquare(queryString, sectionName) {
         }
         avLat = totalLatitudes / theseVenues.length;
         avLon = totalLongitudes / theseVenues.length;
-        console.log("la: "+avLat+"lo: "+avLon);
-
-
         //console.dir(theseVenues);
 
         if(resetMap)
@@ -724,7 +725,10 @@ function queryFoursquare(queryString, sectionName) {
         addSuggestions(thisCategory, 0);
         
         searchVenuesCounter++;
-    },'text');
+
+    }).fail(function(){
+        $('#notFound').css('visibility','visible');
+    });
 }
 
 function addSuggestions(category, lastIndex) {
@@ -747,6 +751,7 @@ function addSuggestions(category, lastIndex) {
 }
 
 function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
+    $('#notFound').css('visibility','hidden');  //remove error message
     var queryString = 'https://api.foursquare.com/v2/venues/search?' +
         'query=' + venueTerms + 
         '&near=' + location + 
@@ -760,10 +765,12 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
         var categoryId = categoryIds[categoryName];
         queryString += '&categoryId=' + categoryId;
     }
-    $.getJSON(queryString, function(data) {
+    var search = $.getJSON(queryString, function(data) {
         //console.log(venueTerms + ' results:');
 
         var bestMatch = data.response.venues[0];
+        if(bestMatch == null)
+            $('#notFound').css('visibility','visible');
         //console.log(bestMatch.id);
         var photoQuery = 'https://api.foursquare.com/v2/venues/' + bestMatch.id + '/photos?' +
             'limit=1' + 
@@ -777,7 +784,9 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
             addedPlace = addToEnvironment("Restaurant", niceMatch, true, false);
             addNewLocation("Restaurant", addedPlace, true);
         })        
-    }, 'text');
+    }).fail(function(){
+        $('#notFound').css('visibility','visible');
+    });
 }
 
 // get the parameters in our url. Sourced from stackoverflow (sort of).

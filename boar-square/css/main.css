@@ -17,9 +17,15 @@ body {
 }
 
 footer {
+    position:fixed;
+    bottom: 0;
+    width: 100%;
     color: #111;
     background: #FFB6C1;
+
+    margin-bottom: 0px;
     margin-left: -5px;
+
     height: 40px;
     line-height: 40px;
     font-size: 1.75em;
@@ -350,6 +356,13 @@ width:100%;
 .heart-marker {
 }
 
+#notFound {
+  color:rgb(240,0,50); 
+  visibility: hidden;
+  border-style: solid;
+  border-radius: 10px;
+  margin-left: 20px;
+}
 
 
 
