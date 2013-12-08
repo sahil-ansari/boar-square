@@ -265,11 +265,11 @@ function setIteneraryIcons() {
     while (category != null) {
         var selected = findSelectedInCategory(category);
         var itenId = '"itenerary_' + category + '"';
-        column.append("<div class='itenerary-item'> \
+        column.append("<div class='special-well'><div class='itenerary-item'> \
                           <div class='itenerary-item-text' id=" + itenId + ">" + selected.name + "</div>" +
                           "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
                           selected.address + "</div>" + 
-                       "</div>");
+                       "</div></div>");
         category = environment[category].nextCategory;
         if (category)
             column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
@@ -628,7 +628,7 @@ function queryFoursquare(queryString, sectionName) {
         //console.dir(nearbyVenues);
 
         /* add the new category */
-        addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + " PM");
+        addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = thisCategory;
         timeForNextDate += 1; // 1 hour change
     
@@ -731,7 +731,7 @@ function loadFromStore(saveName) {
     savedEnv = data.env; 
     thisCategory = savedEnv['__START__'].nextCategory;
     while (thisCategory != null) {
-        addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + " PM");
+        addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = thisCategory;
         timeForNextDate += 1; // 1 hour change
 
