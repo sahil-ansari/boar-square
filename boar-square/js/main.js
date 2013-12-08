@@ -544,6 +544,7 @@ function addThumbnail(loc, venue_info_div, suggested) {
 
     if (loc.selected) {
         thumbnailClass += " thumb_selected";
+        setInfoDiv(venue_info_div, loc);
     }
     //console.log(loc.photo);
     var thumb = $( "<img/>", {
