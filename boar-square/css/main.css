@@ -238,8 +238,12 @@ width:100%;
     text-align: center;
 }
 
-.coffee-color {
+.popup-coffee-color .leaflet-popup-content-wrapper {
     background-color: rgba(255, 215, 128, 0.8);
+}
+
+.coffee-color {
+    background-color: rgba(184, 138, 31, 0.8);
 }
 
 .park-color {
@@ -251,11 +255,11 @@ width:100%;
 }
 
 .bar-color {
-    background-color: rgba(200, 200, 200, 0.8);
+    background-color: rgba(222, 0, 214, 0.8);
 }
 
 .shopping-color {
-    background-color: rgba(155, 100, 200, 0.8);
+    background-color: rgba(255, 106, 0, 0.8);
 }
 
 .outdoors-color {
@@ -263,11 +267,11 @@ width:100%;
 }
 
 .sights-color {
-    background-color: rgba(50, 75, 100, 0.8);
+    background-color: rgba(25, 25, 200, 0.8);
 }
 
 .hotspots-color {
-    background-color: rgba(25, 25, 200, 0.8);
+    background-color: rgba(255, 31, 188, 0.8);
 }
 
 .category-options {
@@ -343,6 +347,8 @@ width:100%;
     font-size: 1.5em;
 }
 
+.heart-marker {
+}
 
 
 

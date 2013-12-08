@@ -75,18 +75,37 @@ var currentArea = null;
 var the_lat;
 var the_lon;
 
+var heartIcon = L.Icon.extend({
+    options: {
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30],
+        labelAnchor: [14, -15],
+        className: 'heart-marker'
+    }
+});
+var bigHeartIcon = L.Icon.extend({
+    options: {
+        iconSize: [50, 50],
+        iconAnchor: [25, 50],
+        popupAnchor: [0, -50],
+        labelAnchor: [23, -25],
+        className: 'big-heart-marker'
+    }
+});
+
 var selectedPathOptions = {
     dashArray: null,
-    weight: 8,
+    weight: 5,
     opacity: 1.0,
     color: "#2a6496"
 };
 
 var possiblePathOptions = {
     dashArray: '5, 10',
-    weight: 6,
+    weight: 3,
     opacity: 0.5,
-    color: "#E6A45E"
+    color: "#00CED1"
 };
 
 var iToColor = [
@@ -110,14 +129,14 @@ var foursquareSectionToCat = {
     'trending': 'Hot spots'
 };
 var categoryColors = {
-    Coffee: {color: 'rgba(255, 215, 128, 0.8)', 'class': 'coffee-color'},
-    Museum: {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color'}, 
-    Restaurant: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color'},
-    Bar: {color: 'rgba(200, 200, 200, 0.8)', 'class': 'bar-color'},
-    Shopping: {color: 'rgba(155, 100, 200, 0.8)', 'class': 'shopping-color'},
-    Outdoors: {color: 'rgba(100, 150, 175, 0.8)', 'class': 'outdoors-color'},
-    Sights: {color: 'rgba(50, 75, 100, 0.8)', 'class': 'sights-color'},
-    'Hot spots': {color: 'rgba(25, 25, 200, 0.8)', 'class': 'hotspots-color'}
+    Coffee: {color: 'rgba(255, 215, 128, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
+    Museum: {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
+    Restaurant: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color', 'iconUrl': 'img/markers/restaurant-heart-marker.png'},
+    Bar: {color: 'rgba(200, 200, 200, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
+    Shopping: {color: 'rgba(155, 100, 200, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
+    Outdoors: {color: 'rgba(100, 150, 175, 0.8)', 'class': 'outdoors-color', 'iconUrl': 'img/markers/outdoors-heart-marker.png'},
+    Sights: {color: 'rgba(50, 75, 100, 0.8)', 'class': 'sights-color', 'iconUrl': 'img/markers/sights-heart-marker.png'},
+    'Hot spots': {color: 'rgba(25, 25, 200, 0.8)', 'class': 'hotspots-color', 'iconUrl': 'img/markers/hotspots-heart-marker.png'}
 };
 var sectionToIcon = {
     'food': 'img/icons/food.jpg',
@@ -359,12 +378,17 @@ function setMarkerSelected(place, category, isSelected) {
     }
 
     if (isSelected) {
-        newOpacity = 1.0;
+        newOpacity = 0.85;
         newOptions = selectedPathOptions;
-        
+        place.marker.bindLabel(place.name, {
+            noHide: true,
+            className: 'marker-label ' + environment[category].categoryColorClass,
+        }).showLabel();
     } else {
         newOpacity = 0.5; 
         newOptions = possiblePathOptions;
+        map.removeLayer(place.marker.label);
+        place.marker.label === undefined;
     }
 
     place.marker.setOpacity(newOpacity);
@@ -436,12 +460,11 @@ function initLocations(locations) {
         for (var j=0; j<locOptions.length; j++) {
             var loc = locOptions[j];
             
-            var marker = L.marker(loc.point);
+            var marker = L.marker(loc.point, {
+                icon: new heartIcon({iconUrl: categoryColors[category].iconUrl})
+            });
             loc.marker = marker;
             
-            if (!loc.selected)  
-                marker.setOpacity(0.5)                  
-
             if (typeOfPlace.nextCategory) {
                 var nextTypeOfPlace = environment[typeOfPlace.nextCategory];
                 createPaths(loc, nextTypeOfPlace.places, typeOfPlace.color); 
@@ -450,14 +473,21 @@ function initLocations(locations) {
             marker.on('click', markerClicked);
             marker.on('mouseover', markerMouseOver);
             marker.on('mouseout', markerMouseLeft);
+
+            if (loc.selected) {
+                marker.bindLabel(loc.name, {
+                    noHide: true,
+                    className: 'marker-label ' + typeOfPlace.categoryColorClass,
+                }).showLabel();
+                marker.setOpacity(0.85);
+            }
+            else {
+                marker.setOpacity(0.5, false);
+            }
            
-            marker.bindLabel(loc.name, {
-                noHide: true,
-                className: 'marker-label ' + typeOfPlace.categoryColorClass,
-            }).showLabel();
-           
-            marker.bindPopup(loc.specificCategory + ' - ' + loc.address, {
-                closeButton: false,
+            marker.bindPopup(loc.name + ' - ' + loc.specificCategory + ' - ' + loc.address, {
+                closeButton: false
+                //className: 'popup-' + 'coffee-color'
             });
             
             markersInMap.push(marker);
@@ -660,7 +690,6 @@ function queryFoursquare(queryString, sectionName) {
         {
             totalLatitudes += theseVenues[i].point[0];
             totalLongitudes += theseVenues[i].point[1];
-
         }
         avLat = totalLatitudes / theseVenues.length;
         avLon = totalLongitudes / theseVenues.length;
@@ -855,13 +884,6 @@ $(document).ready(function (){
 
         return false;
     });
-
-    //initMap(37.7,-122.2);
-    //setIteneraryIcons();
-    //addNewCategory("Cookies", "Coffee", "park-color", "11 AM")
-    //addToEnvironment("Cookies", "insomnia", "123 town", [37.8, -122.25], true);
-    //addToEnvironment("Coffee", "doodo", "123 town", [37.89, -122.25], false);
-    //initLocations(environment);
 
     var initialQueryParams = getUrlParams();
     //console.log(initialQueryParams);
