@@ -4,7 +4,7 @@
    Author's custom styles
    ========================================================================== */
 
-   html {
+html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -22,8 +22,10 @@ footer {
     width: 100%;
     color: #111;
     background: #FFB6C1;
-    margin-left: -30px;
+
     margin-bottom: 0px;
+    margin-left: -5px;
+
     height: 40px;
     line-height: 40px;
     font-size: 1.75em;
@@ -39,7 +41,7 @@ footer a:hover {
 
 /* override the bootstrap container width */
 .container {
-    max-width: 95%;
+    max-width: 100%;
 }
 
 /* our three main columns */
@@ -50,23 +52,27 @@ footer a:hover {
 
 #option-column {
     overflow-y:auto;
-    height:600px;    
+    height:600px; 
 }
 
-.wrapper { 
+.category-div-wrapper { 
     /* -moz-border-radius: 5px; */
     overflow-x:scroll;
     float:left;
     width:100%;
-    
-
+    height: 140px;
+    font-size: 0.7em;
  }
+
+.option-row {
+
+}
+
 .scrolls { 
     overflow-x: scroll;
     overflow-y: hidden;
-    overflow : scroll; /* ! */
     white-space : nowrap; /* ! */
-    width:255px;
+    width: 330px;
 } 
 
 #itenerary-column {
@@ -273,28 +279,28 @@ width:100%;
 .category-options {
 }
 
-.place_thumbnail
-{
+.place_thumbnail {
     float: left;
-    width: 70px;
-    margin: 0 15px 15px 0;
+    width: 110px;
     padding: 5px;
     text-align: center;
     cursor: pointer;
     white-space: normal;
-
 }
 
 .thumb_personal {
   border: 2px solid orange;
+  border-radius: 5px;
 }
 
 .thumb_suggested {
-  border: 2px solid #428bca ;
+  border: 2px solid #428bca;
+  border-radius: 5px;
 }
 
 .thumb_selected {
   border: 2px solid red;
+  border-radius: 5px;
 }
 
 .thumb_personal:hover, .thumb_personal:focus,
@@ -330,6 +336,13 @@ width:100%;
     display: inline-block;
     float: right;
     font-size: 1.5em;
+    color: black;
+    cursor: pointer;
+}
+
+.refresh-icon:hover,
+.refresh-icon:focus {
+    color: #888;
 }
 
 .category-header {
