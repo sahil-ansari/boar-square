@@ -336,6 +336,14 @@ width:100%;
     font-size: 1.5em;
 }
 
+#notFound {
+  color:rgb(240,0,50); 
+  visibility: hidden;
+  border-style: solid;
+  border-radius: 10px;
+  margin-left: 20px;
+}
+
 
 
 
