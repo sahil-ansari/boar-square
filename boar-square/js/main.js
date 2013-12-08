@@ -876,7 +876,6 @@ $(document).ready(function (){
     $("#endTime").clockpick({
       starthour : 8,
       endhour : 23,
-      layout : "horizontal",
       event : "mouseover"
     });
 });
