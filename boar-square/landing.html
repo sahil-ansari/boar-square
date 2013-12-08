@@ -65,10 +65,11 @@
             <br>
             <div id="landing-date-planning" class="hidden">
               <input type="text" id="location" class="form-control" onchange="check()" placeholder="Location" autofocus>
-              <center>
-                <input class="btn-sm" type="text" size="10" id="startTime" onchange="check()" placeholder="Start Time">
-                <input class="btn-sm" type="text" size="10" id="endTime" onchange="check()" placeholder="End Time">
-              </center>
+              <div class="row">
+                <input class="btn col-md-2 col-md-offset-5 control-label" type="text" size="10" id="startTime" onchange="check()" placeholder="Start Time">
+                <br>
+                <input class="btn col-md-2 col-md-offset-5 control-label" type="text" size="10" id="endTime" onchange="check()" placeholder="End Time">
+              </div>
               <br>
 
 
@@ -242,7 +243,7 @@
               </div>
 
 
-              <button class="btn-primary hidden btn-sm" id="addVenue"  type="submit">Add Venue (Optional)</button>
+              <button class="btn btn-primary hidden btn-sm" id="addVenue"  type="submit">Add Venue (Optional)</button>
               <br>
               <br>
               <button class="btn btn-lg btn-success btn-primary btn-block hidden" id="goDate" type="submit">Plan My Date!</button>
