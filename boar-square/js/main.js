@@ -283,8 +283,7 @@ function initMap(lat,lon) {
     the_lat = lat; 
     var options ={
         center: new L.LatLng(lat, lon),
-        //center: new L.LatLng(40.77, -73.94),
-        zoom: 15
+        zoom: 12
     };
 
     map = new L.Map('map', options);
@@ -304,16 +303,20 @@ function findSelectedInCategory(category) {
 }
 
 function clearCols() {
+    clearItenerary();
+    var column_options = $('#option-div');
+    column_options.empty();
+}
+
+function clearItenerary() {
     var column_itenerary = $('#itenerary-div');
     column_itenerary.empty(); 
-
-    var column_options = $('#option_div');
-    column_options.empty();
 }
 
 function setIteneraryIcons() {
     var category = environment.__START__.nextCategory;
     var column = $('#itenerary-div');
+    column.empty();
     
     idx = 1; 
     while (category != null) {
@@ -329,11 +332,7 @@ function setIteneraryIcons() {
         if (category)
             column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
         idx += 1; 
-
-      
     }
-
-
 }
 
 function changeSelection(indexKey) {
@@ -552,14 +551,11 @@ function initLocations(locations) {
         var sections = target_id.split('_');
         var category = sections[sections.length-1];
 
-        addSuggestions(category, nextToSuggest[category]);
         clearMap();
-
+        addSuggestions(category, nextToSuggest[category]);
         initLocations(environment);
         setIteneraryIcons();
         setCategoryDivWidth(category);
-
-
 
         return false;
 }
@@ -608,11 +604,11 @@ function setInfoDiv(venue_info_div, loc) {
     if (loc.url)
         link = "<a target='_blank' href='" + loc.url + "'>" + loc.name + "</a>"
 
-    console.log(venue_info_div);
     venue_info_div.html("<div>" + link + " (" + loc.rating + "/10) - Cost: " + loc.price + "</div>");
 }
 
 function addNewLocation(category, location, personal) {
+    clearItenerary();
     var category_div = $("#category_div_" + category);
     var loc = location;
 
@@ -710,7 +706,6 @@ function clearMap() {
         map.removeLayer(markersInMap[i]);
     markersInMap = [];
     clearCols();
-
 }
 
 function thumbnailClicked(leaflet_id){
@@ -824,7 +819,7 @@ function queryFoursquare(queryString, sectionName) {
         }
         actuallyAddVenues();
     }).fail(function(){
-        $('#notFound').css('visibility','visible');
+        $('#notFound').show();
     });
 }
 
@@ -848,7 +843,7 @@ function addSuggestions(category, lastIndex) {
 }
 
 function querySpecificVenueFoursquare(venueTerms, location, categoryName) {
-    $('#notFound').css('visibility','hidden');  //remove error message
+    $('#notFound').hide();  //remove error message
     var queryString = 'https://api.foursquare.com/v2/venues/search?' +
         'query=' + venueTerms + 
         '&near=' + location + 
