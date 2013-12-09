@@ -34,27 +34,27 @@ $(function () {
       });
 
 //If choose existing is called
-  $('#oldDate').click( function() {
-
-        
-        $(".jumbotron").animate({height:"+=225px"}, 200);
-        $(".form-group").removeClass("hidden");
-        
-        document.getElementById('newDate').disabled=true;
-        document.getElementById('oldDate').disabled=true;
+$('#oldDate').click( function() {
 
 
-        return false;
-      });
+  $(".jumbotron").animate({height:"+=225px"}, 200);
+  $(".form-group").removeClass("hidden");
+
+  document.getElementById('newDate').disabled=true;
+  document.getElementById('oldDate').disabled=true;
+
+
+  return false;
+});
 
 
 
 
-  $('#addVenue').click( function() {
-    if(venueCount==3)
-      document.getElementById('addVenue').disabled=true;
+$('#addVenue').click( function() {
+  if(venueCount==3)
+    document.getElementById('addVenue').disabled=true;
 
-    else{
+  else{
         // $("#bottomLogo").addClass("hidden");
         $(".jumbotron").animate({height:"+=200px"}, 200);
         if(venueCount==2){
@@ -69,7 +69,7 @@ $(function () {
         if(venueCount==1){
           $("#venue2").removeClass("hidden");
           venueCount++;
-           $( "#addVenue" ).empty();
+          $( "#addVenue" ).empty();
           $( "#addVenue" ).append("Add Up to <strong><font size=14>1</font></strong> More Date Spot (Optional)");
         }
 
@@ -77,7 +77,7 @@ $(function () {
           $("#venue1").removeClass("hidden");
           venueCount++;
           $( "#addVenue" ).empty();
-         $( "#addVenue" ).append("Add Up to <strong><font size=14>2</font></strong> More Date Spot (Optional)");
+          $( "#addVenue" ).append("Add Up to <strong><font size=14>2</font></strong> More Date Spot (Optional)");
 
         }
 
@@ -90,44 +90,44 @@ $(function () {
 
 
 
-       $('.filters').click( 
-        function autofill(){
+$('.filters').click( 
+  function autofill(){
 
-          console.dir(this.value);
+    console.dir(this.value);
 
-          if(this.value==1){
-          venuename1.value="(Category: "+this.name+")";
-          initialParameters.category1=this.name;
-          $('#category1params').hide();
-          $('#category1params').removeClass("hidden");
-          $('#category1params').fadeIn('slow');
-          
-
-        }
-
-      if(this.value==2){
-          venuename2.value="(Category: "+this.name+")";
-          initialParameters.category2=this.name;
-          $('#category2params').hide();
-          $('#category2params').removeClass("hidden");
-          $('#category2params').fadeIn('slow');
+    if(this.value==1){
+      venuename1.value="(Category: "+this.name+")";
+      initialParameters.category1=this.name;
+      $('#category1params').hide();
+      $('#category1params').removeClass("hidden");
+      $('#category1params').fadeIn('slow');
 
 
-        }
+    }
 
-      if(this.value==3){
-       
-        
-          venuename3.value="(Category: "+this.name+")";
-          initialParameters.category3=this.name;
-          $('#category3params').hide();
-          $('#category3params').removeClass("hidden");
-          $('#category3params').fadeIn('slow');
-          
+    if(this.value==2){
+      venuename2.value="(Category: "+this.name+")";
+      initialParameters.category2=this.name;
+      $('#category2params').hide();
+      $('#category2params').removeClass("hidden");
+      $('#category2params').fadeIn('slow');
 
-        }
 
-      });
+    }
+
+    if(this.value==3){
+
+
+      venuename3.value="(Category: "+this.name+")";
+      initialParameters.category3=this.name;
+      $('#category3params').hide();
+      $('#category3params').removeClass("hidden");
+      $('#category3params').fadeIn('slow');
+
+
+    }
+
+  });
 
 
        //Make a Date
@@ -137,7 +137,7 @@ $(function () {
         e.preventDefault();
         e.stopPropagation(); 
 
-          initialParameters = {
+        initialParameters = {
           'location': $('#location').val(),
           'startTime' : $('#startTime').val(),
           'endTime' : $('#endTime').val(),
@@ -176,23 +176,32 @@ $(function () {
           });
 
 
-       $(document).ready(function (){
-        $("#startTime").clockpick({
-          starthour : 8,
-          endhour : 23,
-          layout : "horizontal"
+
+// What happens if we hit load date from file??
+$('#LoadDate').click(function(e) {
+  window.location.replace("./index.html?");
+
+});
+
+
+$(document).ready(function (){
+  $("#startTime").clockpick({
+    starthour : 8,
+    endhour : 23,
+    layout : "horizontal"
           // event : "mouseover"
         });
 
-        $("#endTime").clockpick({
-          starthour : 8,
-          endhour : 23,
-          layout : "horizontal"
+  $("#endTime").clockpick({
+    starthour : 8,
+    endhour : 23,
+    layout : "horizontal"
           // event : "mouseover"
 
         });
 
-      });
 
-     });
+
+});
+});
 
