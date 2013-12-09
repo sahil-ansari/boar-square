@@ -71,6 +71,9 @@ var searchVenuesCounterLimit;
 var mostRecentCategoryAdded = "__START__";
 var timeForNextDate = 1;
 var currentArea = null;
+var currentStartTime = null;
+var currentEndTime = null;
+var currentDay = null;
 
 var the_lat;
 var the_lon;
@@ -685,6 +688,7 @@ function queryFoursquare(queryString, sectionName) {
     var search = $.getJSON(queryString, function( data ) {
        // console.log('objects from section ' + sectionName);
         var thisCategory = foursquareSectionToCat[sectionName];
+        console.log(data.response.groups[0]);
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
 
@@ -707,25 +711,54 @@ function queryFoursquare(queryString, sectionName) {
                 initMap(avLat, avLon);
             }
             else {
-                var center = new L.LatLng(theseVenues[0].point[0], theseVenues[0].point[1]);
+                var center = new L.LatLng(avLat, avLon);
                 map.panTo(center);
             }
             resetMap = false;
         }
-        //console.dir("our objects with the stuff we want:");
-        //console.dir(nearbyVenues);
 
         /* add the new category */
         addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = thisCategory;
         timeForNextDate += 1; // 1 hour change
-    
-        // take 3 random ones for now (others are saved via cache)
-        theseVenues.sort(function() { return 0.5 - Math.random() });
-        addSuggestions(thisCategory, 0);
-        
-        searchVenuesCounter++;
 
+        var openVenues = [];
+        var venuescheckedOpen = 0;
+        _.each(theseVenues, function(venue) {
+            var openQuery = 'https://api.foursquare.com/v2/venues/' + venue.id + '/hours?' +
+            '&client_id=' + clientId + 
+            '&client_secret=' + secret + 
+            '&v=20120625';
+            $.getJSON(openQuery, function(openData) {
+                var hours = openData.response.popular;
+                if (hours.timeframes === undefined) {
+                    openVenues.push(venue);
+                    venuescheckedOpen++;
+                    return false;
+                }
+                var timeframe = hours.timeframes[0].open; // not *technically* correct, maybe
+                var openDuringDate = false;
+                _.each(timeframe, function(openClose) {
+                    if (currentStartTime >= openClose.start && currentEndTime <= openClose.end)
+                        openDuringDate = true;
+                });
+                if (openDuringDate) {
+                    openVenues.push(venue);
+                }
+                venuescheckedOpen++;
+            });
+        });
+        function actuallyAddVenues() {
+            if (venuescheckedOpen < theseVenues.length) {
+                setTimeout(actuallyAddVenues, 100);
+                return false;
+            }
+            openVenues.sort(function() { return 0.5 - Math.random() });
+            nearbyVenues[thisCategory] = openVenues;
+            addSuggestions(thisCategory, 0); // add the first 3 !
+            searchVenuesCounter++;
+        }
+        actuallyAddVenues();
     }).fail(function(){
         $('#notFound').css('visibility','visible');
     });
@@ -810,7 +843,7 @@ function doFoursquareSectionsSearch(locationName) {
     for (var i=0; i<searchVenuesCounterLimit && i<foursquareSections.length; i++) {
         var queryString = 'https://api.foursquare.com/v2/venues/explore?near=' + locationName + 
             '&section=' + foursquareSections[i] +
-            '&limit=15' + 
+            '&limit=45' + 
             '&venuePhotos=1' + 
             '&time=any' +
             '&day=any' + 
@@ -900,12 +933,15 @@ $(document).ready(function (){
         initialQueryParams.location = 'San Francisco';
     }
     if (!initialQueryParams.startTime) {
-        initialQueryParams.startTime = "3:00";
+        initialQueryParams.startTime = "1200";
     }
     if (!initialQueryParams.endTime) {
-        initialQueryParams.endTime = "6:00";
+        initialQueryParams.endTime = "1800";
     }
     currentArea = initialQueryParams.location;
+    currentStartTime = initialQueryParams.startTime;
+    currentEndTime = initialQueryParams.endTime;
+    currentDay = 1;
     doFoursquareSectionsSearch(initialQueryParams.location);
     setFooterDescription(initialQueryParams);
     // loadFromStore("myData");
