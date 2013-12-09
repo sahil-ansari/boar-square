@@ -213,7 +213,6 @@ function toNearbyVenues(venues, section){
 }
 
 function rawVenueToOurVenue(venue, tips, section) {
-    console.log(venue)
     if (!venue.hours)
         venue.hours = "open"
     var ven = {
@@ -583,6 +582,7 @@ function setInfoDiv(venue_info_div, loc) {
     if (loc.url)
         link = "<a target='_blank' href='" + loc.url + "'>" + loc.name + "</a>"
 
+    console.log(venue_info_div);
     venue_info_div.html("<div>" + link + " (" + loc.rating + "/10) - Cost: " + loc.price + "</div>");
 }
 
@@ -636,12 +636,14 @@ function addNewLocation(category, location, personal) {
     markersInMap.push(marker);
     marker._leaflet_id = category + "_" + marker._leaflet_id;
 
+    var venue_info_div_id = "#info_" + category;
+    var venue_info_div = $(venue_info_div_id);
     var thumbnailDiv = $("<div/>", {
         "class": "place_thumbnail"
         
     }).appendTo(category_div); 
     loc.thumbnailDiv = thumbnailDiv;
-    addThumbnail(loc, !personal);
+    addThumbnail(loc, venue_info_div, !personal);
 
     setCategoryDivWidth(category);
 }
