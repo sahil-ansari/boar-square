@@ -53,8 +53,12 @@
     
 };
 
-var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
-var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
+// var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
+// var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
+
+var clientId = 'ISKQFNT5EU3KSXC5GW5N1AJS5WGQOWH3B2DE3ZFSNN31S5N4';
+var secret = 'KJE4NUK5W3K4E33JT1UV2CSC5UYQWQRJ1BRGT2WOC4LMY0E3';
+
 var cats;
 var categoryIds = {};
 
@@ -307,17 +311,22 @@ function setIteneraryIcons() {
     idx = 1; 
     while (category != null) {
         var selected = findSelectedInCategory(category);
-        var itenId = '"itenerary_' + category + '"';
-        column.append("<div class='special-well'><div class='itenerary-item'> \
-                          <div class='itenerary-item-text' id=" + itenId + ">" + selected.name + "</div>" +
+        var itemId = '"itenerary_' + category + '"';
+        column.append("<div id=" + itemId +" class='special-well'><div class='itenerary-item'> \
+                          <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
                           "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
                           selected.address + "</div>" + 
                        "</div></div>");
+        // $("#itenerary_" + category).offset({top: $("#category_div_" + category).offset().top}); 
         category = environment[category].nextCategory;
         if (category)
             column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
         idx += 1; 
+
+      
     }
+
+
 }
 
 function changeSelection(indexKey) {
@@ -452,6 +461,14 @@ function initLocations(locations) {
             "id": "category_refresh_" + category,
             "click": refreshCategorySuggestions
         }).appendTo(cat_header);
+
+        var spinner = $("<img/>", {
+            "class": 'done_loading refresh-spinner',
+            "id": "category_spinner_" + category,
+            "src": "img/ajax-loader2.gif"
+        }).appendTo(cat_header);
+
+
         refresher.append("<i class='fa fa-refresh'></i>");
         //cat_header.append("<a class='refresh-icon'><i class='fa fa-refresh'></i></a>");
         
@@ -526,16 +543,19 @@ function initLocations(locations) {
 }
 
     function refreshCategorySuggestions(ev) {
-    var target_id = ev.currentTarget.id;
-    var sections = target_id.split('_');
-    var category = sections[sections.length-1];
-    addSuggestions(category, nextToSuggest[category]);
-    clearMap();
-    initLocations(environment);
-    setIteneraryIcons();
-    setCategoryDivWidth(category);
+        var target_id = ev.currentTarget.id;
+        var sections = target_id.split('_');
+        var category = sections[sections.length-1];
 
-    return false;
+        addSuggestions(category, nextToSuggest[category]);
+        clearMap();
+        initLocations(environment);
+        setIteneraryIcons();
+        setCategoryDivWidth(category);
+
+
+
+        return false;
 }
 
 function addThumbnail(loc, venue_info_div, suggested) {
@@ -991,6 +1011,7 @@ $(document).ready(function (){
             setTimeout(addNewLocationsOnceDone, 100);
             return false;
         }
+        $(".loading").addClass("done_loading")
         initLocations(environment);
         setIteneraryIcons();
         save_boar_sq({
@@ -999,6 +1020,7 @@ $(document).ready(function (){
                       loc: [the_lat, the_lon],
                       },  
                       "myData");
+
         // data = load('myData');
         // console.log(load_boar_sq("myData"));
     }
