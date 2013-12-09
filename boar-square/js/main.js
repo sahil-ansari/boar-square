@@ -136,14 +136,14 @@ var foursquareSectionToCat = {
     'trending': 'Hot spots'
 };
 var categoryColors = {
-    Coffee: {color: 'rgba(255, 215, 128, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
+    Coffee: {color: 'rgba(184, 138, 31, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
     Museum: {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
     Restaurant: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color', 'iconUrl': 'img/markers/restaurant-heart-marker.png'},
-    Bar: {color: 'rgba(200, 200, 200, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
-    Shopping: {color: 'rgba(155, 100, 200, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
+    Bar: {color: 'rgba(222, 0, 214, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
+    Shopping: {color: 'rgba(255, 106, 0, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
     Outdoors: {color: 'rgba(100, 150, 175, 0.8)', 'class': 'outdoors-color', 'iconUrl': 'img/markers/outdoors-heart-marker.png'},
-    Sights: {color: 'rgba(50, 75, 100, 0.8)', 'class': 'sights-color', 'iconUrl': 'img/markers/sights-heart-marker.png'},
-    'Hot spots': {color: 'rgba(25, 25, 200, 0.8)', 'class': 'hotspots-color', 'iconUrl': 'img/markers/hotspots-heart-marker.png'}
+    Sights: {color: 'rgba(25, 25, 200, 0.8)', 'class': 'sights-color', 'iconUrl': 'img/markers/sights-heart-marker.png'},
+    'Hot spots': {color: 'rgba(255, 31, 188, 0.8)', 'class': 'hotspots-color', 'iconUrl': 'img/markers/hotspots-heart-marker.png'}
 };
 var sectionToIcon = {
     'food': 'img/icons/food.jpg',
