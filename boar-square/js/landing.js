@@ -141,30 +141,27 @@ $('.filters').click(
           'location': $('#location').val(),
           'startTime' : $('#startTime').val(),
           'endTime' : $('#endTime').val(),
-          'venueName1' : $('#venuename1').val(),
-          'category1' : '',
+          'venue1' : $('#venuename1').val(),
           'price1' : $('input[name=price1]:checked').val(),
-          'venueName2' : $('#venuename2').val(),
-          'category2' : '',
+          'venue2' : $('#venuename2').val(),
           'price2' : $('input[name=price2]:checked').val(),
-          'venueName3' : $('#venuename3').val(),
-          'category3' : '',
+          'venue3' : $('#venuename3').val(),
           'price3' : $('input[name=price3]:checked').val(),
         };
 
         console.dir(initialParameters);
-        
+
         var query = 'location=' + initialParameters.location;
             //query+= '&startTime=' + initialParameters.startTime;
             //query+= '&endTime=' + initialParameters.endTime;
-            // query+= '&venueName1=' + initialParameters.venuename1;
             // query+= '&category1=' + initialParameters.category1;
+            // query+= '&venue1=' + initialParameters.venue1;
             // query+= '&price1=' + initialParameters.price1;
             // query+= '&category2=' + initialParameters.category2;
-            // query+= '&venueName2=' + initialParameters.venuename2;
+            // query+= '&venue2=' + initialParameters.venue2;
             // query+= '&price2=' + initialParameters.price2;
             // query+= '&category3=' + initialParameters.category3;
-            // query+= '&venueName3=' + initialParameters.venuename3;
+            // query+= '&venue3=' + initialParameters.venue3;
             // query+= '&price3=' + initialParameters.price3;
             window.location.replace("./index.html?" + query);
         });

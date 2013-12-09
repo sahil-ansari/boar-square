@@ -436,10 +436,10 @@ width:100%;
 
 #notFound {
   color:rgb(240,0,50); 
-  visibility: hidden;
+  display: none;
   border-style: solid;
   margin-left: .3em;
-  display:visible;
+  margin-top: 10px;
 }
 
 #save {
