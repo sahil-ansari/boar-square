@@ -53,11 +53,11 @@
     
 };
 
-// var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
-// var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
+var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
+var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
 
-var clientId = 'ISKQFNT5EU3KSXC5GW5N1AJS5WGQOWH3B2DE3ZFSNN31S5N4';
-var secret = 'KJE4NUK5W3K4E33JT1UV2CSC5UYQWQRJ1BRGT2WOC4LMY0E3';
+//var clientId = 'ISKQFNT5EU3KSXC5GW5N1AJS5WGQOWH3B2DE3ZFSNN31S5N4';
+//var secret = 'KJE4NUK5W3K4E33JT1UV2CSC5UYQWQRJ1BRGT2WOC4LMY0E3';
 
 var cats;
 var categoryIds = {};
@@ -303,11 +303,18 @@ function findSelectedInCategory(category) {
     })
 }
 
+function clearCols() {
+    var column_itenerary = $('#itenerary-div');
+    column_itenerary.empty(); 
+
+    var column_options = $('#option_div');
+    column_options.empty();
+}
+
 function setIteneraryIcons() {
     var category = environment.__START__.nextCategory;
-    column = $('#itenerary-div');
-    column.empty(); 
-
+    var column = $('#itenerary-div');
+    
     idx = 1; 
     while (category != null) {
         var selected = findSelectedInCategory(category);
@@ -439,11 +446,9 @@ number one in date.
 function initLocations(locations) {
     var idx = 0;
     var category = environment["__START__"].nextCategory;
-    var option_column = $('#option-column');
-    var option_div = $("<div/>", {
-        "class": "category-options"
-    }).appendTo(option_column); 
-   
+    var option_div = $('#option-div');
+    
+    
     while(category != null ) { 
         var typeOfPlace = environment[category];
         var locOptions = typeOfPlace.places
@@ -549,6 +554,7 @@ function initLocations(locations) {
 
         addSuggestions(category, nextToSuggest[category]);
         clearMap();
+
         initLocations(environment);
         setIteneraryIcons();
         setCategoryDivWidth(category);
@@ -703,8 +709,8 @@ function clearMap() {
     for (var i = 0; i < markersInMap.length; i++)
         map.removeLayer(markersInMap[i]);
     markersInMap = [];
-    $('#option-column').empty();
-    $('#option-column').append('<h2 class="major-column-header">Date template</h2>');
+    clearCols();
+
 }
 
 function thumbnailClicked(leaflet_id){
@@ -971,6 +977,7 @@ $(document).ready(function (){
 
         clearMap();
         resetMapKeepingVariables();
+        $('.loading').removeClass('done_loading');
         doFoursquareSectionsSearch(area);
         addNewLocationsOnceDone();
     });
