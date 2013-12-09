@@ -14,7 +14,7 @@ html {
 body {
     height: 100%;
     width: 100%;
-}
+  }
 
 footer {
     position:fixed;
@@ -53,6 +53,8 @@ footer a:hover {
 #option-column {
     overflow-y:auto;
     height:600px; 
+    /*text-align: center;*/
+    /*vertical-align: middle;*/
 }
 
 .category-div-wrapper { 
@@ -60,13 +62,9 @@ footer a:hover {
     overflow-x:scroll;
     float:left;
     width:100%;
-    height: 140px;
+    /*height: 185px;*/
     font-size: 0.7em;
  }
-
-.option-row {
-
-}
 
 .scrolls { 
     overflow-x: scroll;
@@ -77,6 +75,10 @@ footer a:hover {
 
 #itenerary-column {
     border: none;
+     overflow-y:auto;
+    height:600px; 
+    /*text-align: center;*/
+    /*vertical-align: middle;*/
 }
 
 /* the map, of course */
@@ -125,18 +127,18 @@ footer a:hover {
     opacity: 1;
     border-radius: 6px;
     margin-bottom: 2px;
-        margin: 0px;
+    margin: 0px;
     padding:0px;
 
 }
 
 .VenueGroup {
-    overflow:hidden;
+    /*overflow:hidden;*/
     }
 
 #venue1 {
     width:100%;
-    overflow:hidden;
+    /*overflow:hidden;*/
     float:left;
     margin: 0px;
     padding:0px;
@@ -147,20 +149,22 @@ footer a:hover {
 
 #venue2 {
 width:100%;
-    overflow:hidden;
+    /*overflow:hidden;*/
     float:left;
-   margin: 0px;
+   margin-left:0px;
     padding:0px;
-    position: relative;
+    /*position: relative;*/
 
 }
 
 #venue3 {
    
   width:100%;
-    overflow:hidden;
+  margin-left: 0px;
+    padding:0px;
+    /*overflow:hidden;*/
     float:left;
-    position: relative;
+    /*position: relative;*/
 }
 
 #category1params{
@@ -230,9 +234,21 @@ width:100%;
     opacity: 0.9;
 }
 
+.loading {
+  text-align: center; 
+  width: 100%; 
+  display: inline-block;
+  /*display: inline;  */
+}
+
+.done_loading {
+  display: none;
+  width: 100%; 
+}
+
 .itenerary-item-text {
-    font-size: 1.5em;
-    text-align: center;
+    font-size: 1.25em;
+    text-align: left;
 }
 
 .itenerary-item-details {
@@ -244,8 +260,12 @@ width:100%;
     text-align: center;
 }
 
-.coffee-color {
+.popup-coffee-color .leaflet-popup-content-wrapper {
     background-color: rgba(255, 215, 128, 0.8);
+}
+
+.coffee-color {
+    background-color: rgba(184, 138, 31, 0.8);
 }
 
 .park-color {
@@ -257,11 +277,11 @@ width:100%;
 }
 
 .bar-color {
-    background-color: rgba(200, 200, 200, 0.8);
+    background-color: rgba(222, 0, 214, 0.8);
 }
 
 .shopping-color {
-    background-color: rgba(155, 100, 200, 0.8);
+    background-color: rgba(255, 106, 0, 0.8);
 }
 
 .outdoors-color {
@@ -269,11 +289,11 @@ width:100%;
 }
 
 .sights-color {
-    background-color: rgba(50, 75, 100, 0.8);
+    background-color: rgba(25, 25, 200, 0.8);
 }
 
 .hotspots-color {
-    background-color: rgba(25, 25, 200, 0.8);
+    background-color: rgba(255, 31, 188, 0.8);
 }
 
 .category-options {
@@ -300,20 +320,34 @@ width:100%;
 
 .thumb_selected {
   border: 2px solid red;
-  border-radius: 5px;
+  border-radius: 5px solid;
 }
 
 .thumb_personal:hover, .thumb_personal:focus,
 .thumb_suggested:hover, .thumb_suggested:hover,
 .thumb_selected:hover, .thumb_selected:hover {
-  border: 2px solid green;
+  border: 2px solid LightGreen;
 }
 
-.clear_both { clear: both; }
+.clear_both { 
+  clear: both; 
+  padding: 3px;
+}
 
 .special-well {
   min-height: 20px;
   padding: 12px;
+  margin-bottom: 5px;
+  background-color: rgba(245, 245, 245, 0.5);
+  border: 1px solid #e3e3e3;
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.special-well-info {
+  min-height: 36px;
+  padding: 10px;
   margin-bottom: 5px;
   background-color: rgba(245, 245, 245, 0.5);
   border: 1px solid #e3e3e3;
@@ -331,6 +365,14 @@ width:100%;
   border: 2px solid orange;
 }
 
+#startTime{
+    border:1px solid #cccccc;
+}
+
+#endTime{
+    border:1px solid #cccccc;
+}
+
 
 .refresh-icon {
     display: inline-block;
@@ -340,6 +382,10 @@ width:100%;
     cursor: pointer;
 }
 
+.refresh-spinner {
+  float: right;
+}
+
 .refresh-icon:hover,
 .refresh-icon:focus {
     color: #888;
@@ -347,6 +393,9 @@ width:100%;
 
 .category-header {
     font-size: 1.5em;
+}
+
+.heart-marker {
 }
 
 #notFound {
@@ -360,8 +409,6 @@ width:100%;
 #save {
 
 }
-
-
 
 
 
