@@ -60,9 +60,17 @@
             <button class="btn btn-primary btn-lg" id="newDate" type="submit" style="display:inline" >Create New</button>
 
 
-            <button class="btn btn-primary btn-lg" id="oldDate" type="submit" type="file" style="display:inline">Select Existing</button>
+            <button class="btn btn-primary btn-lg" id="oldDate" type="submit"  style="display:inline">Select Existing</button>
+
             <br>
             <br>
+
+            <div class="form-group hidden">
+    <label for="exampleInputFile">Select a File:</label>
+    <input type="file" id="exampleInputFile">
+    <p class="help-block"><i>Load a .txt file</p>
+  </div>
+
             <div id="landing-date-planning" class="hidden">
 
               <input type="text" id="location" class="form-control" onchange="check()" placeholder="Location" autofocus>

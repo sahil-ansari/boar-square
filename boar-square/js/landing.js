@@ -33,6 +33,23 @@ $(function () {
         return false;
       });
 
+//If choose existing is called
+  $('#oldDate').click( function() {
+
+        
+        $(".jumbotron").animate({height:"+=225px"}, 200);
+        $(".form-group").removeClass("hidden");
+        
+        document.getElementById('newDate').disabled=true;
+        document.getElementById('oldDate').disabled=true;
+
+
+        return false;
+      });
+
+
+
+
   $('#addVenue').click( function() {
     if(venueCount==3)
       document.getElementById('addVenue').disabled=true;
@@ -70,15 +87,6 @@ $(function () {
 
       return false;
     });
-
-       // DO FILE LOAD STUFF HERE!!!!!
-       $('#oldDate').click(
-        function() {
-
-          window.alert("sometext");
-
-          return false;
-        });
 
 
 
