@@ -213,11 +213,16 @@ function toNearbyVenues(venues, section){
 }
 
 function rawVenueToOurVenue(venue, tips, section) {
+    console.log(venue)
+    if (!venue.hours)
+        venue.hours = "open"
     var ven = {
         name: venue.name,
         id: venue.id,
         point: [venue.location.lat, venue.location.lng],
         rating: venue.rating,
+        price: venue.price,
+        hours: venue.hours.status,
         url: venue.url,               //the business' website
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
@@ -460,6 +465,14 @@ function initLocations(locations) {
             "class": "option-row scrolls",
         }).appendTo(container_div)
 
+        var venue_info_div_id = "info_" + category;
+
+        var venue_info_div = $("<div/>", {
+            "id": venue_info_div_id,
+            "class": "special-well-info"
+        }).appendTo(container_div); 
+
+        
         for (var j=0; j<locOptions.length; j++) {
             var loc = locOptions[j];
             
@@ -498,19 +511,22 @@ function initLocations(locations) {
             marker.addTo(map);
 
             var thumbnailDiv = $("<div/>", {
-                "class": "place_thumbnail"
+                "class": "place_thumbnail",
             }).appendTo(category_div);
-            loc.thumbnailDiv = thumbnailDiv; 
-            addThumbnail(loc, true);
-        }
-        idx += 1; 
 
-        option_div.append("<hr class='clear_both'></div>");
+            loc.thumbnailDiv = thumbnailDiv; 
+            addThumbnail(loc, venue_info_div, true);
+        }
+
+        idx += 1; 
+        // venue_info_div.appendTo(category_div);
+      
+        option_div.append("<hr class='clear_both'>");
         category = environment[category].nextCategory;
     }
 }
 
-function refreshCategorySuggestions(ev) {
+    function refreshCategorySuggestions(ev) {
     var target_id = ev.currentTarget.id;
     var sections = target_id.split('_');
     var category = sections[sections.length-1];
@@ -523,7 +539,7 @@ function refreshCategorySuggestions(ev) {
     return false;
 }
 
-function addThumbnail(loc, suggested) {
+function addThumbnail(loc, venue_info_div, suggested) {
     if (suggested)
         var thumbnailClass = "thumb_suggested";
     else
@@ -531,6 +547,7 @@ function addThumbnail(loc, suggested) {
 
     if (loc.selected) {
         thumbnailClass += " thumb_selected";
+        setInfoDiv(venue_info_div, loc);
     }
     //console.log(loc.photo);
     var thumb = $( "<img/>", {
@@ -546,8 +563,27 @@ function addThumbnail(loc, suggested) {
         thumbnailClicked(marker_id);
       }
     }).appendTo(loc.thumbnailDiv);
+
+    thumb.hover(
+        function() {
+            setInfoDiv(venue_info_div, loc)
+        }, 
+        function() {
+        
+        }
+    )
     loc.thumbnailDiv.append(loc.name);
     loc.thumb = thumb;
+
+
+}
+
+function setInfoDiv(venue_info_div, loc) {
+    var link = loc.name; 
+    if (loc.url)
+        link = "<a target='_blank' href='" + loc.url + "'>" + loc.name + "</a>"
+
+    venue_info_div.html("<div>" + link + " (" + loc.rating + "/10) - Cost: " + loc.price + "</div>");
 }
 
 function addNewLocation(category, location, personal) {
@@ -893,7 +929,6 @@ $(document).ready(function (){
     if (!store.enabled) {
         console.error('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser')
     }
-
 
     $.getJSON('https://api.foursquare.com/v2/venues/categories?client_id='
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
