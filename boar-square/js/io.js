@@ -38,8 +38,15 @@ function save_boar_sq(dataBag, currentName) {
 	savableEnv = makeSavable(dataBag.env); 
 	dataBag.env = savableEnv; 
 	store.set(currentName, dataBag);
+	console.log(currentName);
 }
 
 function load_boar_sq(currentName) {
 	return store.get(currentName);
+}
+
+function getSavedDates(){
+
+return store.getAll();
+
 }
