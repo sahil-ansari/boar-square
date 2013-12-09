@@ -22,21 +22,41 @@ footer {
     width: 100%;
     color: #111;
 
-
     margin-bottom: 0px;
-    margin-left: -5px;
+    margin-left: 0px;
+    padding-bottom: 10px;
 
-    height: 40px;
-    line-height: 40px;
+    height: 10px;
+    line-height: 50px;
     font-size: 1.75em;
     letter-spacing: 0.05em;
     border-top: 1px solid #000;
+
+    background-color: red;
+    z-index: 1000;
 }
 footer a {
     color: #999;
 }
 footer a:hover {
     color: #efefef;
+}
+
+#date-loading {
+    float: left;
+}
+
+#date-saving {
+    float: right;
+}
+
+#saveText {
+    height: 40px;
+    width: 140px;
+    line-height: 40px;
+    border-radius: 3px;
+    margin-top: 10px;
+    font-size: 0.8em;
 }
 
 /* override the bootstrap container width */
@@ -46,15 +66,22 @@ footer a:hover {
 
 /* our three main columns */
 .long-col {
-    border-right: 1px #aaa solid;
     margin-top: 5px;
 }
 
 #option-column {
     overflow-y:auto;
-    height:600px; 
+    border-right: 1px #aaa solid;
+    border-left: 1px #aaa solid;
+    height:610px;
+    min-height: 610px;
     /*text-align: center;*/
     /*vertical-align: middle;*/
+}
+
+#itenerary-column {
+    height: 610px;
+    min-height: 610px;
 }
 
 .category-div-wrapper { 
@@ -81,10 +108,19 @@ footer a:hover {
     /*vertical-align: middle;*/
 }
 
+#map-column {
+    position: relative;
+}
+
+#map-wrapper {
+    height: 610px;
+    border-bottom: 2px solid #ccc;
+}
+
 /* the map, of course */
 #map {
-    height: 100%;
-    min-height: 600px;
+    margin-top: 10px;
+    height: 600px;    
 }
 
 .marker-label {
@@ -400,10 +436,10 @@ width:100%;
 
 #notFound {
   color:rgb(240,0,50); 
-  visibility: hidden;
+  display: none;
   border-style: solid;
   margin-left: .3em;
-  display:visible;
+  margin-top: 10px;
 }
 
 #save {

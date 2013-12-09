@@ -47,7 +47,7 @@
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" id="navbar">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -69,7 +69,7 @@
               <input class="btn control-label" type="text" id="endTime" placeholder="End Time" style='height: 40px'>
             </li>
             <li>
-              <a id="notFound">Location not found!</a>
+              <a id="notFound">Not a solid query!</a>
             </li>
           </ul>
           <form class="navbar-form navbar-right" id="specific-venue">
@@ -77,7 +77,15 @@
               <input id="specific-venue-query" type="text" placeholder="Name a specific place" class="form-control">
             </div>
             <div class="form-group">
-              <input id="specificific-venue-time" type="text" placeholder="What time to go here?" class="form-control">
+              <div class="btn-group dropdown">
+                <button type="button" class="btn btn-default" id="category-selection">Category</button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" id="category-menu">
+                </ul>
+              </div>
             </div>
             <button type="submit" class="btn btn-success">Add it to the</button>
           </form>
@@ -85,35 +93,35 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="column-container">
       <div class="row">
-        <div class="col-lg-7 long-col">
-          <div id="map"></div>
+        <div class="col-lg-7 long-col" id="map-column">
+          <div id="map-wrapper"><div id="map"></div></div>
         </div>
         <div class="col-lg-3 long-col" id="option-column">
           <h2 class="major-column-header">Date template</h2>
+          <div class="loading"> <img src="img/ajax-loader.gif"> </img> </div>
+          <div id="option-div" class="category_options"> </div>
         </div>
         <div class="col-lg-2 long-col" id="itenerary-column">
           <h2 class="itenerary-column-header">Intenerary</h2>
           <div id="itenerary-div"> </div>
+          <div class="loading"> <img src="img/ajax-loader.gif"> </img> </div>
         </div>
       </div>
     </div>
-    </body>
-    
+
     <footer> 
-        <div class="container" id="footer-loc">
+      <div class="container" id="footer-loc">
           <!--
           <input class="btn-sm" type="text" size="10" id="startTime" placeholder="Start Time" style='width: 15%'>
           <input class="btn-sm" type="text" size="10" id="endTime" placeholder="End Time" style='width: 15%'>
           <input type="submit" id="submit" value="make me a daateee" style='width: 15%;'disabled>
         -->
-        <button type="submit" id="save" class="btn" >Save my date!</button>
-        <input type="text" id="saveText" placeholder="date name" style='height:100%;width:140px;' enabled>
-        <button type="submit" id="load" class="btn" >load a date!</button>
 
-        </div>
+
         
+      </div>
    </footer>
-  
- </html>
+  </body>  
+</html>
