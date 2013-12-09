@@ -70,6 +70,7 @@ var markersInMap = [];
 var mapInitiated = false;
 var resetMap = true;
 
+
 var searchVenuesCounter = 0;
 var searchVenuesCounterLimit;
 var mostRecentCategoryAdded = "__START__";
@@ -179,7 +180,7 @@ function addToEnvironment(category, placeObject, new_selected, suggested) {
 
 function addNewCategory(name, previous, color, date_time) {
     if (environment[name]) {
-        console.error("Category: " + category + " already exists!");
+        console.error("Category: " + name + " already exists!");
     }
     
     //console.log(previous);
@@ -921,8 +922,8 @@ function resetMapKeepingVariables() {
 }
 
 function loadFromStore(saveName) {
-    data = load_boar_sq("myData"); 
-
+    data = load_boar_sq(saveName); 
+    //data = load_boar_sq("yo"); 
     savedEnv = data.env; 
     thisCategory = savedEnv['__START__'].nextCategory;
     while (thisCategory != null) {
@@ -940,13 +941,12 @@ function loadFromStore(saveName) {
     initMap(data.loc[0], data.loc[1]);
 }
 
-function setFooterDescription(queryParams) {
-    var d = "A date in " + queryParams.location + 
-        " from " + queryParams.startTime + 
-        " to " + queryParams.endTime +
-        ". Have fun!";
-    $('#footer-loc').html(d);
-}
+//function setFooterDescription(queryParams) {
+//    var d = "A date in " + queryParams.location + 
+//       " from " + queryParams.startTime + 
+//        " to " + queryParams.endTime +
+ //       ". Have fun!"; //save button
+//}
 
 function setContainerHeight() {
     var optionCol = $('#option-column');
@@ -956,6 +956,15 @@ function setContainerHeight() {
     var desiredHeight = $(window).height() - footer.height() - navbar.height() - 150;
     console.log(desiredHeight);
     //colContainer.css('height', desiredHeight);
+}
+
+function toggleFooter() {
+    var f = $('footer');
+    console.log(f.height());
+    if (f.height() == 49)
+        f.animate({'height': 10});
+    else
+        f.animate({'height': 60});
 }
 
 $(document).ready(function (){
@@ -971,12 +980,40 @@ $(document).ready(function (){
     $(window).resize(setContainerHeight);
     setContainerHeight();
 
+    $('#footer-loc').mouseenter(toggleFooter);
+
     //querySpecificVenueFoursquare('mels burger', 'New York City', null);
     
     var $area = $('#place')[0];        //jquery objects for each input field
     var $startTime = $('#start')[0];
     var $duration = $('#duration')[0];
-    
+    var $save = $('#save')[0];
+    var $saveText = $('#saveText')[0];
+    var $load = $('#load')[0];
+
+    $($save).click(function(){
+
+        var fileName = $saveText.value;
+        console.dir(getSavedDates());
+
+        save_boar_sq({
+                      q: initialQueryParams, 
+                      env: environment,
+                      loc: [the_lat, the_lon],
+                      },  
+                      fileName);
+
+    });
+
+     $($load).click(function(){
+        //console.log(getSavedDates()['yo']);
+        var load = loadFromStore("yo");
+        console.dir(load.env);
+        initLocations(load.env);
+        setIteneraryIcons();
+
+     });
+
     //add 'not found' handler later
     $($area).change(function(e){   //find location match, get list of nearby places
         resetMap = true;                  // of recommended nearby venues
@@ -1015,7 +1052,7 @@ $(document).ready(function (){
     currentEndTime = initialQueryParams.endTime;
     currentDay = 1;
     doFoursquareSectionsSearch(initialQueryParams.location);
-    setFooterDescription(initialQueryParams);
+    //setFooterDescription(initialQueryParams);
     // loadFromStore("myData");
     // initLocations(environment);
     // setIteneraryIcons();
@@ -1035,7 +1072,6 @@ $(document).ready(function (){
                       loc: [the_lat, the_lon],
                       },  
                       "myData");
-
         // data = load('myData');
         // console.log(load_boar_sq("myData"));
     }
