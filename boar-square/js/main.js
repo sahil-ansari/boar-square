@@ -948,6 +948,16 @@ function setFooterDescription(queryParams) {
     $('#footer-loc').html(d);
 }
 
+function setContainerHeight() {
+    var optionCol = $('#option-column');
+    var itenCol = $('#itenerary-column');
+    var footer = $('#footer-loc');
+    var navbar = $('#navbar');
+    var desiredHeight = $(window).height() - footer.height() - navbar.height() - 150;
+    console.log(desiredHeight);
+    //colContainer.css('height', desiredHeight);
+}
+
 $(document).ready(function (){
     if (!store.enabled) {
         console.error('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser')
@@ -957,6 +967,9 @@ $(document).ready(function (){
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
             setCategoryRef(data);
     });
+
+    $(window).resize(setContainerHeight);
+    setContainerHeight();
 
     //querySpecificVenueFoursquare('mels burger', 'New York City', null);
     

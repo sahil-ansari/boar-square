@@ -153,11 +153,10 @@ $('.filters').click(
         };
 
         console.dir(initialParameters);
-
-
+        
         var query = 'location=' + initialParameters.location;
-            // query+= '&startTime=' + initialParameters.startTime;
-            // query+= '&endTime=' + initialParameters.endTime;
+            //query+= '&startTime=' + initialParameters.startTime;
+            //query+= '&endTime=' + initialParameters.endTime;
             // query+= '&venueName1=' + initialParameters.venuename1;
             // query+= '&category1=' + initialParameters.category1;
             // query+= '&price1=' + initialParameters.price1;
@@ -167,22 +166,14 @@ $('.filters').click(
             // query+= '&category3=' + initialParameters.category3;
             // query+= '&venueName3=' + initialParameters.venuename3;
             // query+= '&price3=' + initialParameters.price3;
-
-            
-
             window.location.replace("./index.html?" + query);
-
-
-          });
-
-
+        });
 
 // What happens if we hit load date from file??
 $('#LoadDate').click(function(e) {
   window.location.replace("./index.html?");
 
 });
-
 
 $(document).ready(function (){
   $("#startTime").clockpick({
@@ -200,8 +191,7 @@ $(document).ready(function (){
 
         });
 
-
-
 });
+
 });
 
