@@ -130,12 +130,12 @@ footer a:hover {
 }
 
 .VenueGroup {
-    overflow:hidden;
+    /*overflow:hidden;*/
     }
 
 #venue1 {
     width:100%;
-    overflow:hidden;
+    /*overflow:hidden;*/
     float:left;
     margin: 0px;
     padding:0px;
@@ -146,20 +146,22 @@ footer a:hover {
 
 #venue2 {
 width:100%;
-    overflow:hidden;
+    /*overflow:hidden;*/
     float:left;
-   margin: 0px;
+   margin-left:0px;
     padding:0px;
-    position: relative;
+    /*position: relative;*/
 
 }
 
 #venue3 {
    
   width:100%;
-    overflow:hidden;
+  margin-left: 0px;
+    padding:0px;
+    /*overflow:hidden;*/
     float:left;
-    position: relative;
+    /*position: relative;*/
 }
 
 #category1params{
@@ -346,6 +348,14 @@ width:100%;
 
 #endTime:hover {
   border: 2px solid orange;
+}
+
+#startTime{
+    border:1px solid #cccccc;
+}
+
+#endTime{
+    border:1px solid #cccccc;
 }
 
 
