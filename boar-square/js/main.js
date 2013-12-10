@@ -1020,6 +1020,9 @@ function getRandomStartTime(params) {
         params.dateStyle = "Day";
 
     var possibleStartTimes = dateStyleStartTimes[params.dateStyle];
+    if (! possibleStartTimes)
+        return 1;
+    
     t = possibleStartTimes[Math.floor(Math.random()*possibleStartTimes.length)]; // grab random possible start time
     return t;
 }
@@ -1104,6 +1107,7 @@ function hideFooter() {
     animate_elem_to('map', 50);
 
     footerStateUp = false; 
+    resizeStuff();
 }
 
 function toggleFooter() {
@@ -1328,8 +1332,6 @@ $(document).ready(function (){
         return false;
     });
 
-    
-
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
             console.log('not done');
@@ -1340,8 +1342,9 @@ $(document).ready(function (){
         initLocations(environment);
         setIteneraryIcons();
         currentlyQuerying = false;
+
+        resizeStuff();
     }
-    //addNewLocationsOnceDone();
 
     doWelcomeAnimation();
 
