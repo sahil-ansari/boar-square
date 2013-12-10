@@ -1,56 +1,9 @@
- var blankEnvironment = {
+var blankEnvironment = {
     "__START__": {nextCategory: null}
- };
+};
 
- var environment = {
+var environment = {
     "__START__": {nextCategory: null}
-    //"__START__": {nextCategory: "Coffee"}
-
-    
-    // "Coffee": {
-    //     previousCategory: null, 
-    //     nextCategory: "Museum",
-    //     categoryColorClass: "coffee-color",
-    //     categoryDateTime: "1 PM",
-    //     places: [ 
-    //         {name: "Stumptown", address: "123 town", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
-    //         // ,{name: "doodo", address: "123 town", point: [37.89, -122.25], selected: false, pathsTo: [], pathsFrom: []}
-        
-    //     ] 
-    // },
-    // "Museum": {
-    //     previousCategory: "Coffee",
-    //     nextCategory: "Restaurant",
-    //     categoryColorClass: "park-color",
-    //     categoryDateTime: "2 PM",
-    //     places: [
-    //         {name: "Met", address: "123 town", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-    //         {name: "History Museum", address: "123 town", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-    //         {name: "Guggenheim", address: "123 town", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
-    //     ]
-    // },
-    // "Restaurant": {
-    //     previousCategory: "Museum",
-    //     nextCategory: "Bar",
-    //     categoryColorClass: "museum-color",
-    //     categoryDateTime: "3 PM",
-    //     places: [
-    //         {name: "#1 Chinese Food", address: "123 town", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-    //         {name: "Mels", address: "123 town", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-    //         {name: "Thai Market", address: "123 town", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
-    //     ]
-    // }
-    // ,
-    // "Bar": {
-    //     previousCategory: "Restaurant",
-    //     nextCategory: null,
-    //     categoryColorClass: "bar-color",
-    //     categoryDateTime: "4 PM",
-    //     places: [
-    //         {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
-    //     ] 
-    // }
-    
 };
 
 var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
@@ -143,6 +96,20 @@ var categoryQueryToSection = {
     "(Category: Outdoors)": 'outdoors',
     "(Category: Sights)": 'sights'
 };
+var dayDates = [
+    ['coffee', 'outdoors', 'food'],
+    ['shops', 'food', 'outdoors'],
+    ['food', 'sights', 'coffee'],
+    ['outdoors', 'coffee', 'arts'],
+    ['coffee', 'arts', 'shops']
+];
+var eveningDates = [
+    ['food', 'arts', 'drinks'],
+    ['food', 'drinks', 'coffee'],
+    ['drinks', 'coffee', 'outdoors'],
+    ['shops', 'sights', 'drinks'],
+    ['sights', 'food', 'outdoors']
+];
 var categoryColors = {
     Coffee: {color: 'rgba(184, 138, 31, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
     'Arts & Entertainment': {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
@@ -175,7 +142,6 @@ var sectionToIcon = {
 };
 var nextToSuggest = {};
 
-//function addToEnvironment(category, new_name, new_address, new_point, new_selected) {
 function addToEnvironment(category, placeObject, new_selected, suggested) {
     if (!environment[category]){
         console.error("Category: " + category + " doesn't exist! Can't add: " + placeObject.name + "!");
@@ -800,13 +766,10 @@ function queryFoursquare(queryString, sectionName) {
         }
         avLat = totalLatitudes / theseVenues.length;
         avLon = totalLongitudes / theseVenues.length;
-        //console.dir(theseVenues);
 
         if(resetMap)
         {   
-            //console.dir(theseVenues[0].point[0]);//.venue.location.lat);
             if (!mapInitiated) {
-                //initMap(theseVenues[0].point[0], theseVenues[0].point[1]);
                 initMap(avLat, avLon);
             }
             else {
@@ -815,40 +778,8 @@ function queryFoursquare(queryString, sectionName) {
             }
             resetMap = false;
         }
-
-        var openVenues = [];
-        var venuescheckedOpen = 0;
-        _.each(theseVenues, function(venue) {
-            var openQuery = 'https://api.foursquare.com/v2/venues/' + venue.id + '/hours?' +
-            '&client_id=' + clientId + 
-            '&client_secret=' + secret + 
-            '&v=20120625';
-            $.getJSON(openQuery, function(openData) {
-                var hours = openData.response.popular;
-                if (hours.timeframes === undefined) {
-                    openVenues.push(venue);
-                    venuescheckedOpen++;
-                    return false;
-                }
-                var timeframe = hours.timeframes[0].open; // not *technically* correct, maybe
-                var openDuringDate = false;
-                _.each(timeframe, function(openClose) {
-                    if (queryParams.startTime >= openClose.start && queryParams.endTime <= openClose.end)
-                        openDuringDate = true;
-                });
-                if (openDuringDate) {
-                    openVenues.push(venue);
-                }
-                venuescheckedOpen++;
-            });
-        });
         function actuallyAddVenues() {
-            if (venuescheckedOpen < theseVenues.length) {
-                setTimeout(actuallyAddVenues, 100);
-                return false;
-            }
-            openVenues.sort(function() { return 0.5 - Math.random() });
-            nearbyVenues[thisCategory] = openVenues;
+            nearbyVenues[thisCategory].sort(function() { return 0.5 - Math.random() });
             addSuggestions(thisCategory, 0); // add the first 3 !
             searchVenuesCounter++;
         }
@@ -946,7 +877,7 @@ function doFoursquareSectionsSearch(params) {
     var locationName = params.location;
 
     var dateInfo = makeTheDate(params);
-    console.log(dateInfo);
+    console.dir(dateInfo);
 
     // only take the top 3.
     // TODO: Have it take variable amount based on length of date
@@ -954,6 +885,7 @@ function doFoursquareSectionsSearch(params) {
     for (var i=0; i<dateInfo.length; i++) {
 
         /* add the new category */
+        console.log(dateInfo[i].section);
         var cat = foursquareSectionToCat[dateInfo[i].section];
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
@@ -980,23 +912,45 @@ function doFoursquareSectionsSearch(params) {
 }
 
 function makeTheDate(params) {
-    foursquareSections.sort(function() { return 0.5 - Math.random() }); // shuffle the sections list
+    var dateOptions;
+    if (params.dateStyle == "Day")
+        dateOptions = dayDates;
+    else
+        dateOptions = eveningDates;
+
+    dateOptions.sort(function() { return 0.5 - Math.random() }); // shuffle our date options;
+
     var date = [
-        {section: foursquareSections[0]},
-        {section: foursquareSections[1]},
-        {section: foursquareSections[2]}
+        {section: dateOptions[0][0]},
+        {section: dateOptions[0][1]},
+        {section: dateOptions[0][2]}
     ];
 
     if (params.venue1Info) {
+        var oldOption = date[0];
         date[0] = params.venue1Info;
-    }
+        if (date[1].section == date[0].section)       // handle multiple categories
+            date[1].section = oldOption.section;
+        else if (date[2].section == date[0].section)
+            date[2].section = oldOption.section;
+    }   
 
     if (params.venue2Info) {
+        var oldOption = date[1];
         date[1] = params.venue2Info;
+        if (date[0].section == date[1].section)       // handle multiple categories
+            date[0].section = oldOption.section;
+        else if (date[2].section == date[1].section)
+            date[2].section = oldOption.section;
     }
 
     if (params.venue3Info) {
-        date[2] = params.venue3info;
+        var oldOption = date[2];
+        date[2] = params.venue3Info;
+        if (date[0].section == date[2].section)       // handle multiple categories
+            date[0].section = oldOption.section;
+        else if (date[1].section == date[2].section)
+            date[1].section = oldOption.section;
     }
 
     return date;
@@ -1071,8 +1025,6 @@ $(document).ready(function (){
     $('#footer-loc').mouseenter(toggleFooter);
     
     var $area = $('#place')[0];        //jquery objects for each input field
-    var $startTime = $('#start')[0];
-    var $duration = $('#duration')[0];
     var $save = $('#save')[0];
     var $saveText = $('#saveText')[0];
     var $load = $('#load')[0];
@@ -1125,11 +1077,8 @@ $(document).ready(function (){
     if (!initialQueryParams.location) {
         initialQueryParams.location = 'NYC';
     }
-    if (!initialQueryParams.startTime) {
-        initialQueryParams.startTime = "1200";
-    }
-    if (!initialQueryParams.endTime) {
-        initialQueryParams.endTime = "1800";
+    if (!initialQueryParams.dateStyle) {
+        initialQueryParams.dateStyle = "Day";
     }
 
     function getVenueThing(params, venueNum) {
@@ -1149,10 +1098,10 @@ $(document).ready(function (){
     if (initialQueryParams.category1) {
         initialQueryParams.venue1Info = getVenueThing(initialQueryParams, 1);
     }
-    initialQueryParams.venue1Info = {
-        section: 'food',
-        name: 'blossom'
-    };
+    //initialQueryParams.venue1Info = {
+    //    section: 'food',
+    //    name: 'blossom'
+    //};
     if (initialQueryParams.category2) {
         initialQueryParams.venue2Info  = getVenueThing(initialQueryParams, 2);
     }
@@ -1169,7 +1118,7 @@ $(document).ready(function (){
 
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
-            //console.log('not done');
+            console.log('not done');
             setTimeout(addNewLocationsOnceDone, 100);
             return false;
         }
@@ -1186,16 +1135,4 @@ $(document).ready(function (){
         // console.log(load_boar_sq("myData"));
     }
     addNewLocationsOnceDone();
-
-    $("#startTime").clockpick({
-          starthour : 8,
-          endhour : 23,
-          event : "mouseover"
-    });
-
-    $("#endTime").clockpick({
-      starthour : 8,
-      endhour : 23,
-      event : "mouseover"
-    });
 });
