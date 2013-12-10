@@ -674,7 +674,6 @@ function setAllCategoryWidths() {
 }
 
 function setCategoryDivWidth(category) {
-    console.log(category);
     var category_div = $("#category_div_" + category);
     var numIcons = environment[category].places.length;
     category_div.width(numIcons * 110);
@@ -751,7 +750,6 @@ function queryFoursquare(queryString, sectionName) {
     var search = $.getJSON(queryString, function( data ) {
        // console.log('objects from section ' + sectionName);
         var thisCategory = foursquareSectionToCat[sectionName];
-        console.log(data.response.groups[0]);
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
 
@@ -790,7 +788,6 @@ function queryFoursquare(queryString, sectionName) {
 function addSuggestions(category, lastIndex) {
     var endIndex = lastIndex + 3;
     var venues = nearbyVenues[category];
-    console.log(category);
     environment[category].places = environment[category].places.filter(function(el) {
         return !el.suggested;
     });
@@ -883,7 +880,6 @@ function doFoursquareSectionsSearch(params) {
     for (var i=0; i<dateInfo.length; i++) {
 
         /* add the new category */
-        console.log(dateInfo[i].section);
         var cat = foursquareSectionToCat[dateInfo[i].section];
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
