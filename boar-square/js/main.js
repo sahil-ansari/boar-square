@@ -441,6 +441,18 @@ function initLocations(locations) {
     var category = environment["__START__"].nextCategory;
     var option_div = $('#option-div');
     $('#category-selection').empty();
+
+
+    /* clear old paths */
+    while (category != null) {
+        _.each(environment[category].places, function(place) {
+            place.pathsTo = [];
+            place.pathsFrom = [];
+        });
+        category = environment[category].nextCategory;
+    }
+
+    category = environment["__START__"].nextCategory;
     
     while(category != null ) { 
         var typeOfPlace = environment[category];
