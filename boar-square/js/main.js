@@ -297,6 +297,7 @@ function initMap(lat,lon) {
 
     map.addLayer(cloudmade);
     mapInitiated = true;
+    resizeStuff();
 }
 
 function findSelectedInCategory(category) {
