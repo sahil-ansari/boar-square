@@ -5,28 +5,19 @@ function makeSavable(environemnt) {
 	savable['__START__'] = {}
 	savable['__START__'] = $.extend({}, environment['__START__']);
 	while (category != null) {
-		savable[category] = {}
-		cat = savable[category];
-		cat['nextCategory'] = environemnt[category].nextCategory;
-		cat['prevCategory'] = environemnt[category].prevCategory;
-		cat['categoryColorClass'] = environemnt[category].categoryColorClass;
-		cat['categoryDateTime'] = environemnt[category].categoryDateTime;
-		cat['places'] = []
-
-		_(environemnt[category].places).each(function(place){
-			
-			place_copy = {}
-			place_copy['name'] = place.name; 
-			place_copy['address'] = place.address
-			place_copy['point'] = place.point
-			place_copy['selected'] = place.selected; 
-
-			cat['places'].push(place_copy)
-		}) 
+		savable[category] = $.extend({}, environment[category]);
+		_(savable[category].places).each(function(place) {
+			place.pathsFrom = []
+			place.pathsTo = []
+			place.marker = null;
+			place.thumb = null;
+			place.thumbnailDiv = null; 
+		}); 
 
 		category = environemnt[category].nextCategory;
 	}
-	return savable
+
+	return savable;
 }
 
 function save_boar_sq(dataBag, currentName) {
@@ -45,6 +36,7 @@ function load_boar_sq(currentName) {
 }
 
 function getSavedDates(){
-	var saved = {"x":"meow"}
-	return _.keys(saved);
+
+	return store.getAll();
+
 }

@@ -611,10 +611,6 @@ function addThumbnail(loc, venue_info_div, category, suggested) {
     loc.thumb = thumb;
 }
 
-
-function makeBigMarker(theMarker) { 
-
-}
 function addMenuCategory(category) {
     var menu = $('#category-selection');
     menu.append('<option>' + category + '</option>');
@@ -772,7 +768,6 @@ function getRandomColor()  {
     return color;
 }
 
-console.log($.support.cors);
 
 function queryFoursquare(queryString, sectionName) {
     $('#notFound').hide();
@@ -1008,7 +1003,12 @@ function loadFromStore(saveName) {
     data = load_boar_sq(saveName);
     console.dir(data);
     savedEnv = data.env; 
+    query = data.q; 
+
     thisCategory = savedEnv['__START__'].nextCategory;
+    var totalLatitudes = 0; 
+    var totalLongitudes = 0; 
+    var totalVenues = 0; 
     while (thisCategory != null) {
         addNewCategory(thisCategory, mostRecentCategoryAdded, categoryColors[thisCategory].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = thisCategory;
@@ -1016,12 +1016,28 @@ function loadFromStore(saveName) {
 
         _(savedEnv[thisCategory].places).each(function(savedPlace){
             addToEnvironment(thisCategory, savedPlace, savedPlace.selected, true); 
-        }); 
+            totalLatitudes += savedPlace.point[0];
+            totalLongitudes += savedPlace.point[1];
+            totalVenues += 1; 
+         }); 
 
         thisCategory = savedEnv[thisCategory].nextCategory;
     }
 
-    initMap(data.loc[0], data.loc[1]);
+    var avLat = totalLatitudes / totalVenues;
+    var avLon = totalLongitudes / totalVenues;
+   
+    if (!map) {
+        initMap(avLat, avLon);
+    }
+    else {
+        var center = new L.LatLng(avLat, avLon);
+        map.panTo(center);
+    }
+    // initMap(data.loc[0], data.loc[1]);
+    setOptionColumnHeader(query.location);
+    $('#place').val(query.location);
+    initLocations(environment);
 }
 
 //function setFooterDescription(queryParams) {
@@ -1075,7 +1091,16 @@ function init_saved_files() {
     var load_menu = $("#load-menu"); 
     store.forEach(function(key, value) {
         var list_item = $("<li/>");
-        list_item.append("<a href='#'>" + key  + "</a>")
+        var link = $("<a/>", {
+            "href": "#", 
+            html: key,
+            click: function(e) {
+                resetMapKeepingVariables();
+                clearMap();
+                loadFromStore(key);
+                setIteneraryIcons();
+            }
+        }).appendTo(list_item);
         load_menu.append(list_item);
     });
 }
@@ -1121,10 +1146,10 @@ $(document).ready(function (){
 
     $($save).click(function(){
         fileName = $saveText.value;
-        console.dir(getSavedDates());
-        clearStore();
+        // console.dir(getSavedDates());
+        // clearStore();
         save_boar_sq({
-          q: initialQueryParams, 
+          q: queryParams, 
           env: environment,
           loc: [the_lat, the_lon],
         }, fileName);
@@ -1236,10 +1261,7 @@ $(document).ready(function (){
     queryParams = initialQueryParams;
     setOptionColumnHeader(queryParams.location);
     doFoursquareSectionsSearch(queryParams);
-    //setFooterDescription(initialQueryParams);
-    // loadFromStore("myData");
-    // initLocations(environment);
-    // setIteneraryIcons();
+  
 
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
@@ -1250,15 +1272,6 @@ $(document).ready(function (){
         $(".loading").addClass("done_loading")
         initLocations(environment);
         setIteneraryIcons();
-        currentlyQuerying = false;
-        //save_boar_sq({
-        //              q: initialQueryParams, 
-         //             env: environment,
-         //             loc: [the_lat, the_lon],
-         //             },  
-         //             "myData");
-        // data = load('myData');
-        // console.log(load_boar_sq("myData"));
     }
     addNewLocationsOnceDone();
 
