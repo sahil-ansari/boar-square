@@ -1145,6 +1145,8 @@ $(document).ready(function (){
     var $load = $('#load')[0];
 
     $($save).click(function(){
+        $("#date-saved-label").hide();
+
         fileName = $saveText.value;
         // console.dir(getSavedDates());
         // clearStore();
@@ -1153,6 +1155,9 @@ $(document).ready(function (){
           env: environment,
           loc: [the_lat, the_lon],
         }, fileName);
+
+        $("#date-saved-label").html("<lable> Itenerary Saved: " + fileName + "</label>");
+        $("#date-saved-label").fadeIn( 1000);
     });
 
      $($load).click(function(){
