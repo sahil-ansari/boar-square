@@ -233,8 +233,8 @@ function rawVenueToOurVenue(venue, tips, section) {
         url: venue.url,               //the business' website
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
-        address: venue.location.address + ", " + venue.location.postalCode
-        +", "+venue.location.city+", "+venue.location.state
+        address: venue.location.address + ", " + venue.location.city
+         + ", " + venue.location.state + ", " + venue.location.postalCode
         //status: v.venue.hours.status    //number to  $$$ amount
     };
 
@@ -331,12 +331,22 @@ function setIteneraryIcons() {
         column.append("<div id=" + itemId +" class='" + wellClass + "'style='text-align:center;'><div class='itenerary-item'> \
                           <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
                           //"<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" 
-                          selected.address +"</div>" + 
-                       "</div></div>");
-        // $("#itenerary_" + category).offset({top: $("#category_div_" + category).offset().top}); 
+                          selected.address +"</div>");
+        column.append("</div></div>");
+                       
+        // $("#itenerary_" + category).offset({top: $("#category_div_" + category).offset().top});
+
+
+
         category = environment[category].nextCategory;
-        if (category)
-            column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
+        if (category) {
+            var nextSelected = findSelectedInCategory(category);
+            var u = makeGoogleMapsUrl(selected.address, nextSelected.address);
+            var a = '<a href="' + u + '" class="maps-arrow-link" target="_blank">';
+            column.append("<div class='itenerary-arrow-transition'>" + a + 
+                 "<i class='fa fa-arrow-down fa-3x'></i></a></div>");
+        }
+
         idx += 1; 
     }
 
@@ -602,11 +612,20 @@ function addThumbnail(loc, venue_info_div, category, suggested) {
             loc.marker.setIcon(new bigHeartIcon({iconUrl: categoryColors[category].iconUrl}));
         }, 
         function() {
-            loc.marker.setIcon(new heartIcon({iconUrl: categoryColors[category].iconUrl}))
+            loc.marker.setIcon(new heartIcon({iconUrl: categoryColors[category].iconUrl}));
+            //var selectedLoc = findSelectedInCategory(category);
+            //setInfoDiv(venue_info_div, selectedLoc);
         }
     )
     loc.thumbnailDiv.append(loc.name);
     loc.thumb = thumb;
+}
+
+function makeGoogleMapsUrl(addr1, addr2) {
+    var u = 'https://maps.google.com/maps?' +
+        'saddr=' + escape(addr1) + 
+        '&daddr=' + escape(addr2);
+    return u;
 }
 
 function addMenuCategory(category) {
@@ -831,8 +850,10 @@ function addSuggestions(category, lastIndex) {
         addToEnvironment(category, v, selected, true);
     }
     nextToSuggest[category] = endIndex;
-    if (endIndex >= venues.length)
+    if (endIndex >= venues.length) {
         nextToSuggest[category] = 0;
+        environment[category].places.sort(function() { return 0.5 - Math.random() }); // shuffle for less obvious repetition
+    }
 }
 
 function querySpecificVenueFoursquare(venueTerms, location, categoryName, incrementVenuesCounter) {
@@ -1037,12 +1058,10 @@ function loadFromStore(saveName) {
    
     if (!map) {
         initMap(avLat, avLon);
-        console.log('oh');
     }
     else {
         var center = new L.LatLng(avLat, avLon);
         map.panTo(center);
-        console.log('eh');
     }
     // initMap(data.loc[0], data.loc[1]);
     setOptionColumnHeader(queryParams.location);
@@ -1194,8 +1213,6 @@ $(document).ready(function (){
 
     $('#main-search-button').attr("disabled", true);
     function checkSearchEnabled() {
-        console.log('hmmm');
-        console.log($($area).val());
         if ($($area).val())
             $('#main-search-button').attr("disabled", false);
         else
@@ -1244,7 +1261,6 @@ $(document).ready(function (){
     });
 
     $('#broad-date-search').submit(function(e){
-        console.log('big query');
         if (currentlyQuerying)
             return false;
         $('#category-selection, #specific-venue-query, .btn-success').removeAttr('disabled');
@@ -1260,7 +1276,6 @@ $(document).ready(function (){
         if (!queryParams.location) {
             return false;
         }
-        console.log('big 3x');
         
         function changeLookAndQuery() {
             hideWelcome();
@@ -1292,7 +1307,6 @@ $(document).ready(function (){
     });
 
     $('#specific-venue').submit(function() {
-        console.log('hello');
         if (currentlyQuerying)
             return false;
 

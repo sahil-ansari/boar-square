@@ -390,6 +390,14 @@ width:100%;
     letter-spacing: 0.02em;
 }
 
+.maps-arrow-link {
+    color: black;
+}
+
+    .maps-arrow-link:hover, .maps-arrow-link:focus {
+        color: rgb(0, 225, 175);
+    }
+
 .itenerary-arrow-transition {
     text-align: center;
 }
@@ -443,17 +451,17 @@ width:100%;
 }
 
 .thumb_personal {
-  border: 2px solid orange;
+  border: 3px solid orange;
   border-radius: 5px;
 }
 
 .thumb_suggested {
-  border: 2px solid #428bca;
+  border: 3px solid #428bca;
   border-radius: 5px;
 }
 
 .thumb_selected {
-  border: 2px solid red;
+  border: 3px solid red;
   border-radius: 5px solid;
 }
 
