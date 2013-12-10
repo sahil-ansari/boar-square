@@ -829,6 +829,7 @@ function queryFoursquare(queryString, sectionName) {
         actuallyAddVenues();
     }).fail(function(){
         $('#notFound').show();
+        currentlyQuerying = false;
         setTimeout(function() {
             $('#notFound').fadeOut();
         }, 5000);
@@ -1270,6 +1271,8 @@ $(document).ready(function (){
     $('#broad-date-search').submit(function(e){
         if (currentlyQuerying)
             return false;
+        if ($('#main-search-button').attr("disabled") == false)
+            return false;
         $('#category-selection, #specific-venue-query, .btn-success').removeAttr('disabled');
 
         var oldLoc = queryParams.location;
@@ -1305,6 +1308,7 @@ $(document).ready(function (){
         }).fail(function() {
             queryParams.location = oldLoc;
             $('#notFound').show();
+            currentlyQuerying = false;
             setTimeout(function() {
                 $('#notFound').fadeOut();
             }, 5000);
