@@ -1006,6 +1006,8 @@ function loadFromStore(saveName) {
     nearbyVenues = data.nearbyVenues;
     nextToSuggest = data.nextSuggest;
     $("#place").val(queryParams.location);
+    if (! queryParams.dateType)
+        queryParams.dateType = "Day";
     $("#date-type-picker").val(queryParams.dateType);
 
     thisCategory = savedEnv['__START__'].nextCategory;
