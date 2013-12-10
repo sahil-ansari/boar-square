@@ -1093,7 +1093,8 @@ function toggleFooter() {
 
 function init_saved_files() {
     var load_menu = $("#load-menu");
-
+    load_menu.empty();
+    
     var list_item = $("<li/>");
     var link = $("<a/>", {
         "href": "#", 
@@ -1232,7 +1233,7 @@ $(document).ready(function (){
             }
         }).appendTo(list_item);
         load_menu.append(list_item);
-
+        init_saved_files();
     });
 
     $('#broad-date-search').submit(function(e){
