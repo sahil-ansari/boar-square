@@ -27,6 +27,13 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f75b65', endColorstr='#ef017c',GradientType=0 ); /* IE6-9 */  
 }
 
+hr {
+  margin-top: 3px !important;
+  margin-bottom: 3px !important ; 
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
 footer {
     position:fixed;
     bottom: 0;
@@ -386,7 +393,6 @@ width:100%;
 
 .clear_both { 
   clear: both; 
-  padding: 3px;
 }
 
 .special-well {
@@ -401,9 +407,9 @@ width:100%;
 }
 
 .special-well-info {
-  min-height: 36px;
-  padding: 10px;
-  margin-bottom: 5px;
+  clear: both;
+  font-size: 0.8em;
+  padding: 5px;
   background-color: rgba(245, 245, 245, 0.5);
   border: 1px solid #e3e3e3;
   border-radius: 5px;
