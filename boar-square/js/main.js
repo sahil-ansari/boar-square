@@ -1174,7 +1174,7 @@ $(document).ready(function (){
     $('#broad-date-search').submit(function(e){
         if (currentlyQuerying)
             return false;
-
+        $('#category-selection, #specific-venue-query, .btn-success').removeAttr('disabled');
         var oldLoc = queryParams.location;
         var loc = $('#place').val();
         if (loc == "")
