@@ -45,6 +45,8 @@ footer {
 
     background-color: red;
     z-index: 1000;
+
+    cursor: pointer;
 }
 footer a {
     color: #999;

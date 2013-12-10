@@ -1016,7 +1016,6 @@ function showFooter() {
     animate_elem_to('option-column', -50);
     animate_elem_to('itenerary-column', -50);
     animate_elem_to('map', -50);
-
     
     footerStateUp = true;
 }
@@ -1028,7 +1027,7 @@ function hideFooter() {
     animate_elem_to('option-column', 50);
     animate_elem_to('itenerary-column', 50);
     animate_elem_to('map', 50);
-    
+
     footerStateUp = false; 
 }
 
