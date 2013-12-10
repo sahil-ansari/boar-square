@@ -341,6 +341,8 @@ function setIteneraryIcons() {
             column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
         idx += 1; 
     }
+
+    column.append("<hr>")
 }
 
 function changeSelection(indexKey) {
