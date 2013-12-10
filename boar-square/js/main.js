@@ -81,7 +81,7 @@ var foursquareSectionToCat = {
     'drinks': 'Nightlife',
     'coffee': 'Coffee',
     'shops': 'Shopping',
-    'arts': 'Arts & Entertainment',
+    'arts': 'Arts',
     'outdoors': 'Outdoors',
     'sights': 'Sights',
     'trending': 'Hot spots',
@@ -116,7 +116,7 @@ var dateStyleStartTimes = {
 };
 var categoryColors = {
     Coffee: {color: 'rgba(184, 138, 31, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
-    'Arts & Entertainment': {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
+    'Arts': {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
     Food: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color', 'iconUrl': 'img/markers/restaurant-heart-marker.png'},
     Nightlife: {color: 'rgba(222, 0, 214, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
     Shopping: {color: 'rgba(255, 106, 0, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
@@ -126,7 +126,7 @@ var categoryColors = {
 };
 var ourCategoryToFoursquareCat = {
     'Food': 'Food',
-    'Arts & Entertainment': 'Arts & Entertainment',
+    'Arts': 'Arts & Entertainment',
     'Nightlife': 'Nightlife Spot',
     'Coffee': 'Coffee Shop',
     'Shopping': 'Shop & Service',
@@ -309,7 +309,8 @@ function setIteneraryIcons() {
     while (category != null) {
         var selected = findSelectedInCategory(category);
         var itemId = '"itenerary_' + category + '"';
-        column.append("<div id=" + itemId +" class='special-well'><div class='itenerary-item'> \
+        var wellClass = "special-well " + categoryColors[category].class;
+        column.append("<div id=" + itemId +" class='" + wellClass + "'><div class='itenerary-item'> \
                           <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
                           "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
                           selected.address + "</div>" + 
@@ -349,7 +350,7 @@ function changeSelection(indexKey) {
 
 function doIteneraryAnimation(category) {
     var itenerary_piece = $('#itenerary_' + category);
-    itenerary_piece.css('color', categoryColors[category].color);
+    itenerary_piece.css('color', '#eee');
     itenerary_piece.css('font-weight', '700');
     setTimeout(function() {
         itenerary_piece.css('color', '#000');
@@ -1111,8 +1112,11 @@ $(document).ready(function (){
      });
 
     $('#broad-date-search').submit(function(e){
+        var loc = $('#place').val();
+        if (loc == "")
+            loc = queryParams.location;
         queryParams = {
-            location: $('#place').val(),
+            location: loc,
             dateStyle: $('#date-type-picker').val()
         };
         setOptionColumnHeader(queryParams.location);
