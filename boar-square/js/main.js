@@ -4,52 +4,7 @@
 
  var environment = {
     "__START__": {nextCategory: null}
-    //"__START__": {nextCategory: "Coffee"}
-
-    
-    // "Coffee": {
-    //     previousCategory: null, 
-    //     nextCategory: "Museum",
-    //     categoryColorClass: "coffee-color",
-    //     categoryDateTime: "1 PM",
-    //     places: [ 
-    //         {name: "Stumptown", address: "123 town", point: [37.9, -122.2], selected: true, pathsTo: [], pathsFrom: []}
-    //         // ,{name: "doodo", address: "123 town", point: [37.89, -122.25], selected: false, pathsTo: [], pathsFrom: []}
-        
-    //     ] 
-    // },
-    // "Museum": {
-    //     previousCategory: "Coffee",
-    //     nextCategory: "Restaurant",
-    //     categoryColorClass: "park-color",
-    //     categoryDateTime: "2 PM",
-    //     places: [
-    //         {name: "Met", address: "123 town", point: [37.7, -122.0], selected: true, pathsTo: [], pathsFrom: []},
-    //         {name: "History Museum", address: "123 town", point: [37.85, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-    //         {name: "Guggenheim", address: "123 town", point: [37.9, -122.5], selected: false, pathsTo: [], pathsFrom: []}
-    //     ]
-    // },
-    // "Restaurant": {
-    //     previousCategory: "Museum",
-    //     nextCategory: "Bar",
-    //     categoryColorClass: "museum-color",
-    //     categoryDateTime: "3 PM",
-    //     places: [
-    //         {name: "#1 Chinese Food", address: "123 town", point: [37.8, -122.4], selected: true, pathsTo: [], pathsFrom: []},
-    //         {name: "Mels", address: "123 town", point: [37.7, -122.25], selected: false, pathsTo: [], pathsFrom: []},
-    //         {name: "Thai Market", address: "123 town", point: [37.6, -122.1], selected: false, pathsTo: [], pathsFrom: []}
-    //     ]
-    // }
-    // ,
-    // "Bar": {
-    //     previousCategory: "Restaurant",
-    //     nextCategory: null,
-    //     categoryColorClass: "bar-color",
-    //     categoryDateTime: "4 PM",
-    //     places: [
-    //         {name: "1020", address: "123 town", point: [37.65, -122.3], selected: true , pathsTo: [], pathsFrom: []  }
-    //     ] 
-    // }
+   
     
 };
 
@@ -64,6 +19,7 @@ var categoryIds = {};
 
 var placeID = "";   
 var nearbyVenues = {};
+var fileName = "";
 
 var map;
 var markersInMap = [];
@@ -1010,8 +966,8 @@ function resetMapKeepingVariables() {
 }
 
 function loadFromStore(saveName) {
-    data = load_boar_sq(saveName); 
-    //data = load_boar_sq("yo"); 
+    data = load_boar_sq(saveName);
+    console.dir(data);
     savedEnv = data.env; 
     thisCategory = savedEnv['__START__'].nextCategory;
     while (thisCategory != null) {
@@ -1078,10 +1034,9 @@ $(document).ready(function (){
     var $load = $('#load')[0];
 
     $($save).click(function(){
-
-        var fileName = $saveText.value;
+        fileName = $saveText.value;
         console.dir(getSavedDates());
-
+        clearStore();
         save_boar_sq({
           q: initialQueryParams, 
           env: environment,
@@ -1091,11 +1046,18 @@ $(document).ready(function (){
 
      $($load).click(function(){
         //console.log(getSavedDates()['yo']);
-        var load = loadFromStore("yo");
-        console.dir(load.env);
-        initLocations(load.env);
+        var name = fileName;
+        clearMap();
+        resetMapKeepingVariables();
+        if(fileName == "")
+            fileName = "yo";
+        console.log("file to load:"+name);
+        var load = loadFromStore(name);
+        console.dir(load);
+        initLocations(environment);
         setIteneraryIcons();
-
+        
+        return false;
      });
 
     //add 'not found' handler later
@@ -1176,12 +1138,12 @@ $(document).ready(function (){
         $(".loading").addClass("done_loading")
         initLocations(environment);
         setIteneraryIcons();
-        save_boar_sq({
-                      q: initialQueryParams, 
-                      env: environment,
-                      loc: [the_lat, the_lon],
-                      },  
-                      "myData");
+        //save_boar_sq({
+        //              q: initialQueryParams, 
+         //             env: environment,
+         //             loc: [the_lat, the_lon],
+         //             },  
+         //             "myData");
         // data = load('myData');
         // console.log(load_boar_sq("myData"));
     }
