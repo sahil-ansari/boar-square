@@ -225,6 +225,7 @@ function toNearbyVenues(venues, section){
 }
 
 function rawVenueToOurVenue(venue, tips, section) {
+    //console.dir(venue);
     if (!venue.hours)
         venue.hours = "open"
     var ven = {
@@ -237,6 +238,7 @@ function rawVenueToOurVenue(venue, tips, section) {
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
         address: venue.location.address + ", " + venue.location.postalCode
+        +", "+venue.location.city+", "+venue.location.state
         //status: v.venue.hours.status    //number to  $$$ amount
     };
 
@@ -328,12 +330,14 @@ function setIteneraryIcons() {
     idx = 1; 
     while (category != null) {
         var selected = findSelectedInCategory(category);
+        console.dir(selected);
+        console.dir(selected);
         var itemId = '"itenerary_' + category + '"';
         var wellClass = "special-well " + categoryColors[category].class;
-        column.append("<div id=" + itemId +" class='" + wellClass + "'><div class='itenerary-item'> \
+        column.append("<div id=" + itemId +" class='" + wellClass + "'style='text-align:center;'><div class='itenerary-item'> \
                           <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
-                          "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
-                          selected.address + "</div>" + 
+                          //"<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" 
+                          selected.address +"</div>" + 
                        "</div></div>");
         // $("#itenerary_" + category).offset({top: $("#category_div_" + category).offset().top}); 
         category = environment[category].nextCategory;
