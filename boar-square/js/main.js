@@ -105,10 +105,10 @@ var dayDates = [
     ['coffee', 'arts', 'shops'],
     ['coffee', 'arts', 'food'],
     ['arts','coffee','outdoors'],
-    ['food','shopping','trending'],
-    ['food','sights','drinks'],
-    ['shopping','food','sights']
-    ['shopping','food','trending'],
+    ['food','shop','trending'],
+    ['food','sights','trending'],
+    ['shops','food','sights']
+    ['shops','food','trending'],
     ['food','trending','outdoors'],
     ['arts','food','trending']
 ];
