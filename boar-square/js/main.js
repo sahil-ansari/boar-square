@@ -23,7 +23,6 @@ var markersInMap = [];
 var mapInitiated = false;
 var resetMap = true;
 
-
 var searchVenuesCounter = 0;
 var searchVenuesCounterLimit;
 var mostRecentCategoryAdded = "__START__";
@@ -110,6 +109,10 @@ var eveningDates = [
     ['shops', 'sights', 'drinks'],
     ['sights', 'food', 'outdoors']
 ];
+var dateStyleStartTimes = {
+    "Day": [11, 12, 1, 2],
+    "Evening": [6, 7, 8, 9]
+};
 var categoryColors = {
     Coffee: {color: 'rgba(184, 138, 31, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
     'Arts & Entertainment': {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
@@ -430,6 +433,7 @@ function initLocations(locations) {
     var idx = 0;
     var category = environment["__START__"].nextCategory;
     var option_div = $('#option-div');
+    $('#category-selection').empty();
     
     while(category != null ) { 
         var typeOfPlace = environment[category];
@@ -542,7 +546,7 @@ function refreshCategorySuggestions(ev) {
     initLocations(environment);
     setIteneraryIcons();
     setAllCategoryWidths();
-    
+
     return false;
 }
 
@@ -584,14 +588,8 @@ function addThumbnail(loc, venue_info_div, suggested) {
 }
 
 function addMenuCategory(category) {
-    var menu = $('#category-menu');
-    var id = 'category-menu-item-' + category.substring(0, 3);
-    menu.append('<li><a href="" id="' + id + '">' + category + '</a></li>');
-    $('#'+id).click(function(ev) {
-        $('#category-selection').html(ev.target.innerHTML);
-        return false;
-    });
-    $("#category-selection").html(category);
+    var menu = $('#category-selection');
+    menu.append('<option>' + category + '</option>');
 }
 
 function setInfoDiv(venue_info_div, loc) {
@@ -959,8 +957,14 @@ function makeTheDate(params) {
 function resetMapKeepingVariables() {
     searchVenuesCounter = 0;
     mostRecentCategoryAdded = "__START__";
-    timeForNextDate = 1;
+    timeForNextDate = getRandomStartTime(queryParams);
     environment = jQuery.extend(true, {}, blankEnvironment); // deep copy
+}
+
+function getRandomStartTime(params) {
+    var possibleStartTimes = dateStyleStartTimes[params.dateStyle];
+    t = possibleStartTimes[Math.floor(Math.random()*possibleStartTimes.length)]; // grab random possible start time
+    return t;
 }
 
 function loadFromStore(saveName) {
@@ -1065,8 +1069,7 @@ $(document).ready(function (){
 
     $('#specific-venue').submit(function() {
         var venueTerms = $("#specific-venue-query").val();
-        var cat = $('#category-selection').html();
-       // console.log('specific venue query');
+        var cat = $('#category-selection').val();
         querySpecificVenueFoursquare(venueTerms, queryParams.location, cat, false);
 
         return false;
@@ -1080,6 +1083,7 @@ $(document).ready(function (){
     if (!initialQueryParams.dateStyle) {
         initialQueryParams.dateStyle = "Day";
     }
+    timeForNextDate = getRandomStartTime(initialQueryParams);
 
     function getVenueThing(params, venueNum) {
         var categoryKey = 'category' + venueNum;
