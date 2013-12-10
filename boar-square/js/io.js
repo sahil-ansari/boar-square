@@ -26,7 +26,6 @@ function makeSavable(environemnt) {
 
 		category = environemnt[category].nextCategory;
 	}
-
 	return savable
 }
 
@@ -48,5 +47,10 @@ function load_boar_sq(currentName) {
 function getSavedDates(){
 
 return store.getAll();
+
+}
+
+function clearStore(){
+store.clear();
 
 }
