@@ -542,8 +542,8 @@ function refreshCategorySuggestions(ev) {
     addSuggestions(category, nextToSuggest[category]);
     initLocations(environment);
     setIteneraryIcons();
-    setCategoryDivWidth(category);
-
+    setAllCategoryWidths();
+    
     return false;
 }
 
