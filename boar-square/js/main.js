@@ -760,7 +760,6 @@ function queryFoursquare(queryString, sectionName) {
 
     var lat,lon;
     var search = $.getJSON(queryString, function( data ) {
-       // console.log('objects from section ' + sectionName);
         var thisCategory = foursquareSectionToCat[sectionName];
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
@@ -794,6 +793,9 @@ function queryFoursquare(queryString, sectionName) {
         actuallyAddVenues();
     }).fail(function(){
         $('#notFound').show();
+        setTimeout(function() {
+            $('#notFound').fadeOut();
+        }, 5000);
     });
 }
 
@@ -841,6 +843,9 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName, increm
         var bestMatch = data.response.venues[0];
         if(bestMatch === null || bestMatch === undefined) {
             $('#notFound').show();
+            setTimeout(function() {
+                $('#notFound').fadeOut();
+            }, 5000);
             if (incrementVenuesCounter)
                 searchVenuesCounter++;
             return false;
@@ -864,7 +869,11 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName, increm
             }
         })        
     }).fail(function(){
+        console.log('what the hell');
         $('#notFound').show();
+        setTimeout(function() {
+            $('#notFound').fadeOut();
+        }, 5000);
     });
 }
 
@@ -1119,6 +1128,7 @@ $(document).ready(function (){
      });
 
     $('#broad-date-search').submit(function(e){
+        var oldLoc = queryParams.location;
         var loc = $('#place').val();
         if (loc == "")
             loc = queryParams.location;
@@ -1126,13 +1136,31 @@ $(document).ready(function (){
             location: loc,
             dateStyle: $('#date-type-picker').val()
         };
-        setOptionColumnHeader(queryParams.location);
-        clearMap();
-        resetMap = true;
-        resetMapKeepingVariables();
-        $('.loading').removeClass('done_loading');
-        doFoursquareSectionsSearch(queryParams);
-        addNewLocationsOnceDone();
+        currentQuerySucceed = null;
+        
+        function changeLookAndQuery() {
+            setOptionColumnHeader(queryParams.location);
+            clearMap();
+            resetMap = true;
+            resetMapKeepingVariables();
+            doFoursquareSectionsSearch(queryParams);
+            $('.loading').removeClass('done_loading');
+            addNewLocationsOnceDone();
+        }
+        var testQuery = 'https://api.foursquare.com/v2/venues/explore?near=' + queryParams.location + 
+            '&limit=1' + 
+            '&client_id=' + clientId + 
+            '&client_secret=' + secret + 
+            '&v=20120625';
+        $.getJSON(testQuery, function(data) {
+            changeLookAndQuery();
+        }).fail(function() {
+            queryParams.location = oldLoc;
+            $('#notFound').show();
+            setTimeout(function() {
+                $('#notFound').fadeOut();
+            }, 5000);
+        });
 
         return false;
     });

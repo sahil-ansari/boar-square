@@ -183,6 +183,15 @@ footer a:hover {
 
 }
 
+#upper-logo {
+    color: #444;
+    cursor: pointer;
+}
+
+#upper-logo:hover, #upper-logo:focus {
+    color: #fff;
+}
+
 .addVenue {
     max-width: 30%;
     min-height: 100px;
@@ -463,11 +472,14 @@ width:100%;
 }
 
 #notFound {
-  color:rgb(240,0,50); 
+  color: #fff;
   display: none;
-  border-style: solid;
+  border: 3px solid rgb(225, 225, 75);
+  border-radius: 5px;
   margin-left: .3em;
   margin-top: 10px;
+  padding: 8px;
+  background-color: rgba(100, 100, 100, 0.8);
 }
 
 #broad-date-search {
