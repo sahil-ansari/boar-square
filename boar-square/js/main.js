@@ -1,8 +1,8 @@
-var blankEnvironment = {
+var blankEnvironment = {                // used to deep-copy a blank environment
     "__START__": {nextCategory: null}
 };
 
-var environment = {
+var environment = {                     // actual global variable to store our environment
     "__START__": {nextCategory: null}
 };
 
@@ -49,7 +49,7 @@ var bigHeartIcon = L.Icon.extend({
         iconSize: [50, 50],
         iconAnchor: [25, 50],
         popupAnchor: [0, -50],
-        labelAnchor: [23, -25],
+        labelAnchor: [14, -15],
         className: 'big-heart-marker'
     }
 });
@@ -77,8 +77,9 @@ var iToColor = [
         "#FF9933"    // orange
 ];
 
+// sections to feed for foursquare explore call
 var foursquareSections = ['food', 'drinks', 'coffee', 'shops', 'arts', 'outdoors', 'sights', 'trending'];
-var foursquareSectionToCat = {
+var foursquareSectionToCat = {          // what we call the foursquare sections
     'food': 'Food',
     'drinks': 'Nightlife',
     'coffee': 'Coffee',
@@ -89,16 +90,7 @@ var foursquareSectionToCat = {
     'trending': 'Hot spots',
     'custom': 'Your custom location'
 };
-var categoryQueryToSection = {
-    "(Category: Nightlife)": 'drinks',
-    "(Category: Food)": 'food',
-    "(Category: Coffee)": 'coffee',
-    "(Category: Shopping)": 'shops',
-    "(Category: Arts)": 'arts',
-    "(Category: Outdoors)": 'outdoors',
-    "(Category: Sights)": 'sights'
-};
-var dayDates = [
+var dayDates = [                        // our templates for perfect daytime dates
     ['coffee', 'outdoors', 'food'],
     ['shops', 'food', 'outdoors'],
     ['food', 'sights', 'coffee'],
@@ -113,8 +105,7 @@ var dayDates = [
     ['food','trending','outdoors'],
     ['arts','food','trending']
 ];
-
-var eveningDates = [
+var eveningDates = [                    // our templates for perfect evening dates
     ['food', 'arts', 'drinks'],
     ['coffee','food','trending'],
     ['drinks', 'coffee', 'outdoors'],
@@ -204,24 +195,19 @@ function addNewCategory(name, previous, color, date_time) {
     }
 }
 
- // what the api takes as 'section' parameter
+ // converts list of api raw venues to a nice list of our JSON
 function toNearbyVenues(venues, section){ 
     var tmp = [venues.length];
     
-    for(var i = 0; i<venues.length; i++)
-    {
-        //console.log(venues[i].venue.name);
+    for(var i = 0; i<venues.length; i++) {
         var ven = rawVenueToOurVenue(venues[i].venue, venues[i].tips, section);
-
-        //console.dir(ven);
-        tmp[i]= ven;//push[ven];
-     }
+        tmp[i]= ven;
+    }
      
     return tmp;
 }
 
 function rawVenueToOurVenue(venue, tips, section) {
-    //console.dir(venue);
     if (!venue.hours)
         venue.hours = "open"
     var ven = {
@@ -235,7 +221,6 @@ function rawVenueToOurVenue(venue, tips, section) {
         point: [venue.location.lat, venue.location.lng],                    
         address: venue.location.address + ", " + venue.location.city
          + ", " + venue.location.state + ", " + venue.location.postalCode
-        //status: v.venue.hours.status    //number to  $$$ amount
     };
 
     if (venue.categories.length >= 1) {
@@ -279,7 +264,6 @@ function setCategoryRef(apiCategories){
             categoryIds[subcat.name] = subcat.id;
         }
     } 
-    console.log(categoryIds);
 }
 
 function initMap(lat,lon) {
@@ -325,20 +309,13 @@ function setIteneraryIcons() {
     idx = 1;
     while (category != null) {
         var selected = findSelectedInCategory(category);
-        console.dir(selected);
-        console.dir(selected);
         var itemId = '"itenerary_' + category + '"';
         var wellClass = "special-well " + categoryColors[category].class;
         column.append("<div id=" + itemId +" class='" + wellClass + "'style='text-align:center;'><div class='itenerary-item'> \
                           <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
-                          //"<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" 
                           selected.address +"</div>");
         column.append("</div></div>");
                        
-        // $("#itenerary_" + category).offset({top: $("#category_div_" + category).offset().top});
-
-
-
         category = environment[category].nextCategory;
         if (category) {
             var nextSelected = findSelectedInCategory(category);
@@ -347,10 +324,8 @@ function setIteneraryIcons() {
             column.append("<div class='itenerary-arrow-transition'>" + a + 
                  "<i class='fa fa-arrow-down fa-3x'></i></a></div>");
         }
-
         idx += 1; 
     }
-
     column.append("<hr>")
 }
 
@@ -770,26 +745,13 @@ function markerClicked(ev) {
 }
 
 function markerMouseOver(ev) {
-    tag = ev.target; 
-    // category = tag._leaflet_id.split("_")[0]
-
-    // option_div = $('#option-column');
-    // option_div.scrollTo("#category_header_" + category);    
+    tag = ev.target;   
     ev.target.openPopup();
 }
 
 function markerMouseLeft(ev) {
     ev.target.closePopup();
 }
-
-function getRandomColor()  {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ )
-       color += letters[Math.round(Math.random() * 15)];
-    return color;
-}
-
 
 function queryFoursquare(queryString, sectionName) {
     $('#notFound').hide();
@@ -804,7 +766,6 @@ function queryFoursquare(queryString, sectionName) {
 
         for(var i = 0;i<theseVenues.length;i++)
         {
-            console.log(theseVenues[i]);
             totalLatitudes += theseVenues[i].point[0];
             totalLongitudes += theseVenues[i].point[1];
         }
@@ -844,6 +805,7 @@ function addSuggestions(category, lastIndex) {
     environment[category].places = environment[category].places.filter(function(el) {
         return !el.suggested;
     });
+
     for (var i=lastIndex; i<endIndex && i<venues.length; i++) {   
         var v = venues[i];
         var selected = false;
@@ -923,23 +885,18 @@ function getUrlParams() {
         vars[termSplit[0]] = unescape(termSplit[1]);
     }
     return vars;
-    //console.dir(vars);
 }
 
 function doFoursquareSectionsSearch(params) {
     var locationName = params.location;
 
     var dateInfo = makeTheDate(params);
-    console.dir(dateInfo);
 
-    // only take the top 3.
-    // TODO: Have it take variable amount based on length of date
     searchVenuesCounterLimit = dateInfo.length;
     
     for (var i=0; i<dateInfo.length; i++) {
 
         /* add the new category */
-        console.log(dateInfo[i].section);
         var cat = foursquareSectionToCat[dateInfo[i].section];
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
@@ -1032,7 +989,6 @@ function getRandomStartTime(params) {
 function loadFromStore(saveName) {
     hideWelcome();
     data = load_boar_sq(saveName);
-    console.dir(data);
     savedEnv = data.env;
     queryParams = data.q;
     nearbyVenues = data.nearbyVenues;
@@ -1069,7 +1025,7 @@ function loadFromStore(saveName) {
         var center = new L.LatLng(avLat, avLon);
         map.panTo(center);
     }
-    // initMap(data.loc[0], data.loc[1]);
+
     setOptionColumnHeader(queryParams.location);
     $('#place').val(queryParams.location);
     initLocations(environment);
@@ -1078,12 +1034,16 @@ function loadFromStore(saveName) {
     resizeStuff();
 }
 
-function animate_elem_to(element_id, diff){ 
+function animate_elem_to(element_id, diff, callback){ 
     var element = $("#"+ element_id);
     var element_height = element.height(); 
     var newHeight = element_height + diff; 
-    element.animate({'height': newHeight});
+    element.animate({'height': newHeight}, function() {
+        if (callback)
+            callback();
+    });
 }
+
 function showFooter() {
     if(footerStateUp)
         return; 
@@ -1093,7 +1053,7 @@ function showFooter() {
     animate_elem_to('map-column', -50);
     animate_elem_to('option-column', -50);
     animate_elem_to('itenerary-column', -50);
-    animate_elem_to('map', -50);
+    animate_elem_to('map', -50, resizeStuff);
     
     footerStateUp = true;
 }
@@ -1106,10 +1066,9 @@ function hideFooter() {
     animate_elem_to('map-column', 50);
     animate_elem_to('option-column', 50);
     animate_elem_to('itenerary-column', 50);
-    animate_elem_to('map', 50);
+    animate_elem_to('map', 50, resizeStuff);
 
     footerStateUp = false; 
-    resizeStuff();
 }
 
 function toggleFooter() {
@@ -1118,9 +1077,6 @@ function toggleFooter() {
     else 
         showFooter();
 }
-
-
-
 
 function init_saved_files() {
     var load_menu = $("#load-menu");
@@ -1165,8 +1121,6 @@ function init_saved_files() {
         load_menu.append(list_item);
     });
 }
-
-
 
 function setBottomToPixel(element, dest) {
     var topOfElement = element.offset().top; 
@@ -1336,7 +1290,6 @@ $(document).ready(function (){
 
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
-            console.log('not done');
             setTimeout(addNewLocationsOnceDone, 100);
             return false;
         }

@@ -378,16 +378,16 @@ width:100%;
   width: 100%; 
 }
 
-
-
 .itenerary-item-text {
     font-size: 1.25em;
     text-align: left;
+    color: #000;
 }
 
 .itenerary-item-details {
     text-align: right;
     letter-spacing: 0.02em;
+    color: #000;
 }
 
 .maps-arrow-link {
@@ -542,6 +542,9 @@ width:100%;
 }
 
 .heart-marker {
+}
+
+.big-heart-marker {
 }
 
 #notFound {
