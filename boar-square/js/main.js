@@ -102,14 +102,32 @@ var dayDates = [
     ['shops', 'food', 'outdoors'],
     ['food', 'sights', 'coffee'],
     ['outdoors', 'coffee', 'arts'],
-    ['coffee', 'arts', 'shops']
+    ['coffee', 'arts', 'shops'],
+    ['coffee', 'arts', 'food'],
+    ['arts','coffee','outdoors'],
+    ['food','shopping','trending'],
+    ['food','sights','drinks'],
+    ['shopping','food','sights']
+    ['shopping','food','trending'],
+    ['food','trending','outdoors'],
+    ['arts','food','trending']
 ];
+
 var eveningDates = [
     ['food', 'arts', 'drinks'],
-    ['food', 'drinks', 'coffee'],
+    ['coffee','food','trending'],
     ['drinks', 'coffee', 'outdoors'],
     ['shops', 'sights', 'drinks'],
-    ['sights', 'food', 'outdoors']
+    ['sights', 'food', 'outdoors'],
+    ['food', 'arts', 'drinks'],
+    ['trending','arts','drinks'],
+    ['outdoors','food','drinks'],
+    ['arts','outdoors','drinks'],
+    ['outdoors','food','arts'],
+    ['food','drinks','outdoors'],
+    ['sights','food','drinks'],
+    ['trending','arts','food'],
+    ['arts','trending','drinks']
 ];
 var dateStyleStartTimes = {
     "Day": [11, 12, 1, 2],
