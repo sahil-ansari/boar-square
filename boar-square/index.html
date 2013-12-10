@@ -57,15 +57,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Love.ly</a>
+          <span class="navbar-brand" id="upper-logo">Love.ly</span>
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form" id="broad-date-search">
             <div class="form-group">
-              <input type="text" id="place" class='form-control' placeholder="location search" style='height: 40px' enabled>
+              <input type="text" id="place" class='form-control' placeholder="location search" enabled>
             </div>
             <div class="form-group">
-              <select class="selectpicker" id="date-type-picker">
+              <select class="selectpicker form-control" id="date-type-picker">
                 <option>Day Date</option>
                 <option>Evening Date</option>
               </select>
@@ -77,17 +77,11 @@
               <input id="specific-venue-query" type="text" placeholder="Name a specific place" class="form-control">
             </div>
             <div class="form-group">
-              <div class="btn-group dropdown">
-                <button type="button" class="btn btn-default" id="category-selection">Category</button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                  <span class="caret"></span>
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" id="category-menu">
-                </ul>
-              </div>
+              <select class="selectpicker form-control" id="category-selection">
+                <option>Category</option>
+              </select>
             </div>
-            <button type="submit" class="btn btn-success">Add it to the</button>
+            <button type="submit" class="btn btn-success">Add your own option!</button>
           </form>
         </div><!--/.navbar-collapse -->
       </div>
