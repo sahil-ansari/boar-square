@@ -30,6 +30,7 @@ var searchVenuesCounterLimit;
 var mostRecentCategoryAdded = "__START__";
 var timeForNextDate = 1;
 var queryParams = {};
+var currentlyQuerying = false;
 
 var the_lat;
 var the_lon;
@@ -102,14 +103,32 @@ var dayDates = [
     ['shops', 'food', 'outdoors'],
     ['food', 'sights', 'coffee'],
     ['outdoors', 'coffee', 'arts'],
-    ['coffee', 'arts', 'shops']
+    ['coffee', 'arts', 'shops'],
+    ['coffee', 'arts', 'food'],
+    ['arts','coffee','outdoors'],
+    ['food','shop','trending'],
+    ['food','sights','trending'],
+    ['shops','food','sights']
+    ['shops','food','trending'],
+    ['food','trending','outdoors'],
+    ['arts','food','trending']
 ];
+
 var eveningDates = [
     ['food', 'arts', 'drinks'],
-    ['food', 'drinks', 'coffee'],
+    ['coffee','food','trending'],
     ['drinks', 'coffee', 'outdoors'],
     ['shops', 'sights', 'drinks'],
-    ['sights', 'food', 'outdoors']
+    ['sights', 'food', 'outdoors'],
+    ['food', 'arts', 'drinks'],
+    ['trending','arts','drinks'],
+    ['outdoors','food','drinks'],
+    ['arts','outdoors','drinks'],
+    ['outdoors','food','arts'],
+    ['food','drinks','outdoors'],
+    ['sights','food','drinks'],
+    ['trending','arts','food'],
+    ['arts','trending','drinks']
 ];
 var dateStyleStartTimes = {
     "Day": [11, 12, 1, 2],
@@ -1128,6 +1147,9 @@ $(document).ready(function (){
      });
 
     $('#broad-date-search').submit(function(e){
+        if (currentlyQuerying)
+            return false;
+
         var oldLoc = queryParams.location;
         var loc = $('#place').val();
         if (loc == "")
@@ -1139,6 +1161,7 @@ $(document).ready(function (){
         currentQuerySucceed = null;
         
         function changeLookAndQuery() {
+            currentlyQuerying = true;
             setOptionColumnHeader(queryParams.location);
             clearMap();
             resetMap = true;
@@ -1166,6 +1189,9 @@ $(document).ready(function (){
     });
 
     $('#specific-venue').submit(function() {
+        if (currentlyQuerying)
+            return false;
+        
         var venueTerms = $("#specific-venue-query").val();
         var cat = $('#category-selection').val();
         querySpecificVenueFoursquare(venueTerms, queryParams.location, cat, false);
@@ -1224,6 +1250,7 @@ $(document).ready(function (){
         $(".loading").addClass("done_loading")
         initLocations(environment);
         setIteneraryIcons();
+        currentlyQuerying = false;
         //save_boar_sq({
         //              q: initialQueryParams, 
          //             env: environment,
