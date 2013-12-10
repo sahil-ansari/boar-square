@@ -596,8 +596,11 @@ function setInfoDiv(venue_info_div, loc) {
     var link = loc.name; 
     if (loc.url)
         link = "<a target='_blank' href='" + loc.url + "'>" + loc.name + "</a>"
+    var rating = "";
+    if (loc.rating)
+        rating = "(" + loc.rating + "/10)";
 
-    venue_info_div.html("<div>" + link + " (" + loc.rating + "/10) - Cost: " + loc.price + "</div>");
+    venue_info_div.html("<div>" + link + " " + rating + " - Cost: " + loc.price + "</div>");
 }
 
 function addNewLocation(category, location, personal) {
@@ -1049,6 +1052,10 @@ function resizeStuff() {
     setBottomToPixel($("#map"), topOfFooter);
 }
 
+function setOptionColumnHeader(locName) {
+    $('#option-column-header').html("A date in " + locName + ":");
+}
+
 $(document).ready(function (){
 
     resizeStuff();
@@ -1096,7 +1103,7 @@ $(document).ready(function (){
             location: $('#place').val(),
             dateStyle: $('#date-type-picker').val()
         };
-
+        setOptionColumnHeader(queryParams.location);
         clearMap();
         resetMap = true;
         resetMapKeepingVariables();
@@ -1150,6 +1157,7 @@ $(document).ready(function (){
         initialQueryParams.venue3Info = getVenueThing(initialQueryParams, 3);
     }
     queryParams = initialQueryParams;
+    setOptionColumnHeader(queryParams.location);
     doFoursquareSectionsSearch(queryParams);
     //setFooterDescription(initialQueryParams);
     // loadFromStore("myData");
