@@ -29,6 +29,13 @@ body {
     width: 100%;
   }
 
+hr {
+  margin-top: 3px !important;
+  margin-bottom: 3px !important ; 
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
 footer {
     position:fixed;
     bottom: 0;
@@ -45,8 +52,17 @@ footer {
     letter-spacing: 0.05em;
     border-top: 1px solid #000;
 
-    background-color: red;
+    background: #26821c; /* Old browsers */
+    background: -moz-linear-gradient(top, #26821c 0%, #3ea515 95%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#26821c), color-stop(95%,#3ea515)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #26821c 0%,#3ea515 95%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #26821c 0%,#3ea515 95%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #26821c 0%,#3ea515 95%); /* IE10+ */
+    background: linear-gradient(to bottom, #26821c 0%,#3ea515 95%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26821c', endColorstr='#3ea515',GradientType=0 ); /* IE6-9 */
     z-index: 1000;
+
+    cursor: pointer;
 }
 footer a {
     color: #999;
@@ -115,7 +131,7 @@ footer a:hover {
 
 #itenerary-column {
     border: none;
-     overflow-y:auto;
+    overflow-y:auto;
     height:600px; 
     /*text-align: center;*/
     /*vertical-align: middle;*/
@@ -156,7 +172,6 @@ footer a:hover {
     text-align: center;
 }
 
-
 /* helper class for hiding */
 .hidden {
     display: none;
@@ -169,7 +184,6 @@ footer a:hover {
 }
 
 .addVenue {
-
     max-width: 30%;
     min-height: 100px;
     background-color: #428bca;
@@ -178,7 +192,6 @@ footer a:hover {
     margin-bottom: 2px;
     margin: 0px;
     padding:0px;
-
 }
 
 .VenueGroup {
@@ -239,6 +252,8 @@ width:100%;
     margin: 0;
 }
 
+#option-column-header {
+}
 
 .landing-form {
   width: 40%;
@@ -380,24 +395,24 @@ width:100%;
 
 .clear_both { 
   clear: both; 
-  padding: 3px;
 }
 
 .special-well {
   min-height: 20px;
   padding: 12px;
   margin-bottom: 5px;
-  background-color: rgba(245, 245, 245, 0.5);
-  border: 1px solid #e3e3e3;
+  /* background-color: rgba(245, 245, 245, 0.5); */
+  border: 1px solid #ccc;
   border-radius: 5px;
+  opacity: 0.95;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .special-well-info {
-  min-height: 36px;
-  padding: 10px;
-  margin-bottom: 5px;
+  clear: both;
+  font-size: 0.8em;
+  padding: 5px;
   background-color: rgba(245, 245, 245, 0.5);
   border: 1px solid #e3e3e3;
   border-radius: 5px;

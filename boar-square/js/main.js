@@ -82,7 +82,7 @@ var foursquareSectionToCat = {
     'drinks': 'Nightlife',
     'coffee': 'Coffee',
     'shops': 'Shopping',
-    'arts': 'Arts & Entertainment',
+    'arts': 'Arts',
     'outdoors': 'Outdoors',
     'sights': 'Sights',
     'trending': 'Hot spots',
@@ -117,7 +117,7 @@ var dateStyleStartTimes = {
 };
 var categoryColors = {
     Coffee: {color: 'rgba(184, 138, 31, 0.8)', 'class': 'coffee-color', 'iconUrl': 'img/markers/coffee-heart-marker.png'},
-    'Arts & Entertainment': {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
+    'Arts': {color: 'rgba(0, 225, 75, 0.8)', 'class': 'park-color', 'iconUrl': 'img/markers/park-heart-marker.png'}, 
     Food: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color', 'iconUrl': 'img/markers/restaurant-heart-marker.png'},
     Nightlife: {color: 'rgba(222, 0, 214, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
     Shopping: {color: 'rgba(255, 106, 0, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
@@ -127,7 +127,7 @@ var categoryColors = {
 };
 var ourCategoryToFoursquareCat = {
     'Food': 'Food',
-    'Arts & Entertainment': 'Arts & Entertainment',
+    'Arts': 'Arts & Entertainment',
     'Nightlife': 'Nightlife Spot',
     'Coffee': 'Coffee Shop',
     'Shopping': 'Shop & Service',
@@ -310,7 +310,8 @@ function setIteneraryIcons() {
     while (category != null) {
         var selected = findSelectedInCategory(category);
         var itemId = '"itenerary_' + category + '"';
-        column.append("<div id=" + itemId +" class='special-well'><div class='itenerary-item'> \
+        var wellClass = "special-well " + categoryColors[category].class;
+        column.append("<div id=" + itemId +" class='" + wellClass + "'><div class='itenerary-item'> \
                           <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
                           "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
                           selected.address + "</div>" + 
@@ -350,7 +351,7 @@ function changeSelection(indexKey) {
 
 function doIteneraryAnimation(category) {
     var itenerary_piece = $('#itenerary_' + category);
-    itenerary_piece.css('color', categoryColors[category].color);
+    itenerary_piece.css('color', '#eee');
     itenerary_piece.css('font-weight', '700');
     setTimeout(function() {
         itenerary_piece.css('color', '#000');
@@ -480,7 +481,7 @@ function initLocations(locations) {
         var venue_info_div = $("<div/>", {
             "id": venue_info_div_id,
             "class": "special-well-info"
-        }).appendTo(container_div); 
+        });
 
         
         for (var j=0; j<locOptions.length; j++) {
@@ -525,8 +526,10 @@ function initLocations(locations) {
             }).appendTo(category_div);
 
             loc.thumbnailDiv = thumbnailDiv; 
-            addThumbnail(loc, venue_info_div, true);
+            addThumbnail(loc, venue_info_div, category, true);
         }
+        venue_info_div.appendTo(option_div); 
+
 
         idx += 1; 
         // venue_info_div.appendTo(category_div);
@@ -551,7 +554,7 @@ function refreshCategorySuggestions(ev) {
     return false;
 }
 
-function addThumbnail(loc, venue_info_div, suggested) {
+function addThumbnail(loc, venue_info_div, category, suggested) {
     if (suggested)
         var thumbnailClass = "thumb_suggested";
     else
@@ -578,16 +581,21 @@ function addThumbnail(loc, venue_info_div, suggested) {
 
     thumb.hover(
         function() {
-            setInfoDiv(venue_info_div, loc)
+            setInfoDiv(venue_info_div, loc);
+            loc.marker.setIcon(new bigHeartIcon({iconUrl: categoryColors[category].iconUrl}));
         }, 
         function() {
-        
+            loc.marker.setIcon(new heartIcon({iconUrl: categoryColors[category].iconUrl}))
         }
     )
     loc.thumbnailDiv.append(loc.name);
     loc.thumb = thumb;
 }
 
+
+function makeBigMarker(theMarker) { 
+
+}
 function addMenuCategory(category) {
     var menu = $('#category-selection');
     menu.append('<option>' + category + '</option>');
@@ -597,8 +605,11 @@ function setInfoDiv(venue_info_div, loc) {
     var link = loc.name; 
     if (loc.url)
         link = "<a target='_blank' href='" + loc.url + "'>" + loc.name + "</a>"
+    var rating = "";
+    if (loc.rating)
+        rating = "(" + loc.rating + "/10)";
 
-    venue_info_div.html("<div>" + link + " (" + loc.rating + "/10) - Cost: " + loc.price + "</div>");
+    venue_info_div.html("<div>" + link + " " + rating + " - Cost: " + loc.price + "</div>");
 }
 
 function addNewLocation(category, location, personal) {
@@ -659,9 +670,9 @@ function addNewLocation(category, location, personal) {
     var thumbnailDiv = $("<div/>", {
         "class": "place_thumbnail"
         
-    }).appendTo(category_div); 
+    }).prependTo(category_div); 
     loc.thumbnailDiv = thumbnailDiv;
-    addThumbnail(loc, venue_info_div, !personal);
+    addThumbnail(loc, venue_info_div, category, !personal);
 
     setCategoryDivWidth(category);
 }
@@ -675,7 +686,6 @@ function setAllCategoryWidths() {
 }
 
 function setCategoryDivWidth(category) {
-    console.log(category);
     var category_div = $("#category_div_" + category);
     var numIcons = environment[category].places.length;
     category_div.width(numIcons * 110);
@@ -752,7 +762,6 @@ function queryFoursquare(queryString, sectionName) {
     var search = $.getJSON(queryString, function( data ) {
        // console.log('objects from section ' + sectionName);
         var thisCategory = foursquareSectionToCat[sectionName];
-        console.log(data.response.groups[0]);
         nearbyVenues[thisCategory] = toNearbyVenues(data.response.groups[0].items, sectionName); //all the nearby places
         var theseVenues = nearbyVenues[thisCategory];
 
@@ -791,7 +800,6 @@ function queryFoursquare(queryString, sectionName) {
 function addSuggestions(category, lastIndex) {
     var endIndex = lastIndex + 3;
     var venues = nearbyVenues[category];
-    console.log(category);
     environment[category].places = environment[category].places.filter(function(el) {
         return !el.suggested;
     });
@@ -885,7 +893,6 @@ function doFoursquareSectionsSearch(params) {
     for (var i=0; i<dateInfo.length; i++) {
 
         /* add the new category */
-        console.log(dateInfo[i].section);
         var cat = foursquareSectionToCat[dateInfo[i].section];
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
@@ -996,17 +1003,6 @@ function loadFromStore(saveName) {
  //       ". Have fun!"; //save button
 //}
 
-function setContainerHeight() {
-    var optionCol = $('#option-column');
-    var itenCol = $('#itenerary-column');
-    var footer = $('#footer-loc');
-    var navbar = $('#navbar');
-    var desiredHeight = $(window).height() - footer.height() - navbar.height() - 150;
-    //console.log(desiredHeight);
-    //optionCol.css('height', desiredHeight);
-    //colContainer.css('height', desiredHeight);
-}
-
 function animate_elem_to(element_id, diff){ 
     var element = $("#"+ element_id);
     var element_height = element.height(); 
@@ -1021,7 +1017,6 @@ function showFooter() {
     animate_elem_to('option-column', -50);
     animate_elem_to('itenerary-column', -50);
     animate_elem_to('map', -50);
-
     
     footerStateUp = true;
 }
@@ -1033,7 +1028,7 @@ function hideFooter() {
     animate_elem_to('option-column', 50);
     animate_elem_to('itenerary-column', 50);
     animate_elem_to('map', 50);
-    
+
     footerStateUp = false; 
 }
 
@@ -1058,13 +1053,22 @@ function setBottomToPixel(element, dest) {
     element.height(dest-topOfElement);
 }
 
-$(document).ready(function (){
-
+function resizeStuff() {
     var topOfFooter = $('footer').offset().top; 
     setBottomToPixel($("#map-column"), topOfFooter);
     setBottomToPixel($("#option-column"), topOfFooter);
     setBottomToPixel($("#itenerary-column"), topOfFooter);
     setBottomToPixel($("#map"), topOfFooter);
+}
+
+function setOptionColumnHeader(locName) {
+    $('#option-column-header').html("A date in " + locName + ":");
+}
+
+$(document).ready(function (){
+
+    resizeStuff();
+    $(window).resize(resizeStuff);
    
     if (!store.enabled) {
         console.error('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser')
@@ -1074,9 +1078,6 @@ $(document).ready(function (){
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
             setCategoryRef(data);
     });
-
-    // $(window).resize(setContainerHeight);
-    // setContainerHeight();
 
     $('#footer-loc').click(toggleFooter);
  
@@ -1112,17 +1113,23 @@ $(document).ready(function (){
         return false;
      });
 
-    //add 'not found' handler later
-    $($area).change(function(e){   //find location match, get list of nearby places
-        resetMap = true;                  // of recommended nearby venues
-        area = this.value;
-        queryParams.location = area; 
-
+    $('#broad-date-search').submit(function(e){
+        var loc = $('#place').val();
+        if (loc == "")
+            loc = queryParams.location;
+        queryParams = {
+            location: loc,
+            dateStyle: $('#date-type-picker').val()
+        };
+        setOptionColumnHeader(queryParams.location);
         clearMap();
+        resetMap = true;
         resetMapKeepingVariables();
         $('.loading').removeClass('done_loading');
         doFoursquareSectionsSearch(queryParams);
         addNewLocationsOnceDone();
+
+        return false;
     });
 
     $('#specific-venue').submit(function() {
@@ -1167,8 +1174,8 @@ $(document).ready(function (){
     if (initialQueryParams.category3) {
         initialQueryParams.venue3Info = getVenueThing(initialQueryParams, 3);
     }
-    initialQueryParams.day = 1;
     queryParams = initialQueryParams;
+    setOptionColumnHeader(queryParams.location);
     doFoursquareSectionsSearch(queryParams);
     //setFooterDescription(initialQueryParams);
     // loadFromStore("myData");
