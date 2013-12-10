@@ -1112,18 +1112,31 @@ function toggleFooter() {
         showFooter();
 }
 
+
+
+
 function init_saved_files() {
     var load_menu = $("#load-menu");
+    var confirm_group = $('#confirm_group');
     load_menu.empty();
-    
+
+    $('#delete_confirm').click(function(e){
+        store.clear(); 
+        load_menu.empty();
+        init_saved_files();    
+        confirm_group.fadeOut(500);
+    }); 
+
+    $('#delete_decline').click(function(e){
+        confirm_group.fadeOut(500);
+    }); 
+
     var list_item = $("<li/>");
-    var link = $("<a/>", {
+    var clear_link = $("<a/>", {
         "href": "#", 
         html: "CLEAR ALL",
         click: function(e) {
-            store.clear();    
-            load_menu.empty();
-            init_saved_files();        
+            $('#confirm_group').fadeIn(500);    
         },
         "style": "background-color:red" 
     }).appendTo(list_item);
@@ -1145,6 +1158,8 @@ function init_saved_files() {
         load_menu.append(list_item);
     });
 }
+
+
 
 function setBottomToPixel(element, dest) {
     var topOfElement = element.offset().top; 
@@ -1239,24 +1254,13 @@ $(document).ready(function (){
           loc: [the_lat, the_lon],
           nearbyVenues: nearbyVenues,
           nextSuggest: nextToSuggest
-        }, fileName);
-
+        }, fileName)
+        
         $("#date-saved-label").html("<lable> Itenerary Saved: " + fileName + "</label>");
         $("#date-saved-label").fadeIn(1000);
-        var load_menu = $("#load-menu"); 
-        var list_item = $("<li/>");
-        var link = $("<a/>", {
-            "href": "#", 
-            html: fileName,
-            click: function(e) {
-                resetMapKeepingVariables();
-                clearMap();
-                toggleFooter();
-                loadFromStore(fileName);
-                setIteneraryIcons();
-            }
-        }).appendTo(list_item);
-        load_menu.append(list_item);
+        setTimeout(function() {
+                $("#date-saved-label").fadeOut(1000); 
+        }, 2500);
         init_saved_files();
     });
 
@@ -1317,49 +1321,7 @@ $(document).ready(function (){
         return false;
     });
 
-    /*
-    var initialQueryParams = getUrlParams();
-    //console.log(initialQueryParams);
-    if (!initialQueryParams.location) {
-        initialQueryParams.location = 'NYC';
-    }
-    if (!initialQueryParams.dateStyle) {
-        initialQueryParams.dateStyle = "Day";
-    }
-    timeForNextDate = getRandomStartTime(initialQueryParams);
-
-    function getVenueThing(params, venueNum) {
-        var categoryKey = 'category' + venueNum;
-        var venueNameKey = 'venue' + venueNum;
-
-        var catVal = params[categoryKey];
-        var nameVal = params[venueNameKey];
-
-        var searchInfo = {
-            section: categoryQueryToSection[catVal],
-            name: nameVal
-        };
-        return searchInfo;
-    }
-
-    if (initialQueryParams.category1) {
-        initialQueryParams.venue1Info = getVenueThing(initialQueryParams, 1);
-    }
-  
-    if (initialQueryParams.category2) {
-        initialQueryParams.venue2Info  = getVenueThing(initialQueryParams, 2);
-    }
-    if (initialQueryParams.category3) {
-        initialQueryParams.venue3Info = getVenueThing(initialQueryParams, 3);
-    }
-    queryParams = initialQueryParams;
-    setOptionColumnHeader(queryParams.location);
-    doFoursquareSectionsSearch(queryParams);
-    //setFooterDescription(initialQueryParams);
-    // loadFromStore("myData");
-    // initLocations(environment);
-    // setIteneraryIcons();
-    */
+    
 
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {

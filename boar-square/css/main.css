@@ -468,7 +468,10 @@ width:100%;
 .thumb_personal:hover, .thumb_personal:focus,
 .thumb_suggested:hover, .thumb_suggested:hover,
 .thumb_selected:hover, .thumb_selected:hover {
-  border: 2px solid LightGreen;
+  border: 3px solid LightGreen;
+}
+.confirm_group {
+  padding-left: 5px;
 }
 
 .clear_both { 
