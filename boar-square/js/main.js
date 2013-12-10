@@ -1181,6 +1181,7 @@ function doWelcomeAnimation() {
 
 function hideWelcome() {
     $('#main-search-button').attr("disabled", false);
+    $('#main-search-button').html('Try something different!');
     $("#welcome-screen").fadeOut(400, function() {
         $("#column-container").fadeIn(1000);
     });
