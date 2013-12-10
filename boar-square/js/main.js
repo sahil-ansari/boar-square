@@ -282,12 +282,11 @@ function setCategoryRef(apiCategories){
 
 function initMap(lat,lon) {
     the_lon = lon; 
-    the_lat = lat; 
+    the_lat = lat;
     var options ={
         center: new L.LatLng(lat, lon),
         zoom: 12
     };
-
     map = new L.Map('map', options);
 
     var cloudmadeUrl = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg',
@@ -722,6 +721,8 @@ function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
 }
 
 function clearMap() {
+    clearCols();
+
     if (!map)
         return;
 
@@ -733,7 +734,6 @@ function clearMap() {
     for (var i = 0; i < markersInMap.length; i++)
         map.removeLayer(markersInMap[i]);
     markersInMap = [];
-    clearCols();
 }
 
 function thumbnailClicked(leaflet_id){
@@ -1033,10 +1033,12 @@ function loadFromStore(saveName) {
    
     if (!map) {
         initMap(avLat, avLon);
+        console.log('oh');
     }
     else {
         var center = new L.LatLng(avLat, avLon);
         map.panTo(center);
+        console.log('eh');
     }
     // initMap(data.loc[0], data.loc[1]);
     setOptionColumnHeader(queryParams.location);
@@ -1046,13 +1048,6 @@ function loadFromStore(saveName) {
     $('.loading').addClass('done_loading');
     resizeStuff();
 }
-
-//function setFooterDescription(queryParams) {
-//    var d = "A date in " + queryParams.location + 
-//       " from " + queryParams.startTime + 
-//        " to " + queryParams.endTime +
- //       ". Have fun!"; //save button
-//}
 
 function animate_elem_to(element_id, diff){ 
     var element = $("#"+ element_id);
@@ -1096,7 +1091,8 @@ function toggleFooter() {
 
 function init_saved_files() {
     var load_menu = $("#load-menu");
-
+    load_menu.empty();
+    
     var list_item = $("<li/>");
     var link = $("<a/>", {
         "href": "#", 
@@ -1118,6 +1114,7 @@ function init_saved_files() {
             click: function(e) {
                 resetMapKeepingVariables();
                 clearMap();
+                toggleFooter();
                 loadFromStore(key);
                 setIteneraryIcons();
             }
@@ -1201,21 +1198,13 @@ $(document).ready(function (){
             $('#main-search-button').attr("disabled", true);
     }
     $($area).keyup(checkSearchEnabled);
-    /*$($area).keyup(function(e) {
-        console.log($($area).val());
-        console.log(e);
-        $('#main-search-button').attr("disabled", false);
-        $($area).trigger('change');
-    });*/
 
     $($save).click(function(){
         $("#date-saved-label").hide();
 
         fileName = $saveText.value;
-        // console.dir(getSavedDates());
-        // clearStore();
         if (!queryParams || !the_lat || nextToSuggest == {}) { // nothing loaded yet
-            $("#date-saved-label").html("<lable>Can't save nothing!</label>");
+            $("#date-saved-label").html("<label>Can't save nothing!</label>");
             $("#date-saved-label").fadeIn(400);
             setTimeout(function() {
                 $("#date-saved-label").fadeOut(1000); 
@@ -1241,12 +1230,13 @@ $(document).ready(function (){
             click: function(e) {
                 resetMapKeepingVariables();
                 clearMap();
+                toggleFooter();
                 loadFromStore(fileName);
                 setIteneraryIcons();
             }
         }).appendTo(list_item);
         load_menu.append(list_item);
-
+        init_saved_files();
     });
 
     $('#broad-date-search').submit(function(e){
