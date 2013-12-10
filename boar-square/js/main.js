@@ -991,17 +991,6 @@ function loadFromStore(saveName) {
  //       ". Have fun!"; //save button
 //}
 
-function setContainerHeight() {
-    var optionCol = $('#option-column');
-    var itenCol = $('#itenerary-column');
-    var footer = $('#footer-loc');
-    var navbar = $('#navbar');
-    var desiredHeight = $(window).height() - footer.height() - navbar.height() - 150;
-    //console.log(desiredHeight);
-    //optionCol.css('height', desiredHeight);
-    //colContainer.css('height', desiredHeight);
-}
-
 function animate_elem_to(element_id, diff){ 
     var element = $("#"+ element_id);
     var element_height = element.height(); 
@@ -1052,13 +1041,18 @@ function setBottomToPixel(element, dest) {
     element.height(dest-topOfElement);
 }
 
-$(document).ready(function (){
-
+function resizeStuff() {
     var topOfFooter = $('footer').offset().top; 
     setBottomToPixel($("#map-column"), topOfFooter);
     setBottomToPixel($("#option-column"), topOfFooter);
     setBottomToPixel($("#itenerary-column"), topOfFooter);
     setBottomToPixel($("#map"), topOfFooter);
+}
+
+$(document).ready(function (){
+
+    resizeStuff();
+    $(window).resize(resizeStuff);
    
     if (!store.enabled) {
         console.error('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser')
@@ -1068,9 +1062,6 @@ $(document).ready(function (){
         +clientId+'&client_secret='+secret+'&v=20120625', function( data ) {
             setCategoryRef(data);
     });
-
-    // $(window).resize(setContainerHeight);
-    // setContainerHeight();
 
     $('#footer-loc').click(toggleFooter);
  
