@@ -163,7 +163,6 @@ footer a:hover {
     text-align: center;
 }
 
-
 /* helper class for hiding */
 .hidden {
     display: none;
@@ -176,7 +175,6 @@ footer a:hover {
 }
 
 .addVenue {
-
     max-width: 30%;
     min-height: 100px;
     background-color: #428bca;
@@ -185,7 +183,6 @@ footer a:hover {
     margin-bottom: 2px;
     margin: 0px;
     padding:0px;
-
 }
 
 .VenueGroup {
@@ -246,6 +243,8 @@ width:100%;
     margin: 0;
 }
 
+#option-column-header {
+}
 
 .landing-form {
   width: 40%;
