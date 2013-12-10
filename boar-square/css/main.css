@@ -124,8 +124,8 @@ footer a:hover {
 }
 
 #map-wrapper {
-    height: 610px;
-    border-bottom: 2px solid #ccc;
+    /*height: 610px;*/
+    /*border-bottom: 2px solid #ccc;*/
 }
 
 /* the map, of course */

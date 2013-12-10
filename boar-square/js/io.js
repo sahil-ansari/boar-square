@@ -46,7 +46,6 @@ function load_boar_sq(currentName) {
 }
 
 function getSavedDates(){
-
-return store.getAll();
-
+	var saved = {"x":"meow"}
+	return _.keys(saved);
 }
