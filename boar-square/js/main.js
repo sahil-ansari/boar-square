@@ -180,7 +180,6 @@ function addToEnvironment(category, placeObject, new_selected, suggested) {
     }, placeObject); // deep copy
 
     environment[category].places.push( newPlace ); 
-    //console.log(environment[category]);
 
     return newPlace;
 }
@@ -190,7 +189,6 @@ function addNewCategory(name, previous, color, date_time) {
         console.error("Category: " + name + " already exists!");
     }
     
-    //console.log(previous);
     var nextCat = environment[previous].nextCategory;
     environment[name] = {
         previousCategory: previous,
@@ -208,8 +206,6 @@ function addNewCategory(name, previous, color, date_time) {
 
  // what the api takes as 'section' parameter
 function toNearbyVenues(venues, section){ 
-    //log("raw venue object from api:"); 
-    //console.dir(venues);
     var tmp = [venues.length];
     
     for(var i = 0; i<venues.length; i++)
@@ -273,7 +269,6 @@ function rawVenueToOurVenue(venue, tips, section) {
 
 function setCategoryRef(apiCategories){
     cats = apiCategories;
-    console.log("hi");
     for(var i = 0;i<cats.response.categories.length;i++) {
         var cat = cats.response.categories[i];
         categoryIds[cat.name] = cat.id;
@@ -325,7 +320,7 @@ function setIteneraryIcons() {
     var column = $('#itenerary-div');
     column.empty();
     
-    idx = 1; 
+    idx = 1;
     while (category != null) {
         var selected = findSelectedInCategory(category);
         var itemId = '"itenerary_' + category + '"';
@@ -583,9 +578,7 @@ function addThumbnail(loc, venue_info_div, category, suggested) {
         thumbnailClass += " thumb_selected";
         setInfoDiv(venue_info_div, loc);
     }
-    //console.log(loc.photo);
     var thumb = $( "<img/>", {
-      //"src": "img/placeholder.jpg",
       "src": loc.photo,
       "alt": "",
       "width": "100",
@@ -856,8 +849,6 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName, increm
         }
     }
     var search = $.getJSON(queryString, function(data) {
-        //console.log(venueTerms + ' results:');
-
         var bestMatch = data.response.venues[0];
         if(bestMatch === null || bestMatch === undefined) {
             $('#notFound').show();
@@ -868,7 +859,6 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName, increm
                 searchVenuesCounter++;
             return false;
         }
-        //console.log(bestMatch.id);
         var photoQuery = 'https://api.foursquare.com/v2/venues/' + bestMatch.id + '/photos?' +
             'limit=1' + 
             '&client_id=' + clientId + 
@@ -887,7 +877,6 @@ function querySpecificVenueFoursquare(venueTerms, location, categoryName, increm
             }
         })        
     }).fail(function(){
-        console.log('what the hell');
         $('#notFound').show();
         setTimeout(function() {
             $('#notFound').fadeOut();
@@ -921,8 +910,6 @@ function doFoursquareSectionsSearch(params) {
 
         /* add the new category */
         var cat = foursquareSectionToCat[dateInfo[i].section];
-        console.log(cat);
-        console.log(dateInfo[i]);
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
         timeForNextDate += 1; // 1 hour change
@@ -1000,18 +987,22 @@ function resetMapKeepingVariables() {
 }
 
 function getRandomStartTime(params) {
-    console.log(params);
-    console.log(params.dateStyle);
+    if (params.dateStyle === undefined)
+        params.dateStyle = "Day";
+
     var possibleStartTimes = dateStyleStartTimes[params.dateStyle];
     t = possibleStartTimes[Math.floor(Math.random()*possibleStartTimes.length)]; // grab random possible start time
     return t;
 }
 
 function loadFromStore(saveName) {
+    hideWelcome();
     data = load_boar_sq(saveName);
     console.dir(data);
-    savedEnv = data.env; 
-    query = data.q; 
+    savedEnv = data.env;
+    queryParams = data.q;
+    nearbyVenues = data.nearbyVenues;
+    nextToSuggest = data.nextSuggest;
 
     thisCategory = savedEnv['__START__'].nextCategory;
     var totalLatitudes = 0; 
@@ -1043,9 +1034,11 @@ function loadFromStore(saveName) {
         map.panTo(center);
     }
     // initMap(data.loc[0], data.loc[1]);
-    setOptionColumnHeader(query.location);
-    $('#place').val(query.location);
+    setOptionColumnHeader(queryParams.location);
+    $('#place').val(queryParams.location);
     initLocations(environment);
+
+    $('.loading').addClass('done_loading');
 }
 
 //function setFooterDescription(queryParams) {
@@ -1096,7 +1089,8 @@ function toggleFooter() {
 }
 
 function init_saved_files() {
-    var load_menu = $("#load-menu"); 
+    var load_menu = $("#load-menu");
+    load_menu.empty();
     store.forEach(function(key, value) {
         var list_item = $("<li/>");
         var link = $("<a/>", {
@@ -1145,6 +1139,7 @@ function doWelcomeAnimation() {
 }
 
 function hideWelcome() {
+    $('#main-search-button').attr("disabled", false);
     $("#welcome-screen").fadeOut(400, function() {
         $("#column-container").fadeIn(1000);
     });
@@ -1174,7 +1169,6 @@ $(document).ready(function (){
     var $area = $('#place')[0];        //jquery objects for each input field
     var $save = $('#save')[0];
     var $saveText = $('#saveText')[0];
-    var $load = $('#load')[0];
 
     $('#main-search-button').attr("disabled", true);
     $($area).change(function() {
@@ -1190,32 +1184,27 @@ $(document).ready(function (){
         fileName = $saveText.value;
         // console.dir(getSavedDates());
         // clearStore();
+        if (!queryParams || !the_lat || nextToSuggest == {}) { // nothing loaded yet
+            $("#date-saved-label").html("<lable>Can't save nothing!</label>");
+            $("#date-saved-label").fadeIn(400);
+            setTimeout(function() {
+                $("#date-saved-label").fadeOut(1000); 
+            }, 2500);
+            return false;
+        }
+
         save_boar_sq({
           q: queryParams, 
           env: environment,
           loc: [the_lat, the_lon],
+          nearbyVenues: nearbyVenues,
+          nextSuggest: nextToSuggest
         }, fileName);
 
         $("#date-saved-label").html("<lable> Itenerary Saved: " + fileName + "</label>");
-        $("#date-saved-label").fadeIn( 1000);
+        $("#date-saved-label").fadeIn(1000);
+        init_saved_files();
     });
-
-     $($load).click(function(){
-        //console.log(getSavedDates()['yo']);
-        var name = fileName;
-        clearMap();
-        resetMapKeepingVariables();
-        if(fileName == "")
-            fileName = "yo";
-        console.log("file to load:"+name);
-        var load = loadFromStore(name);
-        console.dir(load);
-        hideWelcome();
-        initLocations(environment);
-        setIteneraryIcons();
-        
-        return false;
-     });
 
     $('#broad-date-search').submit(function(e){
         if (currentlyQuerying)

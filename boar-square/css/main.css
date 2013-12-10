@@ -549,6 +549,7 @@ width:100%;
 #lovely-logo {
     max-width: 100%;
     border-radius: 10px;
+    opacity: 0.8;
 }
 
 #date-saved-label {
