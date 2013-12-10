@@ -341,6 +341,8 @@ function setIteneraryIcons() {
             column.append("<div class='itenerary-arrow-transition'><i class='fa fa-arrow-down fa-3x'></i></div>");
         idx += 1; 
     }
+
+    column.append("<hr>")
 }
 
 function changeSelection(indexKey) {
@@ -1088,7 +1090,21 @@ function toggleFooter() {
 }
 
 function init_saved_files() {
-    var load_menu = $("#load-menu"); 
+    var load_menu = $("#load-menu");
+
+    var list_item = $("<li/>");
+    var link = $("<a/>", {
+        "href": "#", 
+        html: "CLEAR ALL",
+        click: function(e) {
+            store.clear();    
+            load_menu.empty();
+            init_saved_files();        
+        },
+        "style": "background-color:red" 
+    }).appendTo(list_item);
+    load_menu.append(list_item);
+
     store.forEach(function(key, value) {
         var list_item = $("<li/>");
         var link = $("<a/>", {
@@ -1158,6 +1174,20 @@ $(document).ready(function (){
 
         $("#date-saved-label").html("<lable> Itenerary Saved: " + fileName + "</label>");
         $("#date-saved-label").fadeIn( 1000);
+        var load_menu = $("#load-menu"); 
+        var list_item = $("<li/>");
+        var link = $("<a/>", {
+            "href": "#", 
+            html: fileName,
+            click: function(e) {
+                resetMapKeepingVariables();
+                clearMap();
+                loadFromStore(fileName);
+                setIteneraryIcons();
+            }
+        }).appendTo(list_item);
+        load_menu.append(list_item);
+
     });
 
      $($load).click(function(){
