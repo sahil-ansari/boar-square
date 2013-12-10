@@ -116,14 +116,24 @@ footer a:hover {
     float: right;
 }
 
-#saveText {
+.date-save-box {
+  height: 34px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555555;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+/*#saveText {
     height: 40px;
     width: 140px;
     line-height: 40px;
     border-radius: 3px;
     margin-top: 10px;
     font-size: 0.8em;
-}
+}*/
 
 /* override the bootstrap container width */
 .container {
@@ -359,6 +369,8 @@ width:100%;
   width: 100%; 
 }
 
+
+
 .itenerary-item-text {
     font-size: 1.25em;
     text-align: left;
@@ -531,6 +543,7 @@ width:100%;
     padding-top: 5px;
     padding-bottom: 5px;
     border-top: 2px solid #ccc;
+
 }
 
 #lovely-logo {
@@ -538,8 +551,12 @@ width:100%;
     border-radius: 10px;
 }
 
-#save {
-
+#date-saved-label {
+  display: inline-block;
+  color: #222;
+  height: 60px;
+  font-size: 20px;
+  vertical-align: -webkit-baseline-middle;
 }
 
 /*****
@@ -577,6 +594,8 @@ width:100%;
 #InputFile {
     opacity: 0;
 }
+
+
 
 
 
