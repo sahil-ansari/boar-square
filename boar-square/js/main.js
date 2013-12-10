@@ -140,7 +140,7 @@ var categoryColors = {
     Food: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color', 'iconUrl': 'img/markers/restaurant-heart-marker.png'},
     Nightlife: {color: 'rgba(222, 0, 214, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
     Shopping: {color: 'rgba(255, 106, 0, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
-    Outdoors: {color: 'rgba(100, 150, 175, 0.8)', 'class': 'outdoors-color', 'iconUrl': 'img/markers/outdoors-heart-marker.png'},
+    Outdoors: {color: 'rgba(60, 120, 20, 0.8)', 'class': 'outdoors-color', 'iconUrl': 'img/markers/outdoors-heart-marker.png'},
     Sights: {color: 'rgba(25, 25, 200, 0.8)', 'class': 'sights-color', 'iconUrl': 'img/markers/sights-heart-marker.png'},
     'Hot spots': {color: 'rgba(255, 31, 188, 0.8)', 'class': 'hotspots-color', 'iconUrl': 'img/markers/hotspots-heart-marker.png'}
 };
@@ -731,6 +731,9 @@ function drawArrows(line, arrowColor, arrowOpacity, repeatVal) {
 }
 
 function clearMap() {
+    if (!map)
+        return;
+
     for(i in map._layers) {
         if(map._layers[i]._path != undefined) {
             map.removeLayer(map._layers[i]);
@@ -787,6 +790,7 @@ function queryFoursquare(queryString, sectionName) {
 
         for(var i = 0;i<theseVenues.length;i++)
         {
+            console.log(theseVenues[i]);
             totalLatitudes += theseVenues[i].point[0];
             totalLongitudes += theseVenues[i].point[1];
         }
@@ -922,6 +926,8 @@ function doFoursquareSectionsSearch(params) {
 
         /* add the new category */
         var cat = foursquareSectionToCat[dateInfo[i].section];
+        console.log(cat);
+        console.log(dateInfo[i]);
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
         timeForNextDate += 1; // 1 hour change
@@ -1097,6 +1103,29 @@ function setOptionColumnHeader(locName) {
     $('#option-column-header').html("A date in " + locName + ":");
 }
 
+function doWelcomeAnimation() {
+    $("#specific-venue-query").attr("disabled", true);
+    $("#category-selection").attr("disabled", true);
+    $("#submit-specific-venue").attr("disabled", true);
+
+    $('#welcome-banner').fadeIn(1200, function() {
+        $("#welcome-text").fadeIn(600, function() {
+            $("#power-user-text").fadeIn(1000, function() {
+                $("#save-load-text").fadeIn(1000);
+            });
+        });
+    });
+}
+
+function hideWelcome() {
+    $("#welcome-screen").fadeOut(400, function() {
+        $("#column-container").fadeIn(1000);
+    });
+    $("#specific-venue-query").attr("disabled", false);
+    $("#category-selection").attr("disabled", false);
+    $("#submit-specific-venue").attr("disabled", false);
+}
+
 $(document).ready(function (){
 
     resizeStuff();
@@ -1113,11 +1142,20 @@ $(document).ready(function (){
 
     $('#footer-loc').mouseenter(showFooter);
     $('#column-container').click(hideFooter);
+    $("#welcome-screen").click(hideFooter);
  
     var $area = $('#place')[0];        //jquery objects for each input field
     var $save = $('#save')[0];
     var $saveText = $('#saveText')[0];
     var $load = $('#load')[0];
+
+    $('#main-search-button').attr("disabled", true);
+    $($area).change(function() {
+        if ($(this).val())
+            $('#main-search-button').attr("disabled", false);
+        else
+            $('#main-search-button').attr("disabled", true);
+    })
 
     $($save).click(function(){
         fileName = $saveText.value;
@@ -1140,6 +1178,7 @@ $(document).ready(function (){
         console.log("file to load:"+name);
         var load = loadFromStore(name);
         console.dir(load);
+        hideWelcome();
         initLocations(environment);
         setIteneraryIcons();
         
@@ -1158,9 +1197,12 @@ $(document).ready(function (){
             location: loc,
             dateStyle: $('#date-type-picker').val()
         };
-        currentQuerySucceed = null;
+        if (!queryParams.location) {
+            return false;
+        }
         
         function changeLookAndQuery() {
+            hideWelcome();
             currentlyQuerying = true;
             setOptionColumnHeader(queryParams.location);
             clearMap();
@@ -1191,7 +1233,7 @@ $(document).ready(function (){
     $('#specific-venue').submit(function() {
         if (currentlyQuerying)
             return false;
-        
+
         var venueTerms = $("#specific-venue-query").val();
         var cat = $('#category-selection').val();
         querySpecificVenueFoursquare(venueTerms, queryParams.location, cat, false);
@@ -1199,6 +1241,7 @@ $(document).ready(function (){
         return false;
     });
 
+    /*
     var initialQueryParams = getUrlParams();
     //console.log(initialQueryParams);
     if (!initialQueryParams.location) {
@@ -1240,7 +1283,7 @@ $(document).ready(function (){
     // loadFromStore("myData");
     // initLocations(environment);
     // setIteneraryIcons();
-
+    */
     function addNewLocationsOnceDone() {
         if (searchVenuesCounter < searchVenuesCounterLimit) {
             console.log('not done');
@@ -1260,7 +1303,9 @@ $(document).ready(function (){
         // data = load('myData');
         // console.log(load_boar_sq("myData"));
     }
-    addNewLocationsOnceDone();
+    //addNewLocationsOnceDone();
+
+    doWelcomeAnimation();
 
     init_saved_files();
 });
