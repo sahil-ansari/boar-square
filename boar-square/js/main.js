@@ -297,6 +297,7 @@ function initMap(lat,lon) {
 
     map.addLayer(cloudmade);
     mapInitiated = true;
+    resizeStuff();
 }
 
 function findSelectedInCategory(category) {
@@ -820,6 +821,7 @@ function queryFoursquare(queryString, sectionName) {
                 map.panTo(center);
             }
             resetMap = false;
+            resizeStuff();
         }
         function actuallyAddVenues() {
             nearbyVenues[thisCategory].sort(function() { return 0.5 - Math.random() });
