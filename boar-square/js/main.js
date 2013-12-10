@@ -1083,7 +1083,7 @@ $(document).ready(function (){
             setCategoryRef(data);
     });
 
-    $('#footer-loc').click(showFooter);
+    $('#footer-loc').mouseenter(showFooter);
     $('#column-container').click(hideFooter);
  
     var $area = $('#place')[0];        //jquery objects for each input field
