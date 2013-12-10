@@ -524,7 +524,7 @@ function initLocations(locations) {
             }).appendTo(category_div);
 
             loc.thumbnailDiv = thumbnailDiv; 
-            addThumbnail(loc, venue_info_div, true);
+            addThumbnail(loc, venue_info_div, category, true);
         }
         venue_info_div.appendTo(option_div); 
 
@@ -552,7 +552,7 @@ function refreshCategorySuggestions(ev) {
     return false;
 }
 
-function addThumbnail(loc, venue_info_div, suggested) {
+function addThumbnail(loc, venue_info_div, category, suggested) {
     if (suggested)
         var thumbnailClass = "thumb_suggested";
     else
@@ -579,16 +579,21 @@ function addThumbnail(loc, venue_info_div, suggested) {
 
     thumb.hover(
         function() {
-            setInfoDiv(venue_info_div, loc)
+            setInfoDiv(venue_info_div, loc);
+            loc.marker.setIcon(new bigHeartIcon({iconUrl: categoryColors[category].iconUrl}));
         }, 
         function() {
-        
+            loc.marker.setIcon(new heartIcon({iconUrl: categoryColors[category].iconUrl}))
         }
     )
     loc.thumbnailDiv.append(loc.name);
     loc.thumb = thumb;
 }
 
+
+function makeBigMarker(theMarker) { 
+
+}
 function addMenuCategory(category) {
     var menu = $('#category-selection');
     menu.append('<option>' + category + '</option>');
@@ -665,7 +670,7 @@ function addNewLocation(category, location, personal) {
         
     }).prependTo(category_div); 
     loc.thumbnailDiv = thumbnailDiv;
-    addThumbnail(loc, venue_info_div, !personal);
+    addThumbnail(loc, venue_info_div, category, !personal);
 
     setCategoryDivWidth(category);
 }
