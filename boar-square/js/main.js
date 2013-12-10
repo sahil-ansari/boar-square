@@ -221,6 +221,7 @@ function toNearbyVenues(venues, section){
 }
 
 function rawVenueToOurVenue(venue, tips, section) {
+    //console.dir(venue);
     if (!venue.hours)
         venue.hours = "open"
     var ven = {
@@ -233,6 +234,7 @@ function rawVenueToOurVenue(venue, tips, section) {
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
         address: venue.location.address + ", " + venue.location.postalCode
+        +", "+venue.location.city+", "+venue.location.state
         //status: v.venue.hours.status    //number to  $$$ amount
     };
 
@@ -322,12 +324,14 @@ function setIteneraryIcons() {
     idx = 1;
     while (category != null) {
         var selected = findSelectedInCategory(category);
+        console.dir(selected);
+        console.dir(selected);
         var itemId = '"itenerary_' + category + '"';
         var wellClass = "special-well " + categoryColors[category].class;
-        column.append("<div id=" + itemId +" class='" + wellClass + "'><div class='itenerary-item'> \
+        column.append("<div id=" + itemId +" class='" + wellClass + "'style='text-align:center;'><div class='itenerary-item'> \
                           <div class='itenerary-item-text'>" + idx + ": " + selected.name + "</div>" +
-                          "<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" +
-                          selected.address + "</div>" + 
+                          //"<div class='itenerary-item-details'>" + environment[category].categoryDateTime + "<br>" 
+                          selected.address +"</div>" + 
                        "</div></div>");
         // $("#itenerary_" + category).offset({top: $("#category_div_" + category).offset().top}); 
         category = environment[category].nextCategory;
@@ -642,7 +646,8 @@ function addNewLocation(category, location, personal) {
     });
     loc.marker = marker;
     if (!loc.selected)  
-        marker.setOpacity(0.5)                  
+        marker.setOpacity(0.5);
+    markersInMap.push(marker);                
 
     typeOfPlace = environment[category];
     if (typeOfPlace.nextCategory) {
@@ -670,9 +675,8 @@ function addNewLocation(category, location, personal) {
         closeButton: false,
     });
     
-    marker.addTo(map);
-    markersInMap.push(marker);
     marker._leaflet_id = category + "_" + marker._leaflet_id;
+    marker.addTo(map);
 
     var venue_info_div_id = "#info_" + category;
     var venue_info_div = $(venue_info_div_id);
@@ -1243,7 +1247,7 @@ $(document).ready(function (){
         console.log('big query');
         if (currentlyQuerying)
             return false;
-        console.log('big 2x');
+        $('#category-selection, #specific-venue-query, .btn-success').removeAttr('disabled');
 
         var oldLoc = queryParams.location;
         var loc = $('#place').val();
