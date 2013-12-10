@@ -1006,6 +1006,8 @@ function loadFromStore(saveName) {
     queryParams = data.q;
     nearbyVenues = data.nearbyVenues;
     nextToSuggest = data.nextSuggest;
+    $("#place").val(queryParams.location);
+    $("#date-type-picker").val(queryParams.dateType);
 
     thisCategory = savedEnv['__START__'].nextCategory;
     var totalLatitudes = 0; 
@@ -1042,6 +1044,7 @@ function loadFromStore(saveName) {
     initLocations(environment);
 
     $('.loading').addClass('done_loading');
+    resizeStuff();
 }
 
 //function setFooterDescription(queryParams) {
@@ -1148,7 +1151,9 @@ function doWelcomeAnimation() {
     $('#welcome-banner').fadeIn(1200, function() {
         $("#welcome-text").fadeIn(600, function() {
             $("#power-user-text").fadeIn(1000, function() {
-                $("#save-load-text").fadeIn(1000);
+                $("#save-load-text").fadeIn(1000, function() {
+                    $("#more-help-text").fadeIn(1000);
+                });
             });
         });
     });
@@ -1187,12 +1192,21 @@ $(document).ready(function (){
     var $saveText = $('#saveText')[0];
 
     $('#main-search-button').attr("disabled", true);
-    $($area).change(function() {
-        if ($(this).val())
+    function checkSearchEnabled() {
+        console.log('hmmm');
+        console.log($($area).val());
+        if ($($area).val())
             $('#main-search-button').attr("disabled", false);
         else
             $('#main-search-button').attr("disabled", true);
-    })
+    }
+    $($area).keyup(checkSearchEnabled);
+    /*$($area).keyup(function(e) {
+        console.log($($area).val());
+        console.log(e);
+        $('#main-search-button').attr("disabled", false);
+        $($area).trigger('change');
+    });*/
 
     $($save).click(function(){
         $("#date-saved-label").hide();

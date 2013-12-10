@@ -108,6 +108,13 @@ footer a:hover {
     display: none;
 }
 
+#more-help-text {
+    font-size: 1.25em;
+    padding: 10px;
+    background-color: rgba(50, 30, 175, 0.2);
+    display: none;
+}
+
 #date-loading {
     float: left;
 }
