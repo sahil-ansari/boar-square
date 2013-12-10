@@ -12,22 +12,21 @@ html {
 }
 
 .navbar {
-background: #f75b65; /* Old browsers */
-background: -moz-linear-gradient(top, #f75b65 19%, #ef017c 84%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(19%,#f75b65), color-stop(84%,#ef017c)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #f75b65 19%,#ef017c 84%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #f75b65 19%,#ef017c 84%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #f75b65 19%,#ef017c 84%); /* IE10+ */
-background: linear-gradient(to bottom, #f75b65 19%,#ef017c 84%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f75b65', endColorstr='#ef017c',GradientType=0 ); /* IE6-9 */
-
-  
+    background: #f75b65; /* Old browsers */
+    background: -moz-linear-gradient(top, #f75b65 19%, #ef017c 84%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(19%,#f75b65), color-stop(84%,#ef017c)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f75b65 19%,#ef017c 84%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f75b65 19%,#ef017c 84%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f75b65 19%,#ef017c 84%); /* IE10+ */
+    background: linear-gradient(to bottom, #f75b65 19%,#ef017c 84%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f75b65', endColorstr='#ef017c',GradientType=0 ); /* IE6-9 */
 }
 
 body {
     height: 100%;
     width: 100%;
-  }
+    background: rgba(0, 125, 225, 0.1);
+}
 
 hr {
   margin-top: 3px !important;
@@ -71,6 +70,44 @@ footer a:hover {
     color: #efefef;
 }
 
+/***
+
+  Stuff for the 'welcome' screen
+
+ ***/
+
+#welcome-banner {
+    display: none;
+    font-size: 5em;
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
+.lovely-color {
+    color: rgb(255, 105, 180);
+}
+
+#welcome-text {
+    font-size: 1.5em;
+    padding: 10px;
+    background-color: rgba(255, 105, 180, 0.2);
+    display: none;
+}
+
+#power-user-text {
+    font-size: 1.25em;
+    padding: 10px;
+    background-color: rgba(225, 125, 25, 0.2);
+    display: none;
+}
+
+#save-load-text {
+    font-size: 1.25em;
+    padding: 10px;
+    background-color: rgba(25, 225, 75, 0.2);
+    display: none;
+}
+
 #date-loading {
     float: left;
 }
@@ -106,6 +143,10 @@ footer a:hover {
 /* our three main columns */
 .long-col {
     margin-top: 5px;
+}
+
+#column-container {
+    display: none;  
 }
 
 #option-column {
@@ -371,7 +412,7 @@ width:100%;
 }
 
 .outdoors-color {
-    background-color: rgba(100, 150, 175, 0.8);
+    background-color: rgba(50, 225, 50, 0.8);
 }
 
 .sights-color {
@@ -510,6 +551,7 @@ width:100%;
 #lovely-logo {
     max-width: 100%;
     border-radius: 10px;
+    opacity: 0.8;
 }
 
 #date-saved-label {

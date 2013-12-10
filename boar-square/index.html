@@ -22,7 +22,6 @@
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
         <link rel="stylesheet" href="js/vendor/Leaflet.label/dist/leaflet.label.css" />
-        <link rel="stylesheet" href="css/bootstrap-select.min.css" />
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -42,7 +41,6 @@
         <script src="js/io.js"></script> 
         <script src="js/main.js"></script>
         <script src="js/vendor/jquery.clockpick.1.2.9.min.js"></script>
-        <script src="js/vendor/bootstrap-select.min.js"></script>
 
     </head>
     <body>
@@ -62,7 +60,7 @@
         <div class="navbar-collapse collapse">
           <form class="navbar-form" id="broad-date-search">
             <div class="form-group">
-              <input type="text" id="place" class='form-control' placeholder="location search" enabled>
+              <input type="text" id="place" class='form-control' placeholder="City or neighborhood" enabled>
             </div>
             <div class="form-group">
               <select class="selectpicker form-control" id="date-type-picker">
@@ -70,7 +68,7 @@
                 <option>Evening</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">Try something different</button>
+            <button type="submit" class="btn btn-primary" id="main-search-button">Find a date!</button>
             <div class="form-group">
               <a id="notFound">Not a solid query!</a>
             </div>
@@ -84,7 +82,9 @@
                 <option>Category</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-success" disabled>Add your own option!</button>
+
+            <button type="submit" class="btn btn-success" id="submit-specific-venue">Add your own option!</button>
+
           </form>
         </div><!--/.navbar-collapse -->
       </div>
@@ -101,10 +101,42 @@
           <div id="option-div" class="category_options"> </div>
         </div>
         <div class="col-lg-2 long-col" id="itenerary-column">
-          <h2 class="major-column-header" id="itenerary-column-header">Itinerary:</h2>
+          <h2 class="major-column-header" id="itenerary-column-header">Itenerary:</h2>
+          <h2 class="major-column-header" id="itenerary-column-header">Intenerary:</h2>
           <div class="loading"> <img src="img/ajax-loader.gif"> </img> </div>
           <div id="itenerary-div"> </div>
           <div id="logo-zone"> <img src="img/lovely_logo.jpg" alt="" id="lovely-logo"></img></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="welcome-screen">
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="welcome-banner"> Welcome to <span class="lovely-color">Love.ly</span>.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2" id="welcome-text-row">
+          <div class="panel panel-default" id="welcome-text">
+            <div id="general-welcome-text">
+              We'll help you find an awesome three-tiered date in any city. To get started, enter a city
+              up there on the left, and then choose either a day or night-time style date. We recommend you
+              let us take it from there. We'll suggest a sequence of three categories of locations (for instance,
+              a coffee shop, then a park, then a restaurant) for the perfect date, and give options for specific places
+              within each category. You can then select the places that look best to you!
+            </div>
+          </div>
+          <div class="panel panel-default" id="power-user-text">
+            Want more customization? You can always add a specific place to a given category by using the search
+            bar on the right. Don't like the categories provided? Just press that "find a date button" until you see
+            something awesome. Be forewarned, though: the dates we suggest are carefully crafted. Try stepping out
+            of your comfort zone.
+          </div>
+          <div class="panel panel-default" id="save-load-text">
+            See a date you really like? Check out green bar on the bottom there to open a menu to save and load
+            date iteneraries. Then you can always revisit or change a previous date.
+          </div>
         </div>
       </div>
     </div>
