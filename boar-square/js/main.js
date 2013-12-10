@@ -6,11 +6,11 @@ var environment = {
     "__START__": {nextCategory: null}
 };
 
-var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
-var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
+// var clientId = 'CUZWQH2U4X1MDB2B4CL1PVANQG5K4DDLVWMVTV3OIARYVLT0';
+// var secret = 'JVAYYMT2T1YAJHR43LMLKSHOP3PWI42SYQKH1XEPOWFCQMGV';
 
-//var clientId = 'ISKQFNT5EU3KSXC5GW5N1AJS5WGQOWH3B2DE3ZFSNN31S5N4';
-//var secret = 'KJE4NUK5W3K4E33JT1UV2CSC5UYQWQRJ1BRGT2WOC4LMY0E3';
+var clientId = 'ISKQFNT5EU3KSXC5GW5N1AJS5WGQOWH3B2DE3ZFSNN31S5N4';
+var secret = 'KJE4NUK5W3K4E33JT1UV2CSC5UYQWQRJ1BRGT2WOC4LMY0E3';
 
 var cats;
 var categoryIds = {};
@@ -23,6 +23,7 @@ var markersInMap = [];
 var mapInitiated = false;
 var resetMap = true;
 
+var footerStateUp = false;
 var searchVenuesCounter = 0;
 var searchVenuesCounterLimit;
 var mostRecentCategoryAdded = "__START__";
@@ -212,7 +213,6 @@ function rawVenueToOurVenue(venue, tips, section) {
         point: [venue.location.lat, venue.location.lng],
         rating: venue.rating,
         price: venue.price,
-        hours: venue.hours.status,
         url: venue.url,               //the business' website
         checkInsCount: venue.stats.checkinsCount,
         point: [venue.location.lat, venue.location.lng],                    
@@ -880,6 +880,7 @@ function doFoursquareSectionsSearch(params) {
     // only take the top 3.
     // TODO: Have it take variable amount based on length of date
     searchVenuesCounterLimit = dateInfo.length;
+    
     for (var i=0; i<dateInfo.length; i++) {
 
         /* add the new category */
@@ -1005,15 +1006,65 @@ function setContainerHeight() {
     //colContainer.css('height', desiredHeight);
 }
 
-function toggleFooter() {
+function animate_elem_to(element_id, diff){ 
+    var element = $("#"+ element_id);
+    var element_height = element.height(); 
+    var newHeight = element_height + diff; 
+    element.animate({'height': newHeight});
+}
+function showFooter() {
     var f = $('footer');
-    if (f.height() == 49)
-        f.animate({'height': 10});
-    else
-        f.animate({'height': 60});
+    f.animate({'height': 60});
+
+    animate_elem_to('map-column', -50);
+    animate_elem_to('option-column', -50);
+    animate_elem_to('itenerary-column', -50);
+    animate_elem_to('map', -50);
+
+    
+    footerStateUp = true;
+}
+
+function hideFooter() {
+    var f = $('footer');
+    f.animate({'height': 10});
+    animate_elem_to('map-column', 50);
+    animate_elem_to('option-column', 50);
+    animate_elem_to('itenerary-column', 50);
+    animate_elem_to('map', 50);
+    
+    footerStateUp = false; 
+}
+
+function toggleFooter() {
+    if (footerStateUp)
+        hideFooter();
+    else 
+        showFooter();
+}
+
+function init_saved_files() {
+    var load_menu = $("#load-menu"); 
+    store.forEach(function(key, value) {
+        var list_item = $("<li/>");
+        list_item.append("<a href='#'>" + key  + "</a>")
+        load_menu.append(list_item);
+    });
+}
+
+function setBottomToPixel(element, dest) {
+    var topOfElement = element.offset().top; 
+    element.height(dest-topOfElement);
 }
 
 $(document).ready(function (){
+
+    var topOfFooter = $('footer').offset().top; 
+    setBottomToPixel($("#map-column"), topOfFooter);
+    setBottomToPixel($("#option-column"), topOfFooter);
+    setBottomToPixel($("#itenerary-column"), topOfFooter);
+    setBottomToPixel($("#map"), topOfFooter);
+   
     if (!store.enabled) {
         console.error('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser')
     }
@@ -1023,11 +1074,11 @@ $(document).ready(function (){
             setCategoryRef(data);
     });
 
-    $(window).resize(setContainerHeight);
-    setContainerHeight();
+    // $(window).resize(setContainerHeight);
+    // setContainerHeight();
 
-    $('#footer-loc').mouseenter(toggleFooter);
-    
+    $('#footer-loc').click(toggleFooter);
+ 
     var $area = $('#place')[0];        //jquery objects for each input field
     var $save = $('#save')[0];
     var $saveText = $('#saveText')[0];
@@ -1102,10 +1153,7 @@ $(document).ready(function (){
     if (initialQueryParams.category1) {
         initialQueryParams.venue1Info = getVenueThing(initialQueryParams, 1);
     }
-    //initialQueryParams.venue1Info = {
-    //    section: 'food',
-    //    name: 'blossom'
-    //};
+  
     if (initialQueryParams.category2) {
         initialQueryParams.venue2Info  = getVenueThing(initialQueryParams, 2);
     }
@@ -1139,4 +1187,6 @@ $(document).ready(function (){
         // console.log(load_boar_sq("myData"));
     }
     addNewLocationsOnceDone();
+
+    init_saved_files();
 });
