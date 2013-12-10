@@ -106,7 +106,7 @@ var dayDates = [
     ['coffee', 'arts', 'shops'],
     ['coffee', 'arts', 'food'],
     ['arts','coffee','outdoors'],
-    ['food','shop','trending'],
+    ['food','shops','trending'],
     ['food','sights','trending'],
     ['shops','food','sights']
     ['shops','food','trending'],
@@ -909,6 +909,7 @@ function doFoursquareSectionsSearch(params) {
     for (var i=0; i<dateInfo.length; i++) {
 
         /* add the new category */
+        console.log(dateInfo[i].section);
         var cat = foursquareSectionToCat[dateInfo[i].section];
         addNewCategory(cat, mostRecentCategoryAdded, categoryColors[cat].class, timeForNextDate + ":00");
         mostRecentCategoryAdded = cat;
@@ -1090,7 +1091,20 @@ function toggleFooter() {
 
 function init_saved_files() {
     var load_menu = $("#load-menu");
-    load_menu.empty();
+
+    var list_item = $("<li/>");
+    var link = $("<a/>", {
+        "href": "#", 
+        html: "CLEAR ALL",
+        click: function(e) {
+            store.clear();    
+            load_menu.empty();
+            init_saved_files();        
+        },
+        "style": "background-color:red" 
+    }).appendTo(list_item);
+    load_menu.append(list_item);
+
     store.forEach(function(key, value) {
         var list_item = $("<li/>");
         var link = $("<a/>", {
@@ -1203,12 +1217,27 @@ $(document).ready(function (){
 
         $("#date-saved-label").html("<lable> Itenerary Saved: " + fileName + "</label>");
         $("#date-saved-label").fadeIn(1000);
-        init_saved_files();
+        var load_menu = $("#load-menu"); 
+        var list_item = $("<li/>");
+        var link = $("<a/>", {
+            "href": "#", 
+            html: fileName,
+            click: function(e) {
+                resetMapKeepingVariables();
+                clearMap();
+                loadFromStore(fileName);
+                setIteneraryIcons();
+            }
+        }).appendTo(list_item);
+        load_menu.append(list_item);
+
     });
 
     $('#broad-date-search').submit(function(e){
+        console.log('big query');
         if (currentlyQuerying)
             return false;
+        console.log('big 2x');
 
         var oldLoc = queryParams.location;
         var loc = $('#place').val();
@@ -1221,6 +1250,7 @@ $(document).ready(function (){
         if (!queryParams.location) {
             return false;
         }
+        console.log('big 3x');
         
         function changeLookAndQuery() {
             hideWelcome();
@@ -1252,6 +1282,7 @@ $(document).ready(function (){
     });
 
     $('#specific-venue').submit(function() {
+        console.log('hello');
         if (currentlyQuerying)
             return false;
 
@@ -1315,6 +1346,7 @@ $(document).ready(function (){
         $(".loading").addClass("done_loading")
         initLocations(environment);
         setIteneraryIcons();
+        currentlyQuerying = false;
     }
     //addNewLocationsOnceDone();
 
