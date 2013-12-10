@@ -174,8 +174,7 @@ footer a:hover {
     border: none;
     overflow-y:auto;
     height:600px; 
-    /*text-align: center;*/
-    /*vertical-align: middle;*/
+ 
 }
 
 #map-column {
@@ -184,7 +183,6 @@ footer a:hover {
 
 #map-wrapper {
     height: 610px;
-    border-bottom: 2px solid #ccc;
 }
 
 /* the map, of course */
