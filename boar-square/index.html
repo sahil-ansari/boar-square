@@ -22,6 +22,7 @@
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
         <link rel="stylesheet" href="js/vendor/Leaflet.label/dist/leaflet.label.css" />
+        <link rel="stylesheet" href="css/bootstrap-select.min.css" />
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -41,6 +42,7 @@
         <script src="js/io.js"></script> 
         <script src="js/main.js"></script>
         <script src="js/vendor/jquery.clockpick.1.2.9.min.js"></script>
+        <script src="js/vendor/bootstrap-select.min.js"></script>
 
     </head>
     <body>
@@ -58,20 +60,18 @@
           <a class="navbar-brand" href="#">Love.ly</a>
         </div>
         <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li>
+          <form class="navbar-form" id="broad-date-search">
+            <div class="form-group">
               <input type="text" id="place" class='form-control' placeholder="location search" style='height: 40px' enabled>
-            </li>
-            <li>
-              <input class="btn control-label" type="text" id="startTime" placeholder="Start Time" style='height: 40px'>
-            </li>
-            <li>
-              <input class="btn control-label" type="text" id="endTime" placeholder="End Time" style='height: 40px'>
-            </li>
-            <li>
-              <a id="notFound">Not a solid query!</a>
-            </li>
-          </ul>
+            </div>
+            <div class="form-group">
+              <select class="selectpicker" id="date-type-picker">
+                <option>Day Date</option>
+                <option>Evening Date</option>
+              </select>
+            </div>
+          </form>
+          <a id="notFound">Not a solid query!</a>
           <form class="navbar-form navbar-right" id="specific-venue">
             <div class="form-group">
               <input id="specific-venue-query" type="text" placeholder="Name a specific place" class="form-control">
