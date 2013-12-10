@@ -1008,6 +1008,8 @@ function animate_elem_to(element_id, diff){
     element.animate({'height': newHeight});
 }
 function showFooter() {
+    if(footerStateUp)
+        return; 
     var f = $('footer');
     f.animate({'height': 60});
 
@@ -1020,6 +1022,8 @@ function showFooter() {
 }
 
 function hideFooter() {
+    if(!footerStateUp)
+        return;
     var f = $('footer');
     f.animate({'height': 10});
     animate_elem_to('map-column', 50);
@@ -1077,7 +1081,8 @@ $(document).ready(function (){
             setCategoryRef(data);
     });
 
-    $('#footer-loc').click(toggleFooter);
+    $('#footer-loc').click(showFooter);
+    $('#column-container').click(hideFooter);
  
     var $area = $('#place')[0];        //jquery objects for each input field
     var $save = $('#save')[0];
