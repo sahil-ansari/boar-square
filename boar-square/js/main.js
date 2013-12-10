@@ -479,7 +479,7 @@ function initLocations(locations) {
         var venue_info_div = $("<div/>", {
             "id": venue_info_div_id,
             "class": "special-well-info"
-        }).appendTo(container_div); 
+        });
 
         
         for (var j=0; j<locOptions.length; j++) {
@@ -526,6 +526,8 @@ function initLocations(locations) {
             loc.thumbnailDiv = thumbnailDiv; 
             addThumbnail(loc, venue_info_div, true);
         }
+        venue_info_div.appendTo(option_div); 
+
 
         idx += 1; 
         // venue_info_div.appendTo(category_div);
@@ -658,7 +660,7 @@ function addNewLocation(category, location, personal) {
     var thumbnailDiv = $("<div/>", {
         "class": "place_thumbnail"
         
-    }).appendTo(category_div); 
+    }).prependTo(category_div); 
     loc.thumbnailDiv = thumbnailDiv;
     addThumbnail(loc, venue_info_div, !personal);
 
