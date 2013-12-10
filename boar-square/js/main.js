@@ -1054,17 +1054,20 @@ $(document).ready(function (){
 
      });
 
-    //add 'not found' handler later
-    $($area).change(function(e){   //find location match, get list of nearby places
-        resetMap = true;                  // of recommended nearby venues
-        area = this.value;
-        queryParams.location = area; 
+    $('#broad-date-search').submit(function(e){
+        queryParams = {
+            location: $('#place').val(),
+            dateStyle: $('#date-type-picker').val()
+        };
 
         clearMap();
+        resetMap = true;
         resetMapKeepingVariables();
         $('.loading').removeClass('done_loading');
         doFoursquareSectionsSearch(queryParams);
         addNewLocationsOnceDone();
+
+        return false;
     });
 
     $('#specific-venue').submit(function() {
@@ -1112,7 +1115,6 @@ $(document).ready(function (){
     if (initialQueryParams.category3) {
         initialQueryParams.venue3Info = getVenueThing(initialQueryParams, 3);
     }
-    initialQueryParams.day = 1;
     queryParams = initialQueryParams;
     doFoursquareSectionsSearch(queryParams);
     //setFooterDescription(initialQueryParams);
