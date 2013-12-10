@@ -395,7 +395,7 @@ width:100%;
 }
 
     .maps-arrow-link:hover, .maps-arrow-link:focus {
-        color: rgb(0, 225, 175);
+        color: #336600;
     }
 
 .itenerary-arrow-transition {
@@ -427,7 +427,7 @@ width:100%;
 }
 
 .outdoors-color {
-    background-color: rgba(50, 225, 50, 0.8);
+    background-color: rgba(102, 153, 0, 0.8);
 }
 
 .sights-color {
@@ -615,6 +615,39 @@ width:100%;
     opacity: 0;
 }
 
+#venue-arrow
+{
+position:fixed;
+top:60px;
+left:1190px;
+display:inline;
+height: 420px;
+width: 120px;
+}
+
+#location-arrow
+{
+position:fixed;
+top:60px;
+left:150px;
+display:inline;
+height: 250px;
+width: 100px;
+}
+
+#save-arrow
+{
+position:fixed;
+top:510px;
+left:140px;
+display:inline;
+height: 190px;
+width: 110px;
+-moz-transform: scaleX(-1);
+-o-transform: scaleX(-1);
+-webkit-transform: scaleX(-1);
+transform: scaleX(-1);
+}
 
 
 

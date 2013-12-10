@@ -140,7 +140,7 @@ var categoryColors = {
     Food: {color: 'rgba(225, 0, 25, 0.8)', 'class': 'restaurant-color', 'iconUrl': 'img/markers/restaurant-heart-marker.png'},
     Nightlife: {color: 'rgba(222, 0, 214, 0.8)', 'class': 'bar-color', 'iconUrl': 'img/markers/bar-heart-marker.png'},
     Shopping: {color: 'rgba(255, 106, 0, 0.8)', 'class': 'shopping-color', 'iconUrl': 'img/markers/shopping-heart-marker.png'},
-    Outdoors: {color: 'rgba(60, 120, 20, 0.8)', 'class': 'outdoors-color', 'iconUrl': 'img/markers/outdoors-heart-marker.png'},
+    Outdoors: {color: 'rgba(102, 153, 0, 0.8)', 'class': 'outdoors-color', 'iconUrl': 'img/markers/outdoors-heart-marker.png'},
     Sights: {color: 'rgba(25, 25, 200, 0.8)', 'class': 'sights-color', 'iconUrl': 'img/markers/sights-heart-marker.png'},
     'Hot spots': {color: 'rgba(255, 31, 188, 0.8)', 'class': 'hotspots-color', 'iconUrl': 'img/markers/hotspots-heart-marker.png'}
 };
