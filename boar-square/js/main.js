@@ -1185,11 +1185,13 @@ function doWelcomeAnimation() {
 
     $('#welcome-banner').fadeIn(1200, function() {
         $("#welcome-text").fadeIn(600, function() {
-            $("#power-user-text").fadeIn(1000, function() {
-                $("#save-load-text").fadeIn(1000, function() {
-                    $("#more-help-text").fadeIn(1000);
+            setTimeout(function() {
+                $("#power-user-text").fadeIn(1000, function() {
+                    $("#save-load-text").fadeIn(1000, function() {
+                        $("#more-help-text").fadeIn(1000);
+                    });
                 });
-            });
+            }, 500);
         });
     });
 }
